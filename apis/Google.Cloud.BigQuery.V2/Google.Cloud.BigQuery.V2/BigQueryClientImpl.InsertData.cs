@@ -32,7 +32,7 @@ namespace Google.Cloud.BigQuery.V2
         {
             GaxPreconditions.CheckNotNull(tableReference, nameof(tableReference));
             GaxPreconditions.CheckNotNull(input, nameof(input));
-            schema = schema ?? GetSchema(tableReference);
+            schema = schema ?? (options?.Autodetect == true ? null : GetSchema(tableReference));
 
             var configuration = new JobConfigurationLoad
             {
@@ -42,7 +42,7 @@ namespace Google.Cloud.BigQuery.V2
             };
             options?.ModifyConfiguration(configuration);
 
-            return UploadData(configuration, input, "text/csv");
+            return UploadData(configuration, input, "text/csv", options);
         }
 
         /// <inheritdoc />
@@ -60,7 +60,7 @@ namespace Google.Cloud.BigQuery.V2
             };
             options?.ModifyConfiguration(configuration);
 
-            return UploadData(configuration, input, "application/vnd.apache.avro+binary");
+            return UploadData(configuration, input, "application/vnd.apache.avro+binary", options);
         }
 
         /// <inheritdoc />
@@ -72,7 +72,7 @@ namespace Google.Cloud.BigQuery.V2
         {
             GaxPreconditions.CheckNotNull(tableReference, nameof(tableReference));
             GaxPreconditions.CheckNotNull(input, nameof(input));
-            schema = schema ?? GetSchema(tableReference);
+            schema = schema ?? (options?.Autodetect == true ? null : GetSchema(tableReference));
 
             var configuration = new JobConfigurationLoad
             {
@@ -82,7 +82,7 @@ namespace Google.Cloud.BigQuery.V2
             };
             options?.ModifyConfiguration(configuration);
 
-            return UploadData(configuration, input, "text/json");
+            return UploadData(configuration, input, "text/json", options);
         }
 
         private TableSchema GetSchema(TableReference tableReference)
@@ -92,10 +92,11 @@ namespace Google.Cloud.BigQuery.V2
             return table.Schema;
         }
 
-        private BigQueryJob UploadData(JobConfigurationLoad loadConfiguration, Stream input, string contentType)
+        private BigQueryJob UploadData(JobConfigurationLoad loadConfiguration, Stream input, string contentType, JobCreationOptions options)
         {
-            var job = new Job { Configuration = new JobConfiguration { Load = loadConfiguration } };
-            var mediaUpload = Service.Jobs.Insert(job, ProjectId, input, contentType);
+            var job = CreateJob(new JobConfiguration { Load = loadConfiguration }, options);
+            var mediaUpload = new CustomMediaUpload(Service, job, job.JobReference.ProjectId, input, contentType);
+            mediaUpload.Options.ModifySessionInitiationRequest += _versionHeaderAction;
             var finalProgress = mediaUpload.Upload();
             if (finalProgress.Exception != null)
             {
@@ -105,7 +106,7 @@ namespace Google.Cloud.BigQuery.V2
         }
 
         /// <inheritdoc />
-        public override void Insert(TableReference tableReference, IEnumerable<BigQueryInsertRow> rows, InsertOptions options = null)
+        public override void InsertRows(TableReference tableReference, IEnumerable<BigQueryInsertRow> rows, InsertOptions options = null)
         {
             GaxPreconditions.CheckNotNull(tableReference, nameof(tableReference));
             GaxPreconditions.CheckNotNull(rows, nameof(rows));
@@ -120,6 +121,7 @@ namespace Google.Cloud.BigQuery.V2
             };
             options?.ModifyRequest(body);
             var request = Service.Tabledata.InsertAll(body, tableReference.ProjectId, tableReference.DatasetId, tableReference.TableId);
+            request.ModifyRequest += _versionHeaderAction;
             var response = request.Execute();
             HandleInsertAllResponse(response);
         }
@@ -152,7 +154,7 @@ namespace Google.Cloud.BigQuery.V2
         {
             GaxPreconditions.CheckNotNull(tableReference, nameof(tableReference));
             GaxPreconditions.CheckNotNull(input, nameof(input));
-            schema = schema ?? await GetSchemaAsync(tableReference, cancellationToken).ConfigureAwait(false);
+            schema = schema ?? (options?.Autodetect == true ? null : await GetSchemaAsync(tableReference, cancellationToken).ConfigureAwait(false));
 
             var configuration = new JobConfigurationLoad
             {
@@ -162,7 +164,7 @@ namespace Google.Cloud.BigQuery.V2
             };
             options?.ModifyConfiguration(configuration);
 
-            return await UploadDataAsync(configuration, input, "text/csv", cancellationToken).ConfigureAwait(false);
+            return await UploadDataAsync(configuration, input, "text/csv", options, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -180,7 +182,7 @@ namespace Google.Cloud.BigQuery.V2
             };
             options?.ModifyConfiguration(configuration);
 
-            return await UploadDataAsync(configuration, input, "application/vnd.apache.avro+binary", cancellationToken).ConfigureAwait(false);
+            return await UploadDataAsync(configuration, input, "application/vnd.apache.avro+binary", options, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -194,7 +196,7 @@ namespace Google.Cloud.BigQuery.V2
         {
             GaxPreconditions.CheckNotNull(tableReference, nameof(tableReference));
             GaxPreconditions.CheckNotNull(input, nameof(input));
-            schema = schema ?? await GetSchemaAsync(tableReference, cancellationToken).ConfigureAwait(false);
+            schema = schema ?? (options?.Autodetect == true ? null : await GetSchemaAsync(tableReference, cancellationToken).ConfigureAwait(false));
 
             var configuration = new JobConfigurationLoad
             {
@@ -204,7 +206,7 @@ namespace Google.Cloud.BigQuery.V2
             };
             options?.ModifyConfiguration(configuration);
 
-            return await UploadDataAsync(configuration, input, "text/json", cancellationToken).ConfigureAwait(false);
+            return await UploadDataAsync(configuration, input, "text/json", options, cancellationToken).ConfigureAwait(false);
         }
 
         private async Task<TableSchema> GetSchemaAsync(TableReference tableReference, CancellationToken cancellationToken)
@@ -214,10 +216,11 @@ namespace Google.Cloud.BigQuery.V2
             return table.Schema;
         }
 
-        private async Task<BigQueryJob> UploadDataAsync(JobConfigurationLoad loadConfiguration, Stream input, string contentType, CancellationToken cancellationToken)
+        private async Task<BigQueryJob> UploadDataAsync(JobConfigurationLoad loadConfiguration, Stream input, string contentType, JobCreationOptions options, CancellationToken cancellationToken)
         {
-            var job = new Job { Configuration = new JobConfiguration { Load = loadConfiguration } };
-            var mediaUpload = Service.Jobs.Insert(job, ProjectId, input, contentType);
+            var job = CreateJob(new JobConfiguration { Load = loadConfiguration }, options);
+            var mediaUpload = new CustomMediaUpload(Service, job, job.JobReference.ProjectId, input, contentType);
+            mediaUpload.Options.ModifySessionInitiationRequest += _versionHeaderAction;
             var finalProgress = await mediaUpload.UploadAsync(cancellationToken).ConfigureAwait(false);
             if (finalProgress.Exception != null)
             {
@@ -227,7 +230,7 @@ namespace Google.Cloud.BigQuery.V2
         }
 
         /// <inheritdoc />
-        public override async Task InsertAsync(TableReference tableReference, IEnumerable<BigQueryInsertRow> rows,
+        public override async Task InsertRowsAsync(TableReference tableReference, IEnumerable<BigQueryInsertRow> rows,
             InsertOptions options = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             GaxPreconditions.CheckNotNull(tableReference, nameof(tableReference));
@@ -243,6 +246,7 @@ namespace Google.Cloud.BigQuery.V2
             };
             options?.ModifyRequest(body);
             var request = Service.Tabledata.InsertAll(body, tableReference.ProjectId, tableReference.DatasetId, tableReference.TableId);
+            request.ModifyRequest += _versionHeaderAction;
             var response = await request.ExecuteAsync(cancellationToken).ConfigureAwait(false);
             HandleInsertAllResponse(response);
         }

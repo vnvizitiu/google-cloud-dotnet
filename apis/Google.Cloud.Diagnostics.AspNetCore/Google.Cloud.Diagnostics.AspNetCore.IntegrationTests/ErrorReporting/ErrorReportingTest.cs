@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Google.Cloud.Diagnostics.Common;
+using Google.Cloud.Diagnostics.Common.IntegrationTests;
 using Google.Cloud.Diagnostics.Common.Tests;
 using Google.Cloud.ErrorReporting.V1Beta1;
 using Microsoft.AspNetCore.Builder;
@@ -20,79 +22,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Threading;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Xunit;
-using static Google.Cloud.ErrorReporting.V1Beta1.QueryTimeRange.Types;
 
-namespace Google.Cloud.Diagnostics.AspNetCore.IntegrationTest
+namespace Google.Cloud.Diagnostics.AspNetCore.IntegrationTests
 {
     public class ErrorReportingTest
     {
-        /// <summary>Total time to spend sleeping when looking for error events.</summary>
-        private static readonly TimeSpan _timeout = TimeSpan.FromSeconds(10);
+        private readonly ErrorEventEntryPolling _polling = new ErrorEventEntryPolling();
 
-        /// <summary>Time to sleep between checks for error events.</summary>
-        private static readonly TimeSpan _sleepInterval = TimeSpan.FromSeconds(2);
-
-        /// <summary>A query time range of one hour.</summary>
-        private static readonly QueryTimeRange s_oneHour = new QueryTimeRange { Period = Period._1Hour };
-
-        /// <summary>Project to run the test on.</summary>
-        private readonly ProjectName _projectName;
-
-        /// <summary>Client to use to send RPCs.</summary>
-        private readonly ErrorStatsServiceClient _client;
-
-        public ErrorReportingTest()
-        {
-            _projectName = new ProjectName(Utils.GetProjectIdFromEnvironment());
-            _client = ErrorStatsServiceClient.Create();
-        }
-
-        /// <summary>
-        /// Gets error events that contain the passed in testId in the message.  Will poll
-        /// and wait for the entries to appear.
-        /// </summary>
-        /// <param name="startTime">The earliest error event time that will be looked at.</param>
-        /// <param name="testId">The test id to filter error events on.</param>
-        /// <param name="minEntries">The minimum number of error events that should be waited for.
-        ///     If minEntries is zero this method will wait the full timeout before checking for the
-        ///     entries.</param>
-        private IEnumerable<ErrorEvent> GetEvents(DateTime startTime, string testId, int minEntries)
-        {
-            TimeSpan totalSleepTime = TimeSpan.Zero;
-            while (totalSleepTime < _timeout)
-            {
-                TimeSpan sleepTime = minEntries > 0 ? _sleepInterval : _timeout;
-                totalSleepTime += sleepTime;
-                Thread.Sleep(sleepTime);
-
-                List<ErrorEvent> errorEvents = new List<ErrorEvent>();
-                var groups = _client.ListGroupStats(_projectName, s_oneHour);
-                foreach (var group in groups)
-                {
-                    ListEventsRequest request = new ListEventsRequest
-                    {
-                        ProjectName = _projectName.ToString(),
-                        GroupId = group.Group.GroupId,
-                        TimeRange = s_oneHour
-                    };
-
-                    var events = _client.ListEvents(request);
-                    errorEvents.AddRange(events.Where(e => e.Message.Contains(testId)));
-                }
-
-                if (minEntries == 0 || errorEvents.Count() >= minEntries)
-                {
-                    return errorEvents;
-                }
-            }
-            return new List<ErrorEvent>();
-        }
+        private readonly bool _isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
         [Fact]
         public async Task NoExceptions()
@@ -102,13 +44,31 @@ namespace Google.Cloud.Diagnostics.AspNetCore.IntegrationTest
 
             var builder = new WebHostBuilder().UseStartup<ErrorReportingTestApplication>();
             using (TestServer server = new TestServer(builder))
+            using (var client = server.CreateClient())
             {
-                var client = server.CreateClient();
                 await client.GetAsync($"/ErrorReporting/Index/{testId}");
-            }
 
-            var errorEvents = GetEvents(startTime, testId, 0);
-            Assert.Empty(errorEvents);
+                var errorEvents = _polling.GetEvents(startTime, testId, 0);
+                Assert.Empty(errorEvents);
+            }
+        }
+
+        [Fact]
+        public async Task ManualLog()
+        {
+            string testId = Utils.GetTestId();
+            DateTime startTime = DateTime.UtcNow;
+
+            var builder = new WebHostBuilder().UseStartup<ErrorReportingTestApplication>();
+            using (TestServer server = new TestServer(builder))
+            using (var client = server.CreateClient())
+            {
+                await client.GetAsync($"/ErrorReporting/ThrowCatchLog/{testId}");
+
+                var errorEvents = _polling.GetEvents(startTime, testId, 1);
+                Assert.Single(errorEvents);
+                VerifyErrorEvent(errorEvents.First(), testId, "ThrowCatchLog");
+            }
         }
 
         [Fact]
@@ -119,15 +79,15 @@ namespace Google.Cloud.Diagnostics.AspNetCore.IntegrationTest
 
             var builder = new WebHostBuilder().UseStartup<ErrorReportingTestApplication>();
             using (TestServer server = new TestServer(builder))
+            using (var client = server.CreateClient())
             {
-                var client = server.CreateClient();
                 await Assert.ThrowsAsync<Exception>(() =>
                     client.GetAsync($"/ErrorReporting/ThrowsException/{testId}"));
-            }
 
-            var errorEvents = GetEvents(startTime, testId, 1);
-            Assert.Single(errorEvents);
-            VerifyErrorEvent(errorEvents.First(), testId, "ThrowsException");
+                var errorEvents = _polling.GetEvents(startTime, testId, 1);
+                Assert.Single(errorEvents);
+                VerifyErrorEvent(errorEvents.First(), testId, "ThrowsException");
+            }
         }
 
         [Fact]
@@ -138,8 +98,8 @@ namespace Google.Cloud.Diagnostics.AspNetCore.IntegrationTest
 
             var builder = new WebHostBuilder().UseStartup<ErrorReportingTestApplication>();
             using (TestServer server = new TestServer(builder))
+            using (var client = server.CreateClient())
             {
-                var client = server.CreateClient();
                 await Assert.ThrowsAsync<Exception>(() =>
                     client.GetAsync($"/ErrorReporting/ThrowsException/{testId}"));
                 await Assert.ThrowsAsync<ArgumentException>(() =>
@@ -148,21 +108,21 @@ namespace Google.Cloud.Diagnostics.AspNetCore.IntegrationTest
                     client.GetAsync($"/ErrorReporting/ThrowsException/{testId}"));
                 await Assert.ThrowsAsync<Exception>(() =>
                     client.GetAsync($"/ErrorReporting/ThrowsException/{testId}"));
+
+                var errorEvents = _polling.GetEvents(startTime, testId, 4);
+                Assert.Equal(4, errorEvents.Count());
+
+                var exceptionEvents = errorEvents.Where(e => e.Message.Contains("ThrowsException"));
+                Assert.Equal(3, exceptionEvents.Count());
+                foreach (var errorEvent in exceptionEvents)
+                {
+                    VerifyErrorEvent(errorEvent, testId, "ThrowsException");
+                }
+
+                var argumentExceptionEvents = errorEvents.Where(e => e.Message.Contains("ThrowsArgumentException"));
+                Assert.Single(argumentExceptionEvents);
+                VerifyErrorEvent(argumentExceptionEvents.First(), testId, "ThrowsArgumentException");
             }
-
-            var errorEvents = GetEvents(startTime, testId, 1);
-            Assert.Equal(4, errorEvents.Count());
-
-            var exceptionEvents = errorEvents.Where(e => e.Message.Contains("ThrowsException"));
-            Assert.Equal(3, exceptionEvents.Count());
-            foreach (var errorEvent in exceptionEvents)
-            {
-                VerifyErrorEvent(errorEvent, testId, "ThrowsException");
-            }
-
-            var argumentExceptionEvents = errorEvents.Where(e => e.Message.Contains("ThrowsArgumentException"));
-            Assert.Single(argumentExceptionEvents);
-            VerifyErrorEvent(argumentExceptionEvents.First(), testId, "ThrowsArgumentException");
         }
 
         /// <summary>
@@ -170,7 +130,7 @@ namespace Google.Cloud.Diagnostics.AspNetCore.IntegrationTest
         /// </summary>
         /// <param name="errorEvent">The event to check.</param>
         /// <param name="testId">The id of the test.</param>
-        /// <param name="functionName">The name of the function the error occured in.</param>
+        /// <param name="functionName">The name of the function the error occurred in.</param>
         private void VerifyErrorEvent(ErrorEvent errorEvent, string testId, string functionName)
         {
             Assert.Equal(ErrorReportingTestApplication.Service, errorEvent.ServiceContext.Service);
@@ -183,41 +143,46 @@ namespace Google.Cloud.Diagnostics.AspNetCore.IntegrationTest
             Assert.False(string.IsNullOrWhiteSpace(errorEvent.Context.HttpRequest.Url));
             Assert.True(errorEvent.Context.HttpRequest.ResponseStatusCode >= 200);
 
-            Assert.False(string.IsNullOrWhiteSpace(errorEvent.Context.ReportLocation.FilePath));
-            Assert.Equal(functionName, errorEvent.Context.ReportLocation.FunctionName);
-            Assert.True(errorEvent.Context.ReportLocation.LineNumber > 0);
-        }
-    }
-
-    /// <summary>
-    /// A simple web application to test the <see cref="ErrorReportingExceptionLogger"/> and associated classes.
-    /// </summary>
-    public class ErrorReportingTestApplication
-    {
-        public const string Service = "service-name";
-        public const string Version = "version-id";
-        private readonly string _projectId;
-
-        public ErrorReportingTestApplication()
-        {
-            _projectId = Utils.GetProjectIdFromEnvironment();
-        }
-
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddMvc();
-        }
-
-        public void Configure(IApplicationBuilder app)
-        {
-            app.ReportExceptionsToGoogle(_projectId, Service, Version);
-
-            app.UseMvc(routes =>
+            if (_isWindows)
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=ErrorReporting}/{action=Index}/{id}");
-            });
+                Assert.False(string.IsNullOrWhiteSpace(errorEvent.Context.ReportLocation.FilePath));
+                Assert.True(errorEvent.Context.ReportLocation.LineNumber > 0);
+            }
+            Assert.Equal(functionName, errorEvent.Context.ReportLocation.FunctionName);
+        }
+
+        /// <summary>
+        /// A simple web application base to test the <see cref="GoogleExceptionLogger"/>
+        /// and associated classes.
+        /// </summary>
+        private class ErrorReportingTestApplication
+        {
+            public const string Service = "service-name";
+            public const string Version = "version-id";
+            protected readonly string ProjectId = Utils.GetProjectIdFromEnvironment();
+
+            public void ConfigureServices(IServiceCollection services)
+            {
+                services.AddGoogleExceptionLogging(options =>
+                {
+                    options.ProjectId = ProjectId;
+                    options.ServiceName = Service;
+                    options.Version = Version;
+                });
+                services.AddMvc();
+            }
+
+            public void Configure(IApplicationBuilder app)
+            {
+                app.UseGoogleExceptionLogging();
+
+                app.UseMvc(routes =>
+                {
+                    routes.MapRoute(
+                        name: "default",
+                        template: "{controller=ErrorReporting}/{action=Index}/{id}");
+                });
+            }
         }
     }
 
@@ -226,16 +191,21 @@ namespace Google.Cloud.Diagnostics.AspNetCore.IntegrationTest
     /// </summary>
     public class ErrorReportingController : Controller
     {
-        public ErrorReportingController() {}
+        private readonly IExceptionLogger _exceptionLogger;
+        public ErrorReportingController(IExceptionLogger exceptionLogger)
+        {
+            _exceptionLogger = exceptionLogger;
+        }
 
-        /// <summary>Cathces and handles a thrown <see cref="Exception"/>.</summary>
-        public string Index(string id) {
+        /// <summary>Catches and handles a thrown <see cref="Exception"/>.</summary>
+        public string Index(string id)
+        {
             var message = GetMessage(nameof(Index), id);
             try
             {
                 throw new Exception(message);
             }
-            catch (Exception e)
+            catch
             {
                 // Do nothing.
             }
@@ -254,6 +224,21 @@ namespace Google.Cloud.Diagnostics.AspNetCore.IntegrationTest
         {
             string message = GetMessage(nameof(ThrowsArgumentException), id);
             throw new ArgumentException(message);
+        }
+
+        /// <summary>Catches and logs a thrown <see cref="Exception"/>.</summary>
+        public string ThrowCatchLog(string id)
+        {
+            var message = GetMessage(nameof(Index), id);
+            try
+            {
+                throw new Exception(message);
+            }
+            catch (Exception e)
+            {
+                _exceptionLogger.Log(e);
+            }
+            return message;
         }
 
         private string GetMessage(string message, string id) => $"{message} - {id}";

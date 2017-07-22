@@ -85,6 +85,18 @@ namespace Google.Cloud.Storage.V1
         /// </summary>
         public Projection? Projection { get; set; }
 
+        /// <summary>
+        /// The encryption key to use for this operation. If this property is null, the <see cref="StorageClient.EncryptionKey"/>
+        /// will be used instead. Use <see cref="EncryptionKey.None"/> to remove encryption headers from this request.
+        /// </summary>
+        public EncryptionKey EncryptionKey { get; set; }
+
+        /// <summary>
+        /// If set, this is the ID of the project which will be billed for the request, for requester-pays buckets.
+        /// The caller must have suitable permissions for the project being billed.
+        /// </summary>
+        public string UserProject { get; set; }
+
         internal void ModifyMediaUpload(InsertMediaUpload upload)
         {
             // Note the use of ArgumentException here, as this will basically be the result of invalid
@@ -126,6 +138,10 @@ namespace Google.Cloud.Storage.V1
             if (Projection != null)
             {
                 upload.Projection = GaxPreconditions.CheckEnumValue((ProjectionEnum) Projection, nameof(Projection));
+            }
+            if (UserProject != null)
+            {
+                upload.UserProject = UserProject;
             }
         }
     }

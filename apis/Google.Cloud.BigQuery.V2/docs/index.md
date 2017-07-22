@@ -1,28 +1,11 @@
-# Google.Cloud.BigQuery.V2
+{{title}}
 
-`Google.Cloud.BigQuery.V2` is a .NET client library for [Google
-BigQuery](https://cloud.google.com/bigquery/). It wraps the
-`Google.Apis.Bigquery.v2` generated library, providing a
-higher-level API to make it easier to use.
+{{description}}
+It wraps the `Google.Apis.Bigquery.v2` generated library, providing a higher-level API to make it easier to use.
 
-# Installation
+{{installation}}
 
-Install the `Google.Cloud.BigQuery.V2` package from NuGet. Add it to
-your project in the normal way (for example by right-clicking on the
-project in Visual Studio and choosing "Manage NuGet Packages...").
-Please ensure you enable pre-release packages (for example, in the
-Visual Studio NuGet user interface, check the "Include prerelease"
-box).
-
-# Authentication
-
-To authenticate all your API calls, first install and setup the
-[Google Cloud SDK](https://cloud.google.com/sdk/). After that is
-installed, run the following command in a Google Cloud SDK Shell:
-
-```sh
-> gcloud auth application-default login
-```
+{{auth}}
 
 # Getting started
 
@@ -66,3 +49,12 @@ below.
 ## Creating a table partitioned by time
 
 [!code-cs[](obj/snippets/Google.Cloud.BigQuery.V2.BigQueryClient.txt#CreatePartitionedTable)]
+
+## Querying an external data source
+
+As [described in the
+documentation](https://cloud.google.com/bigquery/external-data-sources),
+BigQuery can query some external data sources. The sample code below
+demonstrates querying a CSV file stored in Google Cloud Storage.
+
+[!code-cs[](obj/snippets/Google.Cloud.BigQuery.V2.BigQueryClient.txt#ExternalCsv)]

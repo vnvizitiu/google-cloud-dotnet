@@ -28,31 +28,33 @@ namespace Google.Cloud.Logging.V2 {
             "bmcvdHlwZS9odHRwX3JlcXVlc3QucHJvdG8aJmdvb2dsZS9sb2dnaW5nL3R5",
             "cGUvbG9nX3NldmVyaXR5LnByb3RvGhlnb29nbGUvcHJvdG9idWYvYW55LnBy",
             "b3RvGhxnb29nbGUvcHJvdG9idWYvc3RydWN0LnByb3RvGh9nb29nbGUvcHJv",
-            "dG9idWYvdGltZXN0YW1wLnByb3RvIvIECghMb2dFbnRyeRIQCghsb2dfbmFt",
+            "dG9idWYvdGltZXN0YW1wLnByb3RvIqkFCghMb2dFbnRyeRIQCghsb2dfbmFt",
             "ZRgMIAEoCRIvCghyZXNvdXJjZRgIIAEoCzIdLmdvb2dsZS5hcGkuTW9uaXRv",
             "cmVkUmVzb3VyY2USLQoNcHJvdG9fcGF5bG9hZBgCIAEoCzIULmdvb2dsZS5w",
             "cm90b2J1Zi5BbnlIABIWCgx0ZXh0X3BheWxvYWQYAyABKAlIABIvCgxqc29u",
             "X3BheWxvYWQYBiABKAsyFy5nb29nbGUucHJvdG9idWYuU3RydWN0SAASLQoJ",
-            "dGltZXN0YW1wGAkgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIy",
-            "CghzZXZlcml0eRgKIAEoDjIgLmdvb2dsZS5sb2dnaW5nLnR5cGUuTG9nU2V2",
-            "ZXJpdHkSEQoJaW5zZXJ0X2lkGAQgASgJEjYKDGh0dHBfcmVxdWVzdBgHIAEo",
-            "CzIgLmdvb2dsZS5sb2dnaW5nLnR5cGUuSHR0cFJlcXVlc3QSNwoGbGFiZWxz",
-            "GAsgAygLMicuZ29vZ2xlLmxvZ2dpbmcudjIuTG9nRW50cnkuTGFiZWxzRW50",
-            "cnkSNwoJb3BlcmF0aW9uGA8gASgLMiQuZ29vZ2xlLmxvZ2dpbmcudjIuTG9n",
-            "RW50cnlPcGVyYXRpb24SDQoFdHJhY2UYFiABKAkSQgoPc291cmNlX2xvY2F0",
-            "aW9uGBcgASgLMikuZ29vZ2xlLmxvZ2dpbmcudjIuTG9nRW50cnlTb3VyY2VM",
-            "b2NhdGlvbhotCgtMYWJlbHNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUY",
-            "AiABKAk6AjgBQgkKB3BheWxvYWQiTgoRTG9nRW50cnlPcGVyYXRpb24SCgoC",
-            "aWQYASABKAkSEAoIcHJvZHVjZXIYAiABKAkSDQoFZmlyc3QYAyABKAgSDAoE",
-            "bGFzdBgEIAEoCCJGChZMb2dFbnRyeVNvdXJjZUxvY2F0aW9uEgwKBGZpbGUY",
-            "ASABKAkSDAoEbGluZRgCIAEoAxIQCghmdW5jdGlvbhgDIAEoCUJ/ChVjb20u",
-            "Z29vZ2xlLmxvZ2dpbmcudjJCDUxvZ0VudHJ5UHJvdG9QAVo4Z29vZ2xlLmdv",
-            "bGFuZy5vcmcvZ2VucHJvdG8vZ29vZ2xlYXBpcy9sb2dnaW5nL3YyO2xvZ2dp",
-            "bmf4AQGqAhdHb29nbGUuQ2xvdWQuTG9nZ2luZy5WMmIGcHJvdG8z"));
+            "dGltZXN0YW1wGAkgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBI1",
+            "ChFyZWNlaXZlX3RpbWVzdGFtcBgYIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5U",
+            "aW1lc3RhbXASMgoIc2V2ZXJpdHkYCiABKA4yIC5nb29nbGUubG9nZ2luZy50",
+            "eXBlLkxvZ1NldmVyaXR5EhEKCWluc2VydF9pZBgEIAEoCRI2CgxodHRwX3Jl",
+            "cXVlc3QYByABKAsyIC5nb29nbGUubG9nZ2luZy50eXBlLkh0dHBSZXF1ZXN0",
+            "EjcKBmxhYmVscxgLIAMoCzInLmdvb2dsZS5sb2dnaW5nLnYyLkxvZ0VudHJ5",
+            "LkxhYmVsc0VudHJ5EjcKCW9wZXJhdGlvbhgPIAEoCzIkLmdvb2dsZS5sb2dn",
+            "aW5nLnYyLkxvZ0VudHJ5T3BlcmF0aW9uEg0KBXRyYWNlGBYgASgJEkIKD3Nv",
+            "dXJjZV9sb2NhdGlvbhgXIAEoCzIpLmdvb2dsZS5sb2dnaW5nLnYyLkxvZ0Vu",
+            "dHJ5U291cmNlTG9jYXRpb24aLQoLTGFiZWxzRW50cnkSCwoDa2V5GAEgASgJ",
+            "Eg0KBXZhbHVlGAIgASgJOgI4AUIJCgdwYXlsb2FkIk4KEUxvZ0VudHJ5T3Bl",
+            "cmF0aW9uEgoKAmlkGAEgASgJEhAKCHByb2R1Y2VyGAIgASgJEg0KBWZpcnN0",
+            "GAMgASgIEgwKBGxhc3QYBCABKAgiRgoWTG9nRW50cnlTb3VyY2VMb2NhdGlv",
+            "bhIMCgRmaWxlGAEgASgJEgwKBGxpbmUYAiABKAMSEAoIZnVuY3Rpb24YAyAB",
+            "KAlCfwoVY29tLmdvb2dsZS5sb2dnaW5nLnYyQg1Mb2dFbnRyeVByb3RvUAFa",
+            "OGdvb2dsZS5nb2xhbmcub3JnL2dlbnByb3RvL2dvb2dsZWFwaXMvbG9nZ2lu",
+            "Zy92Mjtsb2dnaW5n+AEBqgIXR29vZ2xlLkNsb3VkLkxvZ2dpbmcuVjJiBnBy",
+            "b3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, global::Google.Api.MonitoredResourceReflection.Descriptor, global::Google.Cloud.Logging.Type.HttpRequestReflection.Descriptor, global::Google.Cloud.Logging.Type.LogSeverityReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.AnyReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.StructReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Google.Cloud.Logging.V2.LogEntry), global::Google.Cloud.Logging.V2.LogEntry.Parser, new[]{ "LogName", "Resource", "ProtoPayload", "TextPayload", "JsonPayload", "Timestamp", "Severity", "InsertId", "HttpRequest", "Labels", "Operation", "Trace", "SourceLocation" }, new[]{ "Payload" }, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Google.Cloud.Logging.V2.LogEntry), global::Google.Cloud.Logging.V2.LogEntry.Parser, new[]{ "LogName", "Resource", "ProtoPayload", "TextPayload", "JsonPayload", "Timestamp", "ReceiveTimestamp", "Severity", "InsertId", "HttpRequest", "Labels", "Operation", "Trace", "SourceLocation" }, new[]{ "Payload" }, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Cloud.Logging.V2.LogEntryOperation), global::Google.Cloud.Logging.V2.LogEntryOperation.Parser, new[]{ "Id", "Producer", "First", "Last" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Cloud.Logging.V2.LogEntrySourceLocation), global::Google.Cloud.Logging.V2.LogEntrySourceLocation.Parser, new[]{ "File", "Line", "Function" }, null, null, null)
           }));
@@ -62,7 +64,7 @@ namespace Google.Cloud.Logging.V2 {
   }
   #region Messages
   /// <summary>
-  ///  An individual entry in a log.
+  /// An individual entry in a log.
   /// </summary>
   public sealed partial class LogEntry : pb::IMessage<LogEntry> {
     private static readonly pb::MessageParser<LogEntry> _parser = new pb::MessageParser<LogEntry>(() => new LogEntry());
@@ -91,6 +93,7 @@ namespace Google.Cloud.Logging.V2 {
       logName_ = other.logName_;
       Resource = other.resource_ != null ? other.Resource.Clone() : null;
       Timestamp = other.timestamp_ != null ? other.Timestamp.Clone() : null;
+      ReceiveTimestamp = other.receiveTimestamp_ != null ? other.ReceiveTimestamp.Clone() : null;
       severity_ = other.severity_;
       insertId_ = other.insertId_;
       HttpRequest = other.httpRequest_ != null ? other.HttpRequest.Clone() : null;
@@ -121,22 +124,24 @@ namespace Google.Cloud.Logging.V2 {
     public const int LogNameFieldNumber = 12;
     private string logName_ = "";
     /// <summary>
-    ///  Required. The resource name of the log to which this log entry belongs:
+    /// Required. The resource name of the log to which this log entry belongs:
     ///
-    ///      "projects/[PROJECT_ID]/logs/[LOG_ID]"
-    ///      "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
+    ///     "projects/[PROJECT_ID]/logs/[LOG_ID]"
+    ///     "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
+    ///     "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
+    ///     "folders/[FOLDER_ID]/logs/[LOG_ID]"
     ///
-    ///  `[LOG_ID]` must be URL-encoded within `log_name`. Example:
-    ///  `"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
-    ///  `[LOG_ID]` must be less than 512 characters long and can only include the
-    ///  following characters: upper and lower case alphanumeric characters,
-    ///  forward-slash, underscore, hyphen, and period.
+    /// `[LOG_ID]` must be URL-encoded within `log_name`. Example:
+    /// `"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
+    /// `[LOG_ID]` must be less than 512 characters long and can only include the
+    /// following characters: upper and lower case alphanumeric characters,
+    /// forward-slash, underscore, hyphen, and period.
     ///
-    ///  For backward compatibility, if `log_name` begins with a forward-slash, such
-    ///  as `/projects/...`, then the log entry is ingested as usual but the
-    ///  forward-slash is removed. Listing the log entry will not show the leading
-    ///  slash and filtering for a log name with a leading slash will never return
-    ///  any results.
+    /// For backward compatibility, if `log_name` begins with a forward-slash, such
+    /// as `/projects/...`, then the log entry is ingested as usual but the
+    /// forward-slash is removed. Listing the log entry will not show the leading
+    /// slash and filtering for a log name with a leading slash will never return
+    /// any results.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string LogName {
@@ -150,10 +155,10 @@ namespace Google.Cloud.Logging.V2 {
     public const int ResourceFieldNumber = 8;
     private global::Google.Api.MonitoredResource resource_;
     /// <summary>
-    ///  Required. The monitored resource associated with this log entry.
-    ///  Example: a log entry that reports a database error would be
-    ///  associated with the monitored resource designating the particular
-    ///  database that reported the error.
+    /// Required. The monitored resource associated with this log entry.
+    /// Example: a log entry that reports a database error would be
+    /// associated with the monitored resource designating the particular
+    /// database that reported the error.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::Google.Api.MonitoredResource Resource {
@@ -166,9 +171,9 @@ namespace Google.Cloud.Logging.V2 {
     /// <summary>Field number for the "proto_payload" field.</summary>
     public const int ProtoPayloadFieldNumber = 2;
     /// <summary>
-    ///  The log entry payload, represented as a protocol buffer.  Some
-    ///  Google Cloud Platform services use this field for their log
-    ///  entry payloads.
+    /// The log entry payload, represented as a protocol buffer.  Some
+    /// Google Cloud Platform services use this field for their log
+    /// entry payloads.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::Google.Protobuf.WellKnownTypes.Any ProtoPayload {
@@ -182,7 +187,7 @@ namespace Google.Cloud.Logging.V2 {
     /// <summary>Field number for the "text_payload" field.</summary>
     public const int TextPayloadFieldNumber = 3;
     /// <summary>
-    ///  The log entry payload, represented as a Unicode string (UTF-8).
+    /// The log entry payload, represented as a Unicode string (UTF-8).
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string TextPayload {
@@ -196,8 +201,8 @@ namespace Google.Cloud.Logging.V2 {
     /// <summary>Field number for the "json_payload" field.</summary>
     public const int JsonPayloadFieldNumber = 6;
     /// <summary>
-    ///  The log entry payload, represented as a structure that is
-    ///  expressed as a JSON object.
+    /// The log entry payload, represented as a structure that is
+    /// expressed as a JSON object.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::Google.Protobuf.WellKnownTypes.Struct JsonPayload {
@@ -212,8 +217,11 @@ namespace Google.Cloud.Logging.V2 {
     public const int TimestampFieldNumber = 9;
     private global::Google.Protobuf.WellKnownTypes.Timestamp timestamp_;
     /// <summary>
-    ///  Optional. The time the event described by the log entry occurred.  If
-    ///  omitted, Stackdriver Logging will use the time the log entry is received.
+    /// Optional. The time the event described by the log entry occurred.  If
+    /// omitted in a new log entry, Stackdriver Logging will insert the time the
+    /// log entry is received.  Stackdriver Logging might reject log entries whose
+    /// time stamps are more than a couple of hours in the future. Log entries
+    /// with time stamps in the past are accepted.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::Google.Protobuf.WellKnownTypes.Timestamp Timestamp {
@@ -223,12 +231,26 @@ namespace Google.Cloud.Logging.V2 {
       }
     }
 
+    /// <summary>Field number for the "receive_timestamp" field.</summary>
+    public const int ReceiveTimestampFieldNumber = 24;
+    private global::Google.Protobuf.WellKnownTypes.Timestamp receiveTimestamp_;
+    /// <summary>
+    /// Output only. The time the log entry was received by Stackdriver Logging.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Google.Protobuf.WellKnownTypes.Timestamp ReceiveTimestamp {
+      get { return receiveTimestamp_; }
+      set {
+        receiveTimestamp_ = value;
+      }
+    }
+
     /// <summary>Field number for the "severity" field.</summary>
     public const int SeverityFieldNumber = 10;
     private global::Google.Cloud.Logging.Type.LogSeverity severity_ = 0;
     /// <summary>
-    ///  Optional. The severity of the log entry. The default value is
-    ///  `LogSeverity.DEFAULT`.
+    /// Optional. The severity of the log entry. The default value is
+    /// `LogSeverity.DEFAULT`.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::Google.Cloud.Logging.Type.LogSeverity Severity {
@@ -242,11 +264,12 @@ namespace Google.Cloud.Logging.V2 {
     public const int InsertIdFieldNumber = 4;
     private string insertId_ = "";
     /// <summary>
-    ///  Optional. A unique ID for the log entry. If you provide this
-    ///  field, the logging service considers other log entries in the
-    ///  same project with the same ID as duplicates which can be removed.  If
-    ///  omitted, Stackdriver Logging will generate a unique ID for this
-    ///  log entry.
+    /// Optional. A unique identifier for the log entry. If you provide a value,
+    /// then Stackdriver Logging considers other log entries in the same project,
+    /// with the same `timestamp`, and with the same `insert_id` to be duplicates
+    /// which can be removed.  If omitted in new log entries, then Stackdriver
+    /// Logging will insert its own unique identifier. The `insert_id` is used
+    /// to order log entries that have the same `timestamp` value.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string InsertId {
@@ -260,8 +283,8 @@ namespace Google.Cloud.Logging.V2 {
     public const int HttpRequestFieldNumber = 7;
     private global::Google.Cloud.Logging.Type.HttpRequest httpRequest_;
     /// <summary>
-    ///  Optional. Information about the HTTP request associated with this
-    ///  log entry, if applicable.
+    /// Optional. Information about the HTTP request associated with this
+    /// log entry, if applicable.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::Google.Cloud.Logging.Type.HttpRequest HttpRequest {
@@ -277,8 +300,8 @@ namespace Google.Cloud.Logging.V2 {
         = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10), pb::FieldCodec.ForString(18), 90);
     private readonly pbc::MapField<string, string> labels_ = new pbc::MapField<string, string>();
     /// <summary>
-    ///  Optional. A set of user-defined (key, value) data that provides additional
-    ///  information about the log entry.
+    /// Optional. A set of user-defined (key, value) data that provides additional
+    /// information about the log entry.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::MapField<string, string> Labels {
@@ -289,8 +312,8 @@ namespace Google.Cloud.Logging.V2 {
     public const int OperationFieldNumber = 15;
     private global::Google.Cloud.Logging.V2.LogEntryOperation operation_;
     /// <summary>
-    ///  Optional. Information about an operation associated with the log entry, if
-    ///  applicable.
+    /// Optional. Information about an operation associated with the log entry, if
+    /// applicable.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::Google.Cloud.Logging.V2.LogEntryOperation Operation {
@@ -304,10 +327,10 @@ namespace Google.Cloud.Logging.V2 {
     public const int TraceFieldNumber = 22;
     private string trace_ = "";
     /// <summary>
-    ///  Optional. Resource name of the trace associated with the log entry, if any.
-    ///  If it contains a relative resource name, the name is assumed to be relative
-    ///  to `//tracing.googleapis.com`. Example:
-    ///  `projects/my-projectid/traces/06796866738c859f2f19b7cfb3214824`
+    /// Optional. Resource name of the trace associated with the log entry, if any.
+    /// If it contains a relative resource name, the name is assumed to be relative
+    /// to `//tracing.googleapis.com`. Example:
+    /// `projects/my-projectid/traces/06796866738c859f2f19b7cfb3214824`
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string Trace {
@@ -321,8 +344,8 @@ namespace Google.Cloud.Logging.V2 {
     public const int SourceLocationFieldNumber = 23;
     private global::Google.Cloud.Logging.V2.LogEntrySourceLocation sourceLocation_;
     /// <summary>
-    ///  Optional. Source code location information associated with the log entry,
-    ///  if any.
+    /// Optional. Source code location information associated with the log entry,
+    /// if any.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::Google.Cloud.Logging.V2.LogEntrySourceLocation SourceLocation {
@@ -371,6 +394,7 @@ namespace Google.Cloud.Logging.V2 {
       if (TextPayload != other.TextPayload) return false;
       if (!object.Equals(JsonPayload, other.JsonPayload)) return false;
       if (!object.Equals(Timestamp, other.Timestamp)) return false;
+      if (!object.Equals(ReceiveTimestamp, other.ReceiveTimestamp)) return false;
       if (Severity != other.Severity) return false;
       if (InsertId != other.InsertId) return false;
       if (!object.Equals(HttpRequest, other.HttpRequest)) return false;
@@ -391,6 +415,7 @@ namespace Google.Cloud.Logging.V2 {
       if (payloadCase_ == PayloadOneofCase.TextPayload) hash ^= TextPayload.GetHashCode();
       if (payloadCase_ == PayloadOneofCase.JsonPayload) hash ^= JsonPayload.GetHashCode();
       if (timestamp_ != null) hash ^= Timestamp.GetHashCode();
+      if (receiveTimestamp_ != null) hash ^= ReceiveTimestamp.GetHashCode();
       if (Severity != 0) hash ^= Severity.GetHashCode();
       if (InsertId.Length != 0) hash ^= InsertId.GetHashCode();
       if (httpRequest_ != null) hash ^= HttpRequest.GetHashCode();
@@ -458,6 +483,10 @@ namespace Google.Cloud.Logging.V2 {
         output.WriteRawTag(186, 1);
         output.WriteMessage(SourceLocation);
       }
+      if (receiveTimestamp_ != null) {
+        output.WriteRawTag(194, 1);
+        output.WriteMessage(ReceiveTimestamp);
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -480,6 +509,9 @@ namespace Google.Cloud.Logging.V2 {
       }
       if (timestamp_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Timestamp);
+      }
+      if (receiveTimestamp_ != null) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(ReceiveTimestamp);
       }
       if (Severity != 0) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Severity);
@@ -522,6 +554,12 @@ namespace Google.Cloud.Logging.V2 {
           timestamp_ = new global::Google.Protobuf.WellKnownTypes.Timestamp();
         }
         Timestamp.MergeFrom(other.Timestamp);
+      }
+      if (other.receiveTimestamp_ != null) {
+        if (receiveTimestamp_ == null) {
+          receiveTimestamp_ = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+        }
+        ReceiveTimestamp.MergeFrom(other.ReceiveTimestamp);
       }
       if (other.Severity != 0) {
         Severity = other.Severity;
@@ -650,6 +688,13 @@ namespace Google.Cloud.Logging.V2 {
             input.ReadMessage(sourceLocation_);
             break;
           }
+          case 194: {
+            if (receiveTimestamp_ == null) {
+              receiveTimestamp_ = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+            }
+            input.ReadMessage(receiveTimestamp_);
+            break;
+          }
         }
       }
     }
@@ -657,8 +702,8 @@ namespace Google.Cloud.Logging.V2 {
   }
 
   /// <summary>
-  ///  Additional information about a potentially long-running operation with which
-  ///  a log entry is associated.
+  /// Additional information about a potentially long-running operation with which
+  /// a log entry is associated.
   /// </summary>
   public sealed partial class LogEntryOperation : pb::IMessage<LogEntryOperation> {
     private static readonly pb::MessageParser<LogEntryOperation> _parser = new pb::MessageParser<LogEntryOperation>(() => new LogEntryOperation());
@@ -699,8 +744,8 @@ namespace Google.Cloud.Logging.V2 {
     public const int IdFieldNumber = 1;
     private string id_ = "";
     /// <summary>
-    ///  Optional. An arbitrary operation identifier. Log entries with the
-    ///  same identifier are assumed to be part of the same operation.
+    /// Optional. An arbitrary operation identifier. Log entries with the
+    /// same identifier are assumed to be part of the same operation.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string Id {
@@ -714,9 +759,9 @@ namespace Google.Cloud.Logging.V2 {
     public const int ProducerFieldNumber = 2;
     private string producer_ = "";
     /// <summary>
-    ///  Optional. An arbitrary producer identifier. The combination of
-    ///  `id` and `producer` must be globally unique.  Examples for `producer`:
-    ///  `"MyDivision.MyBigCompany.com"`, `"github.com/MyProject/MyApplication"`.
+    /// Optional. An arbitrary producer identifier. The combination of
+    /// `id` and `producer` must be globally unique.  Examples for `producer`:
+    /// `"MyDivision.MyBigCompany.com"`, `"github.com/MyProject/MyApplication"`.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string Producer {
@@ -730,7 +775,7 @@ namespace Google.Cloud.Logging.V2 {
     public const int FirstFieldNumber = 3;
     private bool first_;
     /// <summary>
-    ///  Optional. Set this to True if this is the first log entry in the operation.
+    /// Optional. Set this to True if this is the first log entry in the operation.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public bool First {
@@ -744,7 +789,7 @@ namespace Google.Cloud.Logging.V2 {
     public const int LastFieldNumber = 4;
     private bool last_;
     /// <summary>
-    ///  Optional. Set this to True if this is the last log entry in the operation.
+    /// Optional. Set this to True if this is the last log entry in the operation.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public bool Last {
@@ -877,8 +922,8 @@ namespace Google.Cloud.Logging.V2 {
   }
 
   /// <summary>
-  ///  Additional information about the source code location that produced the log
-  ///  entry.
+  /// Additional information about the source code location that produced the log
+  /// entry.
   /// </summary>
   public sealed partial class LogEntrySourceLocation : pb::IMessage<LogEntrySourceLocation> {
     private static readonly pb::MessageParser<LogEntrySourceLocation> _parser = new pb::MessageParser<LogEntrySourceLocation>(() => new LogEntrySourceLocation());
@@ -918,8 +963,8 @@ namespace Google.Cloud.Logging.V2 {
     public const int FileFieldNumber = 1;
     private string file_ = "";
     /// <summary>
-    ///  Optional. Source file name. Depending on the runtime environment, this
-    ///  might be a simple name or a fully-qualified name.
+    /// Optional. Source file name. Depending on the runtime environment, this
+    /// might be a simple name or a fully-qualified name.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string File {
@@ -933,8 +978,8 @@ namespace Google.Cloud.Logging.V2 {
     public const int LineFieldNumber = 2;
     private long line_;
     /// <summary>
-    ///  Optional. Line within the source file. 1-based; 0 indicates no line number
-    ///  available.
+    /// Optional. Line within the source file. 1-based; 0 indicates no line number
+    /// available.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public long Line {
@@ -948,12 +993,12 @@ namespace Google.Cloud.Logging.V2 {
     public const int FunctionFieldNumber = 3;
     private string function_ = "";
     /// <summary>
-    ///  Optional. Human-readable name of the function or method being invoked, with
-    ///  optional context such as the class or package name. This information may be
-    ///  used in contexts such as the logs viewer, where a file and line number are
-    ///  less meaningful. The format can vary by language. For example:
-    ///  `qual.if.ied.Class.method` (Java), `dir/package.func` (Go), `function`
-    ///  (Python).
+    /// Optional. Human-readable name of the function or method being invoked, with
+    /// optional context such as the class or package name. This information may be
+    /// used in contexts such as the logs viewer, where a file and line number are
+    /// less meaningful. The format can vary by language. For example:
+    /// `qual.if.ied.Class.method` (Java), `dir/package.func` (Go), `function`
+    /// (Python).
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string Function {

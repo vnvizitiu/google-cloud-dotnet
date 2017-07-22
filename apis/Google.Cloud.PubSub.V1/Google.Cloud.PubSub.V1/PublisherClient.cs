@@ -1,4 +1,4 @@
-// Copyright 2016, Google Inc. All rights reserved.
+// Copyright 2017, Google Inc. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -50,6 +50,7 @@ namespace Google.Cloud.PubSub.V1
         {
             GaxPreconditions.CheckNotNull(existing, nameof(existing));
             CreateTopicSettings = existing.CreateTopicSettings;
+            UpdateTopicSettings = existing.UpdateTopicSettings;
             PublishSettings = existing.PublishSettings;
             GetTopicSettings = existing.GetTopicSettings;
             ListTopicsSettings = existing.ListTopicsSettings;
@@ -58,7 +59,10 @@ namespace Google.Cloud.PubSub.V1
             SetIamPolicySettings = existing.SetIamPolicySettings;
             GetIamPolicySettings = existing.GetIamPolicySettings;
             TestIamPermissionsSettings = existing.TestIamPermissionsSettings;
+            OnCopy(existing);
         }
+
+        partial void OnCopy(PublisherSettings existing);
 
         /// <summary>
         /// The filter specifying which RPC <see cref="StatusCode"/>s are eligible for retry
@@ -81,12 +85,17 @@ namespace Google.Cloud.PubSub.V1
         /// <remarks>
         /// The eligible RPC <see cref="StatusCode"/>s for retry for "OnePlusDelivery" RPC methods are:
         /// <list type="bullet">
+        /// <item><description><see cref="StatusCode.Cancelled"/></description></item>
+        /// <item><description><see cref="StatusCode.Unknown"/></description></item>
         /// <item><description><see cref="StatusCode.DeadlineExceeded"/></description></item>
+        /// <item><description><see cref="StatusCode.ResourceExhausted"/></description></item>
+        /// <item><description><see cref="StatusCode.Aborted"/></description></item>
+        /// <item><description><see cref="StatusCode.Internal"/></description></item>
         /// <item><description><see cref="StatusCode.Unavailable"/></description></item>
         /// </list>
         /// </remarks>
         public static Predicate<RpcException> OnePlusDeliveryRetryFilter { get; } =
-            RetrySettings.FilterForStatusCodes(StatusCode.DeadlineExceeded, StatusCode.Unavailable);
+            RetrySettings.FilterForStatusCodes(StatusCode.Cancelled, StatusCode.Unknown, StatusCode.DeadlineExceeded, StatusCode.ResourceExhausted, StatusCode.Aborted, StatusCode.Internal, StatusCode.Unavailable);
 
         /// <summary>
         /// The filter specifying which RPC <see cref="StatusCode"/>s are eligible for retry
@@ -210,6 +219,36 @@ namespace Google.Cloud.PubSub.V1
 
         /// <summary>
         /// <see cref="CallSettings"/> for synchronous and asynchronous calls to
+        /// <c>PublisherClient.UpdateTopic</c> and <c>PublisherClient.UpdateTopicAsync</c>.
+        /// </summary>
+        /// <remarks>
+        /// The default <c>PublisherClient.UpdateTopic</c> and
+        /// <c>PublisherClient.UpdateTopicAsync</c> <see cref="RetrySettings"/> are:
+        /// <list type="bullet">
+        /// <item><description>Initial retry delay: 100 milliseconds</description></item>
+        /// <item><description>Retry delay multiplier: 1.3</description></item>
+        /// <item><description>Retry maximum delay: 60000 milliseconds</description></item>
+        /// <item><description>Initial timeout: 60000 milliseconds</description></item>
+        /// <item><description>Timeout multiplier: 1.0</description></item>
+        /// <item><description>Timeout maximum delay: 60000 milliseconds</description></item>
+        /// </list>
+        /// Retry will be attempted on the following response status codes:
+        /// <list>
+        /// <item><description><see cref="StatusCode.DeadlineExceeded"/></description></item>
+        /// <item><description><see cref="StatusCode.Unavailable"/></description></item>
+        /// </list>
+        /// Default RPC expiration is 600000 milliseconds.
+        /// </remarks>
+        public CallSettings UpdateTopicSettings { get; set; } = CallSettings.FromCallTiming(
+            CallTiming.FromRetry(new RetrySettings(
+                retryBackoff: GetDefaultRetryBackoff(),
+                timeoutBackoff: GetDefaultTimeoutBackoff(),
+                totalExpiration: Expiration.FromTimeout(TimeSpan.FromMilliseconds(600000)),
+                retryFilter: IdempotentRetryFilter
+            )));
+
+        /// <summary>
+        /// <see cref="CallSettings"/> for synchronous and asynchronous calls to
         /// <c>PublisherClient.Publish</c> and <c>PublisherClient.PublishAsync</c>.
         /// </summary>
         /// <remarks>
@@ -225,7 +264,12 @@ namespace Google.Cloud.PubSub.V1
         /// </list>
         /// Retry will be attempted on the following response status codes:
         /// <list>
+        /// <item><description><see cref="StatusCode.Cancelled"/></description></item>
+        /// <item><description><see cref="StatusCode.Unknown"/></description></item>
         /// <item><description><see cref="StatusCode.DeadlineExceeded"/></description></item>
+        /// <item><description><see cref="StatusCode.ResourceExhausted"/></description></item>
+        /// <item><description><see cref="StatusCode.Aborted"/></description></item>
+        /// <item><description><see cref="StatusCode.Internal"/></description></item>
         /// <item><description><see cref="StatusCode.Unavailable"/></description></item>
         /// </list>
         /// Default RPC expiration is 600000 milliseconds.
@@ -569,7 +613,7 @@ namespace Google.Cloud.PubSub.V1
             CallSettings callSettings = null) => CreateTopicAsync(
                 new Topic
                 {
-                    TopicName = name,
+                    TopicName = GaxPreconditions.CheckNotNull(name, nameof(name)),
                 },
                 callSettings);
 
@@ -618,7 +662,7 @@ namespace Google.Cloud.PubSub.V1
             CallSettings callSettings = null) => CreateTopic(
                 new Topic
                 {
-                    TopicName = name,
+                    TopicName = GaxPreconditions.CheckNotNull(name, nameof(name)),
                 },
                 callSettings);
 
@@ -661,6 +705,54 @@ namespace Google.Cloud.PubSub.V1
         }
 
         /// <summary>
+        /// Updates an existing topic. Note that certain properties of a topic are not
+        /// modifiable.  Options settings follow the style guide:
+        /// NOTE:  The style guide requires body: "topic" instead of body: "*".
+        /// Keeping the latter for internal consistency in V1, however it should be
+        /// corrected in V2.  See
+        /// https://cloud.google.com/apis/design/standard_methods#update for details.
+        /// </summary>
+        /// <param name="request">
+        /// The request object containing all of the parameters for the API call.
+        /// </param>
+        /// <param name="callSettings">
+        /// If not null, applies overrides to this RPC call.
+        /// </param>
+        /// <returns>
+        /// A Task containing the RPC response.
+        /// </returns>
+        public virtual Task<Topic> UpdateTopicAsync(
+            UpdateTopicRequest request,
+            CallSettings callSettings = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Updates an existing topic. Note that certain properties of a topic are not
+        /// modifiable.  Options settings follow the style guide:
+        /// NOTE:  The style guide requires body: "topic" instead of body: "*".
+        /// Keeping the latter for internal consistency in V1, however it should be
+        /// corrected in V2.  See
+        /// https://cloud.google.com/apis/design/standard_methods#update for details.
+        /// </summary>
+        /// <param name="request">
+        /// The request object containing all of the parameters for the API call.
+        /// </param>
+        /// <param name="callSettings">
+        /// If not null, applies overrides to this RPC call.
+        /// </param>
+        /// <returns>
+        /// The RPC response.
+        /// </returns>
+        public virtual Topic UpdateTopic(
+            UpdateTopicRequest request,
+            CallSettings callSettings = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Adds one or more messages to the topic. Returns `NOT_FOUND` if the topic
         /// does not exist. The message payload must not be empty; it must contain
         ///  either a non-empty data field, or at least one attribute.
@@ -684,8 +776,8 @@ namespace Google.Cloud.PubSub.V1
             CallSettings callSettings = null) => PublishAsync(
                 new PublishRequest
                 {
-                    TopicAsTopicName = topic,
-                    Messages = { messages },
+                    TopicAsTopicName = GaxPreconditions.CheckNotNull(topic, nameof(topic)),
+                    Messages = { GaxPreconditions.CheckNotNull(messages, nameof(messages)) },
                 },
                 callSettings);
 
@@ -739,8 +831,8 @@ namespace Google.Cloud.PubSub.V1
             CallSettings callSettings = null) => Publish(
                 new PublishRequest
                 {
-                    TopicAsTopicName = topic,
-                    Messages = { messages },
+                    TopicAsTopicName = GaxPreconditions.CheckNotNull(topic, nameof(topic)),
+                    Messages = { GaxPreconditions.CheckNotNull(messages, nameof(messages)) },
                 },
                 callSettings);
 
@@ -804,7 +896,7 @@ namespace Google.Cloud.PubSub.V1
             CallSettings callSettings = null) => GetTopicAsync(
                 new GetTopicRequest
                 {
-                    TopicAsTopicName = topic,
+                    TopicAsTopicName = GaxPreconditions.CheckNotNull(topic, nameof(topic)),
                 },
                 callSettings);
 
@@ -845,7 +937,7 @@ namespace Google.Cloud.PubSub.V1
             CallSettings callSettings = null) => GetTopic(
                 new GetTopicRequest
                 {
-                    TopicAsTopicName = topic,
+                    TopicAsTopicName = GaxPreconditions.CheckNotNull(topic, nameof(topic)),
                 },
                 callSettings);
 
@@ -915,7 +1007,7 @@ namespace Google.Cloud.PubSub.V1
             CallSettings callSettings = null) => ListTopicsAsync(
                 new ListTopicsRequest
                 {
-                    ProjectAsProjectName = project,
+                    ProjectAsProjectName = GaxPreconditions.CheckNotNull(project, nameof(project)),
                     PageToken = pageToken ?? "",
                     PageSize = pageSize ?? 0,
                 },
@@ -949,7 +1041,7 @@ namespace Google.Cloud.PubSub.V1
             CallSettings callSettings = null) => ListTopics(
                 new ListTopicsRequest
                 {
-                    ProjectAsProjectName = project,
+                    ProjectAsProjectName = GaxPreconditions.CheckNotNull(project, nameof(project)),
                     PageToken = pageToken ?? "",
                     PageSize = pageSize ?? 0,
                 },
@@ -1021,7 +1113,7 @@ namespace Google.Cloud.PubSub.V1
             CallSettings callSettings = null) => ListTopicSubscriptionsAsync(
                 new ListTopicSubscriptionsRequest
                 {
-                    TopicAsTopicName = topic,
+                    TopicAsTopicName = GaxPreconditions.CheckNotNull(topic, nameof(topic)),
                     PageToken = pageToken ?? "",
                     PageSize = pageSize ?? 0,
                 },
@@ -1055,7 +1147,7 @@ namespace Google.Cloud.PubSub.V1
             CallSettings callSettings = null) => ListTopicSubscriptions(
                 new ListTopicSubscriptionsRequest
                 {
-                    TopicAsTopicName = topic,
+                    TopicAsTopicName = GaxPreconditions.CheckNotNull(topic, nameof(topic)),
                     PageToken = pageToken ?? "",
                     PageSize = pageSize ?? 0,
                 },
@@ -1121,7 +1213,7 @@ namespace Google.Cloud.PubSub.V1
             CallSettings callSettings = null) => DeleteTopicAsync(
                 new DeleteTopicRequest
                 {
-                    TopicAsTopicName = topic,
+                    TopicAsTopicName = GaxPreconditions.CheckNotNull(topic, nameof(topic)),
                 },
                 callSettings);
 
@@ -1170,7 +1262,7 @@ namespace Google.Cloud.PubSub.V1
             CallSettings callSettings = null) => DeleteTopic(
                 new DeleteTopicRequest
                 {
-                    TopicAsTopicName = topic,
+                    TopicAsTopicName = GaxPreconditions.CheckNotNull(topic, nameof(topic)),
                 },
                 callSettings);
 
@@ -1247,8 +1339,8 @@ namespace Google.Cloud.PubSub.V1
             CallSettings callSettings = null) => SetIamPolicyAsync(
                 new SetIamPolicyRequest
                 {
-                    Resource = resource,
-                    Policy = policy,
+                    Resource = GaxPreconditions.CheckNotNullOrEmpty(resource, nameof(resource)),
+                    Policy = GaxPreconditions.CheckNotNull(policy, nameof(policy)),
                 },
                 callSettings);
 
@@ -1308,8 +1400,8 @@ namespace Google.Cloud.PubSub.V1
             CallSettings callSettings = null) => SetIamPolicy(
                 new SetIamPolicyRequest
                 {
-                    Resource = resource,
-                    Policy = policy,
+                    Resource = GaxPreconditions.CheckNotNullOrEmpty(resource, nameof(resource)),
+                    Policy = GaxPreconditions.CheckNotNull(policy, nameof(policy)),
                 },
                 callSettings);
 
@@ -1374,7 +1466,7 @@ namespace Google.Cloud.PubSub.V1
             CallSettings callSettings = null) => GetIamPolicyAsync(
                 new GetIamPolicyRequest
                 {
-                    Resource = resource,
+                    Resource = GaxPreconditions.CheckNotNullOrEmpty(resource, nameof(resource)),
                 },
                 callSettings);
 
@@ -1421,7 +1513,7 @@ namespace Google.Cloud.PubSub.V1
             CallSettings callSettings = null) => GetIamPolicy(
                 new GetIamPolicyRequest
                 {
-                    Resource = resource,
+                    Resource = GaxPreconditions.CheckNotNullOrEmpty(resource, nameof(resource)),
                 },
                 callSettings);
 
@@ -1495,8 +1587,8 @@ namespace Google.Cloud.PubSub.V1
             CallSettings callSettings = null) => TestIamPermissionsAsync(
                 new TestIamPermissionsRequest
                 {
-                    Resource = resource,
-                    Permissions = { permissions },
+                    Resource = GaxPreconditions.CheckNotNullOrEmpty(resource, nameof(resource)),
+                    Permissions = { GaxPreconditions.CheckNotNull(permissions, nameof(permissions)) },
                 },
                 callSettings);
 
@@ -1558,8 +1650,8 @@ namespace Google.Cloud.PubSub.V1
             CallSettings callSettings = null) => TestIamPermissions(
                 new TestIamPermissionsRequest
                 {
-                    Resource = resource,
-                    Permissions = { permissions },
+                    Resource = GaxPreconditions.CheckNotNullOrEmpty(resource, nameof(resource)),
+                    Permissions = { GaxPreconditions.CheckNotNull(permissions, nameof(permissions)) },
                 },
                 callSettings);
 
@@ -1612,8 +1704,8 @@ namespace Google.Cloud.PubSub.V1
     /// </summary>
     public sealed partial class PublisherClientImpl : PublisherClient
     {
-        private readonly ClientHelper _clientHelper;
         private readonly ApiCall<Topic, Topic> _callCreateTopic;
+        private readonly ApiCall<UpdateTopicRequest, Topic> _callUpdateTopic;
         private readonly ApiCall<PublishRequest, PublishResponse> _callPublish;
         private readonly ApiCall<GetTopicRequest, Topic> _callGetTopic;
         private readonly ApiCall<ListTopicsRequest, ListTopicsResponse> _callListTopics;
@@ -1632,27 +1724,32 @@ namespace Google.Cloud.PubSub.V1
         {
             this.GrpcClient = grpcClient;
             PublisherSettings effectiveSettings = settings ?? PublisherSettings.GetDefault();
-            _clientHelper = new ClientHelper(effectiveSettings);
+            ClientHelper clientHelper = new ClientHelper(effectiveSettings);
             var grpcIAMPolicyClient = grpcClient.CreateIAMPolicyClient();
-            _callCreateTopic = _clientHelper.BuildApiCall<Topic, Topic>(
+            _callCreateTopic = clientHelper.BuildApiCall<Topic, Topic>(
                 GrpcClient.CreateTopicAsync, GrpcClient.CreateTopic, effectiveSettings.CreateTopicSettings);
-            _callPublish = _clientHelper.BuildApiCall<PublishRequest, PublishResponse>(
+            _callUpdateTopic = clientHelper.BuildApiCall<UpdateTopicRequest, Topic>(
+                GrpcClient.UpdateTopicAsync, GrpcClient.UpdateTopic, effectiveSettings.UpdateTopicSettings);
+            _callPublish = clientHelper.BuildApiCall<PublishRequest, PublishResponse>(
                 GrpcClient.PublishAsync, GrpcClient.Publish, effectiveSettings.PublishSettings);
-            _callGetTopic = _clientHelper.BuildApiCall<GetTopicRequest, Topic>(
+            _callGetTopic = clientHelper.BuildApiCall<GetTopicRequest, Topic>(
                 GrpcClient.GetTopicAsync, GrpcClient.GetTopic, effectiveSettings.GetTopicSettings);
-            _callListTopics = _clientHelper.BuildApiCall<ListTopicsRequest, ListTopicsResponse>(
+            _callListTopics = clientHelper.BuildApiCall<ListTopicsRequest, ListTopicsResponse>(
                 GrpcClient.ListTopicsAsync, GrpcClient.ListTopics, effectiveSettings.ListTopicsSettings);
-            _callListTopicSubscriptions = _clientHelper.BuildApiCall<ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse>(
+            _callListTopicSubscriptions = clientHelper.BuildApiCall<ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse>(
                 GrpcClient.ListTopicSubscriptionsAsync, GrpcClient.ListTopicSubscriptions, effectiveSettings.ListTopicSubscriptionsSettings);
-            _callDeleteTopic = _clientHelper.BuildApiCall<DeleteTopicRequest, Empty>(
+            _callDeleteTopic = clientHelper.BuildApiCall<DeleteTopicRequest, Empty>(
                 GrpcClient.DeleteTopicAsync, GrpcClient.DeleteTopic, effectiveSettings.DeleteTopicSettings);
-            _callSetIamPolicy = _clientHelper.BuildApiCall<SetIamPolicyRequest, Policy>(
+            _callSetIamPolicy = clientHelper.BuildApiCall<SetIamPolicyRequest, Policy>(
                 grpcIAMPolicyClient.SetIamPolicyAsync, grpcIAMPolicyClient.SetIamPolicy, effectiveSettings.SetIamPolicySettings);
-            _callGetIamPolicy = _clientHelper.BuildApiCall<GetIamPolicyRequest, Policy>(
+            _callGetIamPolicy = clientHelper.BuildApiCall<GetIamPolicyRequest, Policy>(
                 grpcIAMPolicyClient.GetIamPolicyAsync, grpcIAMPolicyClient.GetIamPolicy, effectiveSettings.GetIamPolicySettings);
-            _callTestIamPermissions = _clientHelper.BuildApiCall<TestIamPermissionsRequest, TestIamPermissionsResponse>(
+            _callTestIamPermissions = clientHelper.BuildApiCall<TestIamPermissionsRequest, TestIamPermissionsResponse>(
                 grpcIAMPolicyClient.TestIamPermissionsAsync, grpcIAMPolicyClient.TestIamPermissions, effectiveSettings.TestIamPermissionsSettings);
+            OnConstruction(grpcClient, effectiveSettings, clientHelper);
         }
+
+        partial void OnConstruction(Publisher.PublisherClient grpcClient, PublisherSettings effectiveSettings, ClientHelper clientHelper);
 
         /// <summary>
         /// The underlying gRPC Publisher client.
@@ -1661,6 +1758,7 @@ namespace Google.Cloud.PubSub.V1
 
         // Partial modifier methods contain '_' to ensure no name conflicts with RPC methods.
         partial void Modify_Topic(ref Topic request, ref CallSettings settings);
+        partial void Modify_UpdateTopicRequest(ref UpdateTopicRequest request, ref CallSettings settings);
         partial void Modify_PublishRequest(ref PublishRequest request, ref CallSettings settings);
         partial void Modify_GetTopicRequest(ref GetTopicRequest request, ref CallSettings settings);
         partial void Modify_ListTopicsRequest(ref ListTopicsRequest request, ref CallSettings settings);
@@ -1708,6 +1806,56 @@ namespace Google.Cloud.PubSub.V1
         {
             Modify_Topic(ref request, ref callSettings);
             return _callCreateTopic.Sync(request, callSettings);
+        }
+
+        /// <summary>
+        /// Updates an existing topic. Note that certain properties of a topic are not
+        /// modifiable.  Options settings follow the style guide:
+        /// NOTE:  The style guide requires body: "topic" instead of body: "*".
+        /// Keeping the latter for internal consistency in V1, however it should be
+        /// corrected in V2.  See
+        /// https://cloud.google.com/apis/design/standard_methods#update for details.
+        /// </summary>
+        /// <param name="request">
+        /// The request object containing all of the parameters for the API call.
+        /// </param>
+        /// <param name="callSettings">
+        /// If not null, applies overrides to this RPC call.
+        /// </param>
+        /// <returns>
+        /// A Task containing the RPC response.
+        /// </returns>
+        public override Task<Topic> UpdateTopicAsync(
+            UpdateTopicRequest request,
+            CallSettings callSettings = null)
+        {
+            Modify_UpdateTopicRequest(ref request, ref callSettings);
+            return _callUpdateTopic.Async(request, callSettings);
+        }
+
+        /// <summary>
+        /// Updates an existing topic. Note that certain properties of a topic are not
+        /// modifiable.  Options settings follow the style guide:
+        /// NOTE:  The style guide requires body: "topic" instead of body: "*".
+        /// Keeping the latter for internal consistency in V1, however it should be
+        /// corrected in V2.  See
+        /// https://cloud.google.com/apis/design/standard_methods#update for details.
+        /// </summary>
+        /// <param name="request">
+        /// The request object containing all of the parameters for the API call.
+        /// </param>
+        /// <param name="callSettings">
+        /// If not null, applies overrides to this RPC call.
+        /// </param>
+        /// <returns>
+        /// The RPC response.
+        /// </returns>
+        public override Topic UpdateTopic(
+            UpdateTopicRequest request,
+            CallSettings callSettings = null)
+        {
+            Modify_UpdateTopicRequest(ref request, ref callSettings);
+            return _callUpdateTopic.Sync(request, callSettings);
         }
 
         /// <summary>

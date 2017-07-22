@@ -61,6 +61,18 @@ namespace Google.Cloud.Storage.V1
         /// </summary>
         public RangeHeaderValue Range { get; set; }
 
+        /// <summary>
+        /// The encryption key to use for this operation. If this property is null, the <see cref="StorageClient.EncryptionKey"/>
+        /// will be used instead. Use <see cref="EncryptionKey.None"/> to remove encryption headers from this request.
+        /// </summary>
+        public EncryptionKey EncryptionKey { get; set; }
+
+        /// <summary>
+        /// If set, this is the ID of the project which will be billed for the request, for requester-pays buckets.
+        /// The caller must have suitable permissions for the project being billed.
+        /// </summary>
+        public string UserProject { get; set; }
+
         internal void ModifyDownloader(MediaDownloader downloader)
         {
             if (ChunkSize != null)
@@ -97,10 +109,14 @@ namespace Google.Cloud.Storage.V1
             uri = MaybeAppendParameter(uri, "ifGenerationNotMatch", IfGenerationNotMatch);
             uri = MaybeAppendParameter(uri, "ifMetagenerationMatch", IfMetagenerationMatch);
             uri = MaybeAppendParameter(uri, "ifMetagenerationNotMatch", IfMetagenerationNotMatch);
+            uri = MaybeAppendParameter(uri, "userProject", UserProject);
             return uri;
         }
 
         private static string MaybeAppendParameter(string uri, string name, long? value) =>
             value == null ? uri : $"{uri}&{name}={value.Value.ToString(CultureInfo.InvariantCulture)}";
+
+        private static string MaybeAppendParameter(string uri, string name, string value) =>
+            value == null ? uri : $"{uri}&{name}={Uri.EscapeDataString(value)}";
     }
 }

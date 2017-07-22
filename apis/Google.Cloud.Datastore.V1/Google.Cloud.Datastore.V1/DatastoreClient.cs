@@ -1,4 +1,4 @@
-// Copyright 2016, Google Inc. All rights reserved.
+// Copyright 2017, Google Inc. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -55,7 +55,10 @@ namespace Google.Cloud.Datastore.V1
             CommitSettings = existing.CommitSettings;
             RollbackSettings = existing.RollbackSettings;
             AllocateIdsSettings = existing.AllocateIdsSettings;
+            OnCopy(existing);
         }
+
+        partial void OnCopy(DatastoreSettings existing);
 
         /// <summary>
         /// The filter specifying which RPC <see cref="StatusCode"/>s are eligible for retry
@@ -423,9 +426,9 @@ namespace Google.Cloud.Datastore.V1
             CallSettings callSettings = null) => LookupAsync(
                 new LookupRequest
                 {
-                    ProjectId = projectId,
-                    ReadOptions = readOptions,
-                    Keys = { keys },
+                    ProjectId = GaxPreconditions.CheckNotNullOrEmpty(projectId, nameof(projectId)),
+                    ReadOptions = readOptions, // Optional
+                    Keys = { GaxPreconditions.CheckNotNull(keys, nameof(keys)) },
                 },
                 callSettings);
 
@@ -482,9 +485,9 @@ namespace Google.Cloud.Datastore.V1
             CallSettings callSettings = null) => Lookup(
                 new LookupRequest
                 {
-                    ProjectId = projectId,
-                    ReadOptions = readOptions,
-                    Keys = { keys },
+                    ProjectId = GaxPreconditions.CheckNotNullOrEmpty(projectId, nameof(projectId)),
+                    ReadOptions = readOptions, // Optional
+                    Keys = { GaxPreconditions.CheckNotNull(keys, nameof(keys)) },
                 },
                 callSettings);
 
@@ -525,234 +528,6 @@ namespace Google.Cloud.Datastore.V1
         {
             throw new NotImplementedException();
         }
-
-        /// <summary>
-        /// Queries for entities.
-        /// </summary>
-        /// <param name="projectId">
-        /// The ID of the project against which to make the request.
-        /// </param>
-        /// <param name="partitionId">
-        /// Entities are partitioned into subsets, identified by a partition ID.
-        /// Queries are scoped to a single partition.
-        /// This partition ID is normalized with the standard default context
-        /// partition ID.
-        /// </param>
-        /// <param name="readOptions">
-        /// The options for this query.
-        /// </param>
-        /// <param name="query">
-        /// The query to run.
-        /// </param>
-        /// <param name="callSettings">
-        /// If not null, applies overrides to this RPC call.
-        /// </param>
-        /// <returns>
-        /// A Task containing the RPC response.
-        /// </returns>
-        public virtual Task<RunQueryResponse> RunQueryAsync(
-            string projectId,
-            PartitionId partitionId,
-            ReadOptions readOptions,
-            Query query,
-            CallSettings callSettings = null) => RunQueryAsync(
-                new RunQueryRequest
-                {
-                    ProjectId = projectId,
-                    PartitionId = partitionId,
-                    ReadOptions = readOptions,
-                    Query = query,
-                },
-                callSettings);
-
-        /// <summary>
-        /// Queries for entities.
-        /// </summary>
-        /// <param name="projectId">
-        /// The ID of the project against which to make the request.
-        /// </param>
-        /// <param name="partitionId">
-        /// Entities are partitioned into subsets, identified by a partition ID.
-        /// Queries are scoped to a single partition.
-        /// This partition ID is normalized with the standard default context
-        /// partition ID.
-        /// </param>
-        /// <param name="readOptions">
-        /// The options for this query.
-        /// </param>
-        /// <param name="query">
-        /// The query to run.
-        /// </param>
-        /// <param name="cancellationToken">
-        /// A <see cref="CancellationToken"/> to use for this RPC.
-        /// </param>
-        /// <returns>
-        /// A Task containing the RPC response.
-        /// </returns>
-        public virtual Task<RunQueryResponse> RunQueryAsync(
-            string projectId,
-            PartitionId partitionId,
-            ReadOptions readOptions,
-            Query query,
-            CancellationToken cancellationToken) => RunQueryAsync(
-                projectId,
-                partitionId,
-                readOptions,
-                query,
-                CallSettings.FromCancellationToken(cancellationToken));
-
-        /// <summary>
-        /// Queries for entities.
-        /// </summary>
-        /// <param name="projectId">
-        /// The ID of the project against which to make the request.
-        /// </param>
-        /// <param name="partitionId">
-        /// Entities are partitioned into subsets, identified by a partition ID.
-        /// Queries are scoped to a single partition.
-        /// This partition ID is normalized with the standard default context
-        /// partition ID.
-        /// </param>
-        /// <param name="readOptions">
-        /// The options for this query.
-        /// </param>
-        /// <param name="query">
-        /// The query to run.
-        /// </param>
-        /// <param name="callSettings">
-        /// If not null, applies overrides to this RPC call.
-        /// </param>
-        /// <returns>
-        /// The RPC response.
-        /// </returns>
-        public virtual RunQueryResponse RunQuery(
-            string projectId,
-            PartitionId partitionId,
-            ReadOptions readOptions,
-            Query query,
-            CallSettings callSettings = null) => RunQuery(
-                new RunQueryRequest
-                {
-                    ProjectId = projectId,
-                    PartitionId = partitionId,
-                    ReadOptions = readOptions,
-                    Query = query,
-                },
-                callSettings);
-
-        /// <summary>
-        /// Queries for entities.
-        /// </summary>
-        /// <param name="projectId">
-        /// The ID of the project against which to make the request.
-        /// </param>
-        /// <param name="partitionId">
-        /// Entities are partitioned into subsets, identified by a partition ID.
-        /// Queries are scoped to a single partition.
-        /// This partition ID is normalized with the standard default context
-        /// partition ID.
-        /// </param>
-        /// <param name="readOptions">
-        /// The options for this query.
-        /// </param>
-        /// <param name="gqlQuery">
-        /// The GQL query to run.
-        /// </param>
-        /// <param name="callSettings">
-        /// If not null, applies overrides to this RPC call.
-        /// </param>
-        /// <returns>
-        /// A Task containing the RPC response.
-        /// </returns>
-        public virtual Task<RunQueryResponse> RunQueryAsync(
-            string projectId,
-            PartitionId partitionId,
-            ReadOptions readOptions,
-            GqlQuery gqlQuery,
-            CallSettings callSettings = null) => RunQueryAsync(
-                new RunQueryRequest
-                {
-                    ProjectId = projectId,
-                    PartitionId = partitionId,
-                    ReadOptions = readOptions,
-                    GqlQuery = gqlQuery,
-                },
-                callSettings);
-
-        /// <summary>
-        /// Queries for entities.
-        /// </summary>
-        /// <param name="projectId">
-        /// The ID of the project against which to make the request.
-        /// </param>
-        /// <param name="partitionId">
-        /// Entities are partitioned into subsets, identified by a partition ID.
-        /// Queries are scoped to a single partition.
-        /// This partition ID is normalized with the standard default context
-        /// partition ID.
-        /// </param>
-        /// <param name="readOptions">
-        /// The options for this query.
-        /// </param>
-        /// <param name="gqlQuery">
-        /// The GQL query to run.
-        /// </param>
-        /// <param name="cancellationToken">
-        /// A <see cref="CancellationToken"/> to use for this RPC.
-        /// </param>
-        /// <returns>
-        /// A Task containing the RPC response.
-        /// </returns>
-        public virtual Task<RunQueryResponse> RunQueryAsync(
-            string projectId,
-            PartitionId partitionId,
-            ReadOptions readOptions,
-            GqlQuery gqlQuery,
-            CancellationToken cancellationToken) => RunQueryAsync(
-                projectId,
-                partitionId,
-                readOptions,
-                gqlQuery,
-                CallSettings.FromCancellationToken(cancellationToken));
-
-        /// <summary>
-        /// Queries for entities.
-        /// </summary>
-        /// <param name="projectId">
-        /// The ID of the project against which to make the request.
-        /// </param>
-        /// <param name="partitionId">
-        /// Entities are partitioned into subsets, identified by a partition ID.
-        /// Queries are scoped to a single partition.
-        /// This partition ID is normalized with the standard default context
-        /// partition ID.
-        /// </param>
-        /// <param name="readOptions">
-        /// The options for this query.
-        /// </param>
-        /// <param name="gqlQuery">
-        /// The GQL query to run.
-        /// </param>
-        /// <param name="callSettings">
-        /// If not null, applies overrides to this RPC call.
-        /// </param>
-        /// <returns>
-        /// The RPC response.
-        /// </returns>
-        public virtual RunQueryResponse RunQuery(
-            string projectId,
-            PartitionId partitionId,
-            ReadOptions readOptions,
-            GqlQuery gqlQuery,
-            CallSettings callSettings = null) => RunQuery(
-                new RunQueryRequest
-                {
-                    ProjectId = projectId,
-                    PartitionId = partitionId,
-                    ReadOptions = readOptions,
-                    GqlQuery = gqlQuery,
-                },
-                callSettings);
 
         /// <summary>
         /// Queries for entities.
@@ -809,7 +584,7 @@ namespace Google.Cloud.Datastore.V1
             CallSettings callSettings = null) => BeginTransactionAsync(
                 new BeginTransactionRequest
                 {
-                    ProjectId = projectId,
+                    ProjectId = GaxPreconditions.CheckNotNullOrEmpty(projectId, nameof(projectId)),
                 },
                 callSettings);
 
@@ -848,7 +623,7 @@ namespace Google.Cloud.Datastore.V1
             CallSettings callSettings = null) => BeginTransaction(
                 new BeginTransactionRequest
                 {
-                    ProjectId = projectId,
+                    ProjectId = GaxPreconditions.CheckNotNullOrEmpty(projectId, nameof(projectId)),
                 },
                 callSettings);
 
@@ -934,10 +709,10 @@ namespace Google.Cloud.Datastore.V1
             CallSettings callSettings = null) => CommitAsync(
                 new CommitRequest
                 {
-                    ProjectId = projectId,
+                    ProjectId = GaxPreconditions.CheckNotNullOrEmpty(projectId, nameof(projectId)),
                     Mode = mode,
-                    Transaction = transaction,
-                    Mutations = { mutations },
+                    Transaction = transaction ?? ByteString.Empty, // Optional
+                    Mutations = { GaxPreconditions.CheckNotNull(mutations, nameof(mutations)) },
                 },
                 callSettings);
 
@@ -1033,10 +808,10 @@ namespace Google.Cloud.Datastore.V1
             CallSettings callSettings = null) => Commit(
                 new CommitRequest
                 {
-                    ProjectId = projectId,
+                    ProjectId = GaxPreconditions.CheckNotNullOrEmpty(projectId, nameof(projectId)),
                     Mode = mode,
-                    Transaction = transaction,
-                    Mutations = { mutations },
+                    Transaction = transaction ?? ByteString.Empty, // Optional
+                    Mutations = { GaxPreconditions.CheckNotNull(mutations, nameof(mutations)) },
                 },
                 callSettings);
 
@@ -1078,9 +853,9 @@ namespace Google.Cloud.Datastore.V1
             CallSettings callSettings = null) => CommitAsync(
                 new CommitRequest
                 {
-                    ProjectId = projectId,
+                    ProjectId = GaxPreconditions.CheckNotNullOrEmpty(projectId, nameof(projectId)),
                     Mode = mode,
-                    Mutations = { mutations },
+                    Mutations = { GaxPreconditions.CheckNotNull(mutations, nameof(mutations)) },
                 },
                 callSettings);
 
@@ -1163,9 +938,9 @@ namespace Google.Cloud.Datastore.V1
             CallSettings callSettings = null) => Commit(
                 new CommitRequest
                 {
-                    ProjectId = projectId,
+                    ProjectId = GaxPreconditions.CheckNotNullOrEmpty(projectId, nameof(projectId)),
                     Mode = mode,
-                    Mutations = { mutations },
+                    Mutations = { GaxPreconditions.CheckNotNull(mutations, nameof(mutations)) },
                 },
                 callSettings);
 
@@ -1231,8 +1006,8 @@ namespace Google.Cloud.Datastore.V1
             CallSettings callSettings = null) => RollbackAsync(
                 new RollbackRequest
                 {
-                    ProjectId = projectId,
-                    Transaction = transaction,
+                    ProjectId = GaxPreconditions.CheckNotNullOrEmpty(projectId, nameof(projectId)),
+                    Transaction = GaxPreconditions.CheckNotNull(transaction, nameof(transaction)),
                 },
                 callSettings);
 
@@ -1282,8 +1057,8 @@ namespace Google.Cloud.Datastore.V1
             CallSettings callSettings = null) => Rollback(
                 new RollbackRequest
                 {
-                    ProjectId = projectId,
-                    Transaction = transaction,
+                    ProjectId = GaxPreconditions.CheckNotNullOrEmpty(projectId, nameof(projectId)),
+                    Transaction = GaxPreconditions.CheckNotNull(transaction, nameof(transaction)),
                 },
                 callSettings);
 
@@ -1348,8 +1123,8 @@ namespace Google.Cloud.Datastore.V1
             CallSettings callSettings = null) => AllocateIdsAsync(
                 new AllocateIdsRequest
                 {
-                    ProjectId = projectId,
-                    Keys = { keys },
+                    ProjectId = GaxPreconditions.CheckNotNullOrEmpty(projectId, nameof(projectId)),
+                    Keys = { GaxPreconditions.CheckNotNull(keys, nameof(keys)) },
                 },
                 callSettings);
 
@@ -1401,8 +1176,8 @@ namespace Google.Cloud.Datastore.V1
             CallSettings callSettings = null) => AllocateIds(
                 new AllocateIdsRequest
                 {
-                    ProjectId = projectId,
-                    Keys = { keys },
+                    ProjectId = GaxPreconditions.CheckNotNullOrEmpty(projectId, nameof(projectId)),
+                    Keys = { GaxPreconditions.CheckNotNull(keys, nameof(keys)) },
                 },
                 callSettings);
 
@@ -1453,7 +1228,6 @@ namespace Google.Cloud.Datastore.V1
     /// </summary>
     public sealed partial class DatastoreClientImpl : DatastoreClient
     {
-        private readonly ClientHelper _clientHelper;
         private readonly ApiCall<LookupRequest, LookupResponse> _callLookup;
         private readonly ApiCall<RunQueryRequest, RunQueryResponse> _callRunQuery;
         private readonly ApiCall<BeginTransactionRequest, BeginTransactionResponse> _callBeginTransaction;
@@ -1470,20 +1244,23 @@ namespace Google.Cloud.Datastore.V1
         {
             this.GrpcClient = grpcClient;
             DatastoreSettings effectiveSettings = settings ?? DatastoreSettings.GetDefault();
-            _clientHelper = new ClientHelper(effectiveSettings);
-            _callLookup = _clientHelper.BuildApiCall<LookupRequest, LookupResponse>(
+            ClientHelper clientHelper = new ClientHelper(effectiveSettings);
+            _callLookup = clientHelper.BuildApiCall<LookupRequest, LookupResponse>(
                 GrpcClient.LookupAsync, GrpcClient.Lookup, effectiveSettings.LookupSettings);
-            _callRunQuery = _clientHelper.BuildApiCall<RunQueryRequest, RunQueryResponse>(
+            _callRunQuery = clientHelper.BuildApiCall<RunQueryRequest, RunQueryResponse>(
                 GrpcClient.RunQueryAsync, GrpcClient.RunQuery, effectiveSettings.RunQuerySettings);
-            _callBeginTransaction = _clientHelper.BuildApiCall<BeginTransactionRequest, BeginTransactionResponse>(
+            _callBeginTransaction = clientHelper.BuildApiCall<BeginTransactionRequest, BeginTransactionResponse>(
                 GrpcClient.BeginTransactionAsync, GrpcClient.BeginTransaction, effectiveSettings.BeginTransactionSettings);
-            _callCommit = _clientHelper.BuildApiCall<CommitRequest, CommitResponse>(
+            _callCommit = clientHelper.BuildApiCall<CommitRequest, CommitResponse>(
                 GrpcClient.CommitAsync, GrpcClient.Commit, effectiveSettings.CommitSettings);
-            _callRollback = _clientHelper.BuildApiCall<RollbackRequest, RollbackResponse>(
+            _callRollback = clientHelper.BuildApiCall<RollbackRequest, RollbackResponse>(
                 GrpcClient.RollbackAsync, GrpcClient.Rollback, effectiveSettings.RollbackSettings);
-            _callAllocateIds = _clientHelper.BuildApiCall<AllocateIdsRequest, AllocateIdsResponse>(
+            _callAllocateIds = clientHelper.BuildApiCall<AllocateIdsRequest, AllocateIdsResponse>(
                 GrpcClient.AllocateIdsAsync, GrpcClient.AllocateIds, effectiveSettings.AllocateIdsSettings);
+            OnConstruction(grpcClient, effectiveSettings, clientHelper);
         }
+
+        partial void OnConstruction(Datastore.DatastoreClient grpcClient, DatastoreSettings effectiveSettings, ClientHelper clientHelper);
 
         /// <summary>
         /// The underlying gRPC Datastore client.

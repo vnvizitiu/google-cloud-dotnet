@@ -35,46 +35,52 @@ namespace Google.Cloud.Logging.V2 {
             "RW50cmllc1JlcXVlc3QuTGFiZWxzRW50cnkSLAoHZW50cmllcxgEIAMoCzIb",
             "Lmdvb2dsZS5sb2dnaW5nLnYyLkxvZ0VudHJ5EhcKD3BhcnRpYWxfc3VjY2Vz",
             "cxgFIAEoCBotCgtMYWJlbHNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUY",
-            "AiABKAk6AjgBIhkKF1dyaXRlTG9nRW50cmllc1Jlc3BvbnNlIo0BChVMaXN0",
-            "TG9nRW50cmllc1JlcXVlc3QSEwoLcHJvamVjdF9pZHMYASADKAkSFgoOcmVz",
-            "b3VyY2VfbmFtZXMYCCADKAkSDgoGZmlsdGVyGAIgASgJEhAKCG9yZGVyX2J5",
-            "GAMgASgJEhEKCXBhZ2Vfc2l6ZRgEIAEoBRISCgpwYWdlX3Rva2VuGAUgASgJ",
-            "Il8KFkxpc3RMb2dFbnRyaWVzUmVzcG9uc2USLAoHZW50cmllcxgBIAMoCzIb",
-            "Lmdvb2dsZS5sb2dnaW5nLnYyLkxvZ0VudHJ5EhcKD25leHRfcGFnZV90b2tl",
-            "bhgCIAEoCSJQCidMaXN0TW9uaXRvcmVkUmVzb3VyY2VEZXNjcmlwdG9yc1Jl",
-            "cXVlc3QSEQoJcGFnZV9zaXplGAEgASgFEhIKCnBhZ2VfdG9rZW4YAiABKAki",
-            "igEKKExpc3RNb25pdG9yZWRSZXNvdXJjZURlc2NyaXB0b3JzUmVzcG9uc2US",
-            "RQoUcmVzb3VyY2VfZGVzY3JpcHRvcnMYASADKAsyJy5nb29nbGUuYXBpLk1v",
-            "bml0b3JlZFJlc291cmNlRGVzY3JpcHRvchIXCg9uZXh0X3BhZ2VfdG9rZW4Y",
-            "AiABKAkiSAoPTGlzdExvZ3NSZXF1ZXN0Eg4KBnBhcmVudBgBIAEoCRIRCglw",
-            "YWdlX3NpemUYAiABKAUSEgoKcGFnZV90b2tlbhgDIAEoCSI+ChBMaXN0TG9n",
-            "c1Jlc3BvbnNlEhEKCWxvZ19uYW1lcxgDIAMoCRIXCg9uZXh0X3BhZ2VfdG9r",
-            "ZW4YAiABKAky3AUKEExvZ2dpbmdTZXJ2aWNlVjISdwoJRGVsZXRlTG9nEiMu",
-            "Z29vZ2xlLmxvZ2dpbmcudjIuRGVsZXRlTG9nUmVxdWVzdBoWLmdvb2dsZS5w",
-            "cm90b2J1Zi5FbXB0eSItgtPkkwInKiUvdjJiZXRhMS97bG9nX25hbWU9cHJv",
-            "amVjdHMvKi9sb2dzLyp9EoYBCg9Xcml0ZUxvZ0VudHJpZXMSKS5nb29nbGUu",
-            "bG9nZ2luZy52Mi5Xcml0ZUxvZ0VudHJpZXNSZXF1ZXN0GiouZ29vZ2xlLmxv",
-            "Z2dpbmcudjIuV3JpdGVMb2dFbnRyaWVzUmVzcG9uc2UiHILT5JMCFiIRL3Yy",
-            "L2VudHJpZXM6d3JpdGU6ASoSggEKDkxpc3RMb2dFbnRyaWVzEiguZ29vZ2xl",
-            "LmxvZ2dpbmcudjIuTGlzdExvZ0VudHJpZXNSZXF1ZXN0GikuZ29vZ2xlLmxv",
-            "Z2dpbmcudjIuTGlzdExvZ0VudHJpZXNSZXNwb25zZSIbgtPkkwIVIhAvdjIv",
-            "ZW50cmllczpsaXN0OgEqEsUBCiBMaXN0TW9uaXRvcmVkUmVzb3VyY2VEZXNj",
-            "cmlwdG9ycxI6Lmdvb2dsZS5sb2dnaW5nLnYyLkxpc3RNb25pdG9yZWRSZXNv",
-            "dXJjZURlc2NyaXB0b3JzUmVxdWVzdBo7Lmdvb2dsZS5sb2dnaW5nLnYyLkxp",
-            "c3RNb25pdG9yZWRSZXNvdXJjZURlc2NyaXB0b3JzUmVzcG9uc2UiKILT5JMC",
-            "IhIgL3YyL21vbml0b3JlZFJlc291cmNlRGVzY3JpcHRvcnMSeQoITGlzdExv",
-            "Z3MSIi5nb29nbGUubG9nZ2luZy52Mi5MaXN0TG9nc1JlcXVlc3QaIy5nb29n",
-            "bGUubG9nZ2luZy52Mi5MaXN0TG9nc1Jlc3BvbnNlIiSC0+STAh4SHC92Mi97",
-            "cGFyZW50PXByb2plY3RzLyp9L2xvZ3NCfgoVY29tLmdvb2dsZS5sb2dnaW5n",
-            "LnYyQgxMb2dnaW5nUHJvdG9QAVo4Z29vZ2xlLmdvbGFuZy5vcmcvZ2VucHJv",
-            "dG8vZ29vZ2xlYXBpcy9sb2dnaW5nL3YyO2xvZ2dpbmf4AQGqAhdHb29nbGUu",
-            "Q2xvdWQuTG9nZ2luZy5WMmIGcHJvdG8z"));
+            "AiABKAk6AjgBIhkKF1dyaXRlTG9nRW50cmllc1Jlc3BvbnNlIsgBChxXcml0",
+            "ZUxvZ0VudHJpZXNQYXJ0aWFsRXJyb3JzEl0KEGxvZ19lbnRyeV9lcnJvcnMY",
+            "ASADKAsyQy5nb29nbGUubG9nZ2luZy52Mi5Xcml0ZUxvZ0VudHJpZXNQYXJ0",
+            "aWFsRXJyb3JzLkxvZ0VudHJ5RXJyb3JzRW50cnkaSQoTTG9nRW50cnlFcnJv",
+            "cnNFbnRyeRILCgNrZXkYASABKAUSIQoFdmFsdWUYAiABKAsyEi5nb29nbGUu",
+            "cnBjLlN0YXR1czoCOAEijQEKFUxpc3RMb2dFbnRyaWVzUmVxdWVzdBITCgtw",
+            "cm9qZWN0X2lkcxgBIAMoCRIWCg5yZXNvdXJjZV9uYW1lcxgIIAMoCRIOCgZm",
+            "aWx0ZXIYAiABKAkSEAoIb3JkZXJfYnkYAyABKAkSEQoJcGFnZV9zaXplGAQg",
+            "ASgFEhIKCnBhZ2VfdG9rZW4YBSABKAkiXwoWTGlzdExvZ0VudHJpZXNSZXNw",
+            "b25zZRIsCgdlbnRyaWVzGAEgAygLMhsuZ29vZ2xlLmxvZ2dpbmcudjIuTG9n",
+            "RW50cnkSFwoPbmV4dF9wYWdlX3Rva2VuGAIgASgJIlAKJ0xpc3RNb25pdG9y",
+            "ZWRSZXNvdXJjZURlc2NyaXB0b3JzUmVxdWVzdBIRCglwYWdlX3NpemUYASAB",
+            "KAUSEgoKcGFnZV90b2tlbhgCIAEoCSKKAQooTGlzdE1vbml0b3JlZFJlc291",
+            "cmNlRGVzY3JpcHRvcnNSZXNwb25zZRJFChRyZXNvdXJjZV9kZXNjcmlwdG9y",
+            "cxgBIAMoCzInLmdvb2dsZS5hcGkuTW9uaXRvcmVkUmVzb3VyY2VEZXNjcmlw",
+            "dG9yEhcKD25leHRfcGFnZV90b2tlbhgCIAEoCSJICg9MaXN0TG9nc1JlcXVl",
+            "c3QSDgoGcGFyZW50GAEgASgJEhEKCXBhZ2Vfc2l6ZRgCIAEoBRISCgpwYWdl",
+            "X3Rva2VuGAMgASgJIj4KEExpc3RMb2dzUmVzcG9uc2USEQoJbG9nX25hbWVz",
+            "GAMgAygJEhcKD25leHRfcGFnZV90b2tlbhgCIAEoCTLcBQoQTG9nZ2luZ1Nl",
+            "cnZpY2VWMhJ3CglEZWxldGVMb2cSIy5nb29nbGUubG9nZ2luZy52Mi5EZWxl",
+            "dGVMb2dSZXF1ZXN0GhYuZ29vZ2xlLnByb3RvYnVmLkVtcHR5Ii2C0+STAicq",
+            "JS92MmJldGExL3tsb2dfbmFtZT1wcm9qZWN0cy8qL2xvZ3MvKn0ShgEKD1dy",
+            "aXRlTG9nRW50cmllcxIpLmdvb2dsZS5sb2dnaW5nLnYyLldyaXRlTG9nRW50",
+            "cmllc1JlcXVlc3QaKi5nb29nbGUubG9nZ2luZy52Mi5Xcml0ZUxvZ0VudHJp",
+            "ZXNSZXNwb25zZSIcgtPkkwIWIhEvdjIvZW50cmllczp3cml0ZToBKhKCAQoO",
+            "TGlzdExvZ0VudHJpZXMSKC5nb29nbGUubG9nZ2luZy52Mi5MaXN0TG9nRW50",
+            "cmllc1JlcXVlc3QaKS5nb29nbGUubG9nZ2luZy52Mi5MaXN0TG9nRW50cmll",
+            "c1Jlc3BvbnNlIhuC0+STAhUiEC92Mi9lbnRyaWVzOmxpc3Q6ASoSxQEKIExp",
+            "c3RNb25pdG9yZWRSZXNvdXJjZURlc2NyaXB0b3JzEjouZ29vZ2xlLmxvZ2dp",
+            "bmcudjIuTGlzdE1vbml0b3JlZFJlc291cmNlRGVzY3JpcHRvcnNSZXF1ZXN0",
+            "GjsuZ29vZ2xlLmxvZ2dpbmcudjIuTGlzdE1vbml0b3JlZFJlc291cmNlRGVz",
+            "Y3JpcHRvcnNSZXNwb25zZSIogtPkkwIiEiAvdjIvbW9uaXRvcmVkUmVzb3Vy",
+            "Y2VEZXNjcmlwdG9ycxJ5CghMaXN0TG9ncxIiLmdvb2dsZS5sb2dnaW5nLnYy",
+            "Lkxpc3RMb2dzUmVxdWVzdBojLmdvb2dsZS5sb2dnaW5nLnYyLkxpc3RMb2dz",
+            "UmVzcG9uc2UiJILT5JMCHhIcL3YyL3twYXJlbnQ9cHJvamVjdHMvKn0vbG9n",
+            "c0J+ChVjb20uZ29vZ2xlLmxvZ2dpbmcudjJCDExvZ2dpbmdQcm90b1ABWjhn",
+            "b29nbGUuZ29sYW5nLm9yZy9nZW5wcm90by9nb29nbGVhcGlzL2xvZ2dpbmcv",
+            "djI7bG9nZ2luZ/gBAaoCF0dvb2dsZS5DbG91ZC5Mb2dnaW5nLlYyYgZwcm90",
+            "bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, global::Google.Api.MonitoredResourceReflection.Descriptor, global::Google.Cloud.Logging.V2.LogEntryReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.DurationReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.EmptyReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, global::Google.Rpc.StatusReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Cloud.Logging.V2.DeleteLogRequest), global::Google.Cloud.Logging.V2.DeleteLogRequest.Parser, new[]{ "LogName" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Cloud.Logging.V2.WriteLogEntriesRequest), global::Google.Cloud.Logging.V2.WriteLogEntriesRequest.Parser, new[]{ "LogName", "Resource", "Labels", "Entries", "PartialSuccess" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Cloud.Logging.V2.WriteLogEntriesResponse), global::Google.Cloud.Logging.V2.WriteLogEntriesResponse.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Google.Cloud.Logging.V2.WriteLogEntriesPartialErrors), global::Google.Cloud.Logging.V2.WriteLogEntriesPartialErrors.Parser, new[]{ "LogEntryErrors" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Cloud.Logging.V2.ListLogEntriesRequest), global::Google.Cloud.Logging.V2.ListLogEntriesRequest.Parser, new[]{ "ProjectIds", "ResourceNames", "Filter", "OrderBy", "PageSize", "PageToken" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Cloud.Logging.V2.ListLogEntriesResponse), global::Google.Cloud.Logging.V2.ListLogEntriesResponse.Parser, new[]{ "Entries", "NextPageToken" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Cloud.Logging.V2.ListMonitoredResourceDescriptorsRequest), global::Google.Cloud.Logging.V2.ListMonitoredResourceDescriptorsRequest.Parser, new[]{ "PageSize", "PageToken" }, null, null, null),
@@ -88,7 +94,7 @@ namespace Google.Cloud.Logging.V2 {
   }
   #region Messages
   /// <summary>
-  ///  The parameters to DeleteLog.
+  /// The parameters to DeleteLog.
   /// </summary>
   public sealed partial class DeleteLogRequest : pb::IMessage<DeleteLogRequest> {
     private static readonly pb::MessageParser<DeleteLogRequest> _parser = new pb::MessageParser<DeleteLogRequest>(() => new DeleteLogRequest());
@@ -126,16 +132,18 @@ namespace Google.Cloud.Logging.V2 {
     public const int LogNameFieldNumber = 1;
     private string logName_ = "";
     /// <summary>
-    ///  Required. The resource name of the log to delete:
+    /// Required. The resource name of the log to delete:
     ///
-    ///      "projects/[PROJECT_ID]/logs/[LOG_ID]"
-    ///      "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
+    ///     "projects/[PROJECT_ID]/logs/[LOG_ID]"
+    ///     "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
+    ///     "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
+    ///     "folders/[FOLDER_ID]/logs/[LOG_ID]"
     ///
-    ///  `[LOG_ID]` must be URL-encoded. For example,
-    ///  `"projects/my-project-id/logs/syslog"`,
-    ///  `"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
-    ///  For more information about log names, see
-    ///  [LogEntry][google.logging.v2.LogEntry].
+    /// `[LOG_ID]` must be URL-encoded. For example,
+    /// `"projects/my-project-id/logs/syslog"`,
+    /// `"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
+    /// For more information about log names, see
+    /// [LogEntry][google.logging.v2.LogEntry].
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string LogName {
@@ -220,7 +228,7 @@ namespace Google.Cloud.Logging.V2 {
   }
 
   /// <summary>
-  ///  The parameters to WriteLogEntries.
+  /// The parameters to WriteLogEntries.
   /// </summary>
   public sealed partial class WriteLogEntriesRequest : pb::IMessage<WriteLogEntriesRequest> {
     private static readonly pb::MessageParser<WriteLogEntriesRequest> _parser = new pb::MessageParser<WriteLogEntriesRequest>(() => new WriteLogEntriesRequest());
@@ -262,17 +270,19 @@ namespace Google.Cloud.Logging.V2 {
     public const int LogNameFieldNumber = 1;
     private string logName_ = "";
     /// <summary>
-    ///  Optional. A default log resource name that is assigned to all log entries
-    ///  in `entries` that do not specify a value for `log_name`:
+    /// Optional. A default log resource name that is assigned to all log entries
+    /// in `entries` that do not specify a value for `log_name`:
     ///
-    ///      "projects/[PROJECT_ID]/logs/[LOG_ID]"
-    ///      "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
+    ///     "projects/[PROJECT_ID]/logs/[LOG_ID]"
+    ///     "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
+    ///     "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
+    ///     "folders/[FOLDER_ID]/logs/[LOG_ID]"
     ///
-    ///  `[LOG_ID]` must be URL-encoded. For example,
-    ///  `"projects/my-project-id/logs/syslog"` or
-    ///  `"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
-    ///  For more information about log names, see
-    ///  [LogEntry][google.logging.v2.LogEntry].
+    /// `[LOG_ID]` must be URL-encoded. For example,
+    /// `"projects/my-project-id/logs/syslog"` or
+    /// `"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
+    /// For more information about log names, see
+    /// [LogEntry][google.logging.v2.LogEntry].
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string LogName {
@@ -286,14 +296,14 @@ namespace Google.Cloud.Logging.V2 {
     public const int ResourceFieldNumber = 2;
     private global::Google.Api.MonitoredResource resource_;
     /// <summary>
-    ///  Optional. A default monitored resource object that is assigned to all log
-    ///  entries in `entries` that do not specify a value for `resource`. Example:
+    /// Optional. A default monitored resource object that is assigned to all log
+    /// entries in `entries` that do not specify a value for `resource`. Example:
     ///
-    ///      { "type": "gce_instance",
-    ///        "labels": {
-    ///          "zone": "us-central1-a", "instance_id": "00000000000000000000" }}
+    ///     { "type": "gce_instance",
+    ///       "labels": {
+    ///         "zone": "us-central1-a", "instance_id": "00000000000000000000" }}
     ///
-    ///  See [LogEntry][google.logging.v2.LogEntry].
+    /// See [LogEntry][google.logging.v2.LogEntry].
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::Google.Api.MonitoredResource Resource {
@@ -309,10 +319,10 @@ namespace Google.Cloud.Logging.V2 {
         = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10), pb::FieldCodec.ForString(18), 26);
     private readonly pbc::MapField<string, string> labels_ = new pbc::MapField<string, string>();
     /// <summary>
-    ///  Optional. Default labels that are added to the `labels` field of all log
-    ///  entries in `entries`. If a log entry already has a label with the same key
-    ///  as a label in this parameter, then the log entry's label is not changed.
-    ///  See [LogEntry][google.logging.v2.LogEntry].
+    /// Optional. Default labels that are added to the `labels` field of all log
+    /// entries in `entries`. If a log entry already has a label with the same key
+    /// as a label in this parameter, then the log entry's label is not changed.
+    /// See [LogEntry][google.logging.v2.LogEntry].
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::MapField<string, string> Labels {
@@ -325,15 +335,21 @@ namespace Google.Cloud.Logging.V2 {
         = pb::FieldCodec.ForMessage(34, global::Google.Cloud.Logging.V2.LogEntry.Parser);
     private readonly pbc::RepeatedField<global::Google.Cloud.Logging.V2.LogEntry> entries_ = new pbc::RepeatedField<global::Google.Cloud.Logging.V2.LogEntry>();
     /// <summary>
-    ///  Required. The log entries to write. Values supplied for the fields
-    ///  `log_name`, `resource`, and `labels` in this `entries.write` request are
-    ///  added to those log entries that do not provide their own values for the
-    ///  fields.
+    /// Required.  The log entries to write. Values supplied for the fields
+    /// `log_name`, `resource`, and `labels` in this `entries.write` request are
+    /// inserted into those log entries in this list that do not provide their own
+    /// values.
     ///
-    ///  To improve throughput and to avoid exceeding the
-    ///  [quota limit](/logging/quota-policy) for calls to `entries.write`,
-    ///  you should write multiple log entries at once rather than
-    ///  calling this method for each individual log entry.
+    /// Stackdriver Logging also creates and inserts values for `timestamp` and
+    /// `insert_id` if the entries do not provide them. The created `insert_id` for
+    /// the N'th entry in this list will be greater than earlier entries and less
+    /// than later entries.  Otherwise, the order of log entries in this list does
+    /// not matter.
+    ///
+    /// To improve throughput and to avoid exceeding the
+    /// [quota limit](/logging/quota-policy) for calls to `entries.write`,
+    /// you should write multiple log entries at once rather than
+    /// calling this method for each individual log entry.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::Google.Cloud.Logging.V2.LogEntry> Entries {
@@ -344,11 +360,11 @@ namespace Google.Cloud.Logging.V2 {
     public const int PartialSuccessFieldNumber = 5;
     private bool partialSuccess_;
     /// <summary>
-    ///  Optional. Whether valid entries should be written even if some other
-    ///  entries fail due to INVALID_ARGUMENT or PERMISSION_DENIED errors. If any
-    ///  entry is not written, the response status will be the error associated
-    ///  with one of the failed entries and include error details in the form of
-    ///  WriteLogEntriesPartialErrors.
+    /// Optional. Whether valid entries should be written even if some other
+    /// entries fail due to INVALID_ARGUMENT or PERMISSION_DENIED errors. If any
+    /// entry is not written, then the response status is the error associated
+    /// with one of the failed entries and the response includes error details
+    /// keyed by the entries' zero-based index in the `entries.write` method.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public bool PartialSuccess {
@@ -489,8 +505,8 @@ namespace Google.Cloud.Logging.V2 {
   }
 
   /// <summary>
-  ///  Result returned from WriteLogEntries.
-  ///  empty
+  /// Result returned from WriteLogEntries.
+  /// empty
   /// </summary>
   public sealed partial class WriteLogEntriesResponse : pb::IMessage<WriteLogEntriesResponse> {
     private static readonly pb::MessageParser<WriteLogEntriesResponse> _parser = new pb::MessageParser<WriteLogEntriesResponse>(() => new WriteLogEntriesResponse());
@@ -582,7 +598,127 @@ namespace Google.Cloud.Logging.V2 {
   }
 
   /// <summary>
-  ///  The parameters to `ListLogEntries`.
+  /// Error details for WriteLogEntries with partial success.
+  /// </summary>
+  public sealed partial class WriteLogEntriesPartialErrors : pb::IMessage<WriteLogEntriesPartialErrors> {
+    private static readonly pb::MessageParser<WriteLogEntriesPartialErrors> _parser = new pb::MessageParser<WriteLogEntriesPartialErrors>(() => new WriteLogEntriesPartialErrors());
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<WriteLogEntriesPartialErrors> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Google.Cloud.Logging.V2.LoggingReflection.Descriptor.MessageTypes[3]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public WriteLogEntriesPartialErrors() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public WriteLogEntriesPartialErrors(WriteLogEntriesPartialErrors other) : this() {
+      logEntryErrors_ = other.logEntryErrors_.Clone();
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public WriteLogEntriesPartialErrors Clone() {
+      return new WriteLogEntriesPartialErrors(this);
+    }
+
+    /// <summary>Field number for the "log_entry_errors" field.</summary>
+    public const int LogEntryErrorsFieldNumber = 1;
+    private static readonly pbc::MapField<int, global::Google.Rpc.Status>.Codec _map_logEntryErrors_codec
+        = new pbc::MapField<int, global::Google.Rpc.Status>.Codec(pb::FieldCodec.ForInt32(8), pb::FieldCodec.ForMessage(18, global::Google.Rpc.Status.Parser), 10);
+    private readonly pbc::MapField<int, global::Google.Rpc.Status> logEntryErrors_ = new pbc::MapField<int, global::Google.Rpc.Status>();
+    /// <summary>
+    /// When `WriteLogEntriesRequest.partial_success` is true, records the error
+    /// status for entries that were not written due to a permanent error, keyed
+    /// by the entry's zero-based index in `WriteLogEntriesRequest.entries`.
+    ///
+    /// Failed requests for which no entries are written will not include
+    /// per-entry errors.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::MapField<int, global::Google.Rpc.Status> LogEntryErrors {
+      get { return logEntryErrors_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as WriteLogEntriesPartialErrors);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(WriteLogEntriesPartialErrors other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!LogEntryErrors.Equals(other.LogEntryErrors)) return false;
+      return true;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      hash ^= LogEntryErrors.GetHashCode();
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      logEntryErrors_.WriteTo(output, _map_logEntryErrors_codec);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      size += logEntryErrors_.CalculateSize(_map_logEntryErrors_codec);
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(WriteLogEntriesPartialErrors other) {
+      if (other == null) {
+        return;
+      }
+      logEntryErrors_.Add(other.logEntryErrors_);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 10: {
+            logEntryErrors_.AddEntriesFrom(input, _map_logEntryErrors_codec);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  /// <summary>
+  /// The parameters to `ListLogEntries`.
   /// </summary>
   public sealed partial class ListLogEntriesRequest : pb::IMessage<ListLogEntriesRequest> {
     private static readonly pb::MessageParser<ListLogEntriesRequest> _parser = new pb::MessageParser<ListLogEntriesRequest>(() => new ListLogEntriesRequest());
@@ -591,7 +727,7 @@ namespace Google.Cloud.Logging.V2 {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Google.Cloud.Logging.V2.LoggingReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Google.Cloud.Logging.V2.LoggingReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -627,11 +763,11 @@ namespace Google.Cloud.Logging.V2 {
         = pb::FieldCodec.ForString(10);
     private readonly pbc::RepeatedField<string> projectIds_ = new pbc::RepeatedField<string>();
     /// <summary>
-    ///  Deprecated. Use `resource_names` instead.  One or more project identifiers
-    ///  or project numbers from which to retrieve log entries.  Example:
-    ///  `"my-project-1A"`. If present, these project identifiers are converted to
-    ///  resource name format and added to the list of resources in
-    ///  `resource_names`.
+    /// Deprecated. Use `resource_names` instead.  One or more project identifiers
+    /// or project numbers from which to retrieve log entries.  Example:
+    /// `"my-project-1A"`. If present, these project identifiers are converted to
+    /// resource name format and added to the list of resources in
+    /// `resource_names`.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<string> ProjectIds {
@@ -644,13 +780,15 @@ namespace Google.Cloud.Logging.V2 {
         = pb::FieldCodec.ForString(66);
     private readonly pbc::RepeatedField<string> resourceNames_ = new pbc::RepeatedField<string>();
     /// <summary>
-    ///  Required. Names of one or more resources from which to retrieve log
-    ///  entries:
+    /// Required. Names of one or more parent resources from which to
+    /// retrieve log entries:
     ///
-    ///      "projects/[PROJECT_ID]"
-    ///      "organizations/[ORGANIZATION_ID]"
+    ///     "projects/[PROJECT_ID]"
+    ///     "organizations/[ORGANIZATION_ID]"
+    ///     "billingAccounts/[BILLING_ACCOUNT_ID]"
+    ///     "folders/[FOLDER_ID]"
     ///
-    ///  Projects listed in the `project_ids` field are added to this list.
+    /// Projects listed in the `project_ids` field are added to this list.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<string> ResourceNames {
@@ -661,13 +799,13 @@ namespace Google.Cloud.Logging.V2 {
     public const int FilterFieldNumber = 2;
     private string filter_ = "";
     /// <summary>
-    ///  Optional. A filter that chooses which log entries to return.  See [Advanced
-    ///  Logs Filters](/logging/docs/view/advanced_filters).  Only log entries that
-    ///  match the filter are returned.  An empty filter matches all log entries in
-    ///  the resources listed in `resource_names`. Referencing a parent resource
-    ///  that is not listed in `resource_names` will cause the filter to return no
-    ///  results.
-    ///  The maximum length of the filter is 20000 characters.
+    /// Optional. A filter that chooses which log entries to return.  See [Advanced
+    /// Logs Filters](/logging/docs/view/advanced_filters).  Only log entries that
+    /// match the filter are returned.  An empty filter matches all log entries in
+    /// the resources listed in `resource_names`. Referencing a parent resource
+    /// that is not listed in `resource_names` will cause the filter to return no
+    /// results.
+    /// The maximum length of the filter is 20000 characters.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string Filter {
@@ -681,12 +819,12 @@ namespace Google.Cloud.Logging.V2 {
     public const int OrderByFieldNumber = 3;
     private string orderBy_ = "";
     /// <summary>
-    ///  Optional. How the results should be sorted.  Presently, the only permitted
-    ///  values are `"timestamp asc"` (default) and `"timestamp desc"`. The first
-    ///  option returns entries in order of increasing values of
-    ///  `LogEntry.timestamp` (oldest first), and the second option returns entries
-    ///  in order of decreasing timestamps (newest first).  Entries with equal
-    ///  timestamps are returned in order of `LogEntry.insertId`.
+    /// Optional. How the results should be sorted.  Presently, the only permitted
+    /// values are `"timestamp asc"` (default) and `"timestamp desc"`. The first
+    /// option returns entries in order of increasing values of
+    /// `LogEntry.timestamp` (oldest first), and the second option returns entries
+    /// in order of decreasing timestamps (newest first).  Entries with equal
+    /// timestamps are returned in order of their `insert_id` values.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string OrderBy {
@@ -700,9 +838,9 @@ namespace Google.Cloud.Logging.V2 {
     public const int PageSizeFieldNumber = 4;
     private int pageSize_;
     /// <summary>
-    ///  Optional. The maximum number of results to return from this request.
-    ///  Non-positive values are ignored.  The presence of `nextPageToken` in the
-    ///  response indicates that more results might be available.
+    /// Optional. The maximum number of results to return from this request.
+    /// Non-positive values are ignored.  The presence of `next_page_token` in the
+    /// response indicates that more results might be available.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int PageSize {
@@ -716,10 +854,10 @@ namespace Google.Cloud.Logging.V2 {
     public const int PageTokenFieldNumber = 5;
     private string pageToken_ = "";
     /// <summary>
-    ///  Optional. If present, then retrieve the next batch of results from the
-    ///  preceding call to this method.  `pageToken` must be the value of
-    ///  `nextPageToken` from the previous response.  The values of other method
-    ///  parameters should be identical to those in the previous call.
+    /// Optional. If present, then retrieve the next batch of results from the
+    /// preceding call to this method.  `page_token` must be the value of
+    /// `next_page_token` from the previous response.  The values of other method
+    /// parameters should be identical to those in the previous call.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string PageToken {
@@ -870,7 +1008,7 @@ namespace Google.Cloud.Logging.V2 {
   }
 
   /// <summary>
-  ///  Result returned from `ListLogEntries`.
+  /// Result returned from `ListLogEntries`.
   /// </summary>
   public sealed partial class ListLogEntriesResponse : pb::IMessage<ListLogEntriesResponse> {
     private static readonly pb::MessageParser<ListLogEntriesResponse> _parser = new pb::MessageParser<ListLogEntriesResponse>(() => new ListLogEntriesResponse());
@@ -879,7 +1017,7 @@ namespace Google.Cloud.Logging.V2 {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Google.Cloud.Logging.V2.LoggingReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Google.Cloud.Logging.V2.LoggingReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -911,7 +1049,7 @@ namespace Google.Cloud.Logging.V2 {
         = pb::FieldCodec.ForMessage(10, global::Google.Cloud.Logging.V2.LogEntry.Parser);
     private readonly pbc::RepeatedField<global::Google.Cloud.Logging.V2.LogEntry> entries_ = new pbc::RepeatedField<global::Google.Cloud.Logging.V2.LogEntry>();
     /// <summary>
-    ///  A list of log entries.
+    /// A list of log entries.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::Google.Cloud.Logging.V2.LogEntry> Entries {
@@ -922,16 +1060,16 @@ namespace Google.Cloud.Logging.V2 {
     public const int NextPageTokenFieldNumber = 2;
     private string nextPageToken_ = "";
     /// <summary>
-    ///  If there might be more results than those appearing in this response, then
-    ///  `nextPageToken` is included.  To get the next set of results, call this
-    ///  method again using the value of `nextPageToken` as `pageToken`.
+    /// If there might be more results than those appearing in this response, then
+    /// `nextPageToken` is included.  To get the next set of results, call this
+    /// method again using the value of `nextPageToken` as `pageToken`.
     ///
-    ///  If a value for `next_page_token` appears and the `entries` field is empty,
-    ///  it means that the search found no log entries so far but it did not have
-    ///  time to search all the possible log entries.  Retry the method with this
-    ///  value for `page_token` to continue the search.  Alternatively, consider
-    ///  speeding up the search by changing your filter to specify a single log name
-    ///  or resource type, or to narrow the time range of the search.
+    /// If a value for `next_page_token` appears and the `entries` field is empty,
+    /// it means that the search found no log entries so far but it did not have
+    /// time to search all the possible log entries.  Retry the method with this
+    /// value for `page_token` to continue the search.  Alternatively, consider
+    /// speeding up the search by changing your filter to specify a single log name
+    /// or resource type, or to narrow the time range of the search.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string NextPageToken {
@@ -1025,7 +1163,7 @@ namespace Google.Cloud.Logging.V2 {
   }
 
   /// <summary>
-  ///  The parameters to ListMonitoredResourceDescriptors
+  /// The parameters to ListMonitoredResourceDescriptors
   /// </summary>
   public sealed partial class ListMonitoredResourceDescriptorsRequest : pb::IMessage<ListMonitoredResourceDescriptorsRequest> {
     private static readonly pb::MessageParser<ListMonitoredResourceDescriptorsRequest> _parser = new pb::MessageParser<ListMonitoredResourceDescriptorsRequest>(() => new ListMonitoredResourceDescriptorsRequest());
@@ -1034,7 +1172,7 @@ namespace Google.Cloud.Logging.V2 {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Google.Cloud.Logging.V2.LoggingReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Google.Cloud.Logging.V2.LoggingReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1064,9 +1202,9 @@ namespace Google.Cloud.Logging.V2 {
     public const int PageSizeFieldNumber = 1;
     private int pageSize_;
     /// <summary>
-    ///  Optional. The maximum number of results to return from this request.
-    ///  Non-positive values are ignored.  The presence of `nextPageToken` in the
-    ///  response indicates that more results might be available.
+    /// Optional. The maximum number of results to return from this request.
+    /// Non-positive values are ignored.  The presence of `nextPageToken` in the
+    /// response indicates that more results might be available.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int PageSize {
@@ -1080,10 +1218,10 @@ namespace Google.Cloud.Logging.V2 {
     public const int PageTokenFieldNumber = 2;
     private string pageToken_ = "";
     /// <summary>
-    ///  Optional. If present, then retrieve the next batch of results from the
-    ///  preceding call to this method.  `pageToken` must be the value of
-    ///  `nextPageToken` from the previous response.  The values of other method
-    ///  parameters should be identical to those in the previous call.
+    /// Optional. If present, then retrieve the next batch of results from the
+    /// preceding call to this method.  `pageToken` must be the value of
+    /// `nextPageToken` from the previous response.  The values of other method
+    /// parameters should be identical to those in the previous call.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string PageToken {
@@ -1184,7 +1322,7 @@ namespace Google.Cloud.Logging.V2 {
   }
 
   /// <summary>
-  ///  Result returned from ListMonitoredResourceDescriptors.
+  /// Result returned from ListMonitoredResourceDescriptors.
   /// </summary>
   public sealed partial class ListMonitoredResourceDescriptorsResponse : pb::IMessage<ListMonitoredResourceDescriptorsResponse> {
     private static readonly pb::MessageParser<ListMonitoredResourceDescriptorsResponse> _parser = new pb::MessageParser<ListMonitoredResourceDescriptorsResponse>(() => new ListMonitoredResourceDescriptorsResponse());
@@ -1193,7 +1331,7 @@ namespace Google.Cloud.Logging.V2 {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Google.Cloud.Logging.V2.LoggingReflection.Descriptor.MessageTypes[6]; }
+      get { return global::Google.Cloud.Logging.V2.LoggingReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1225,7 +1363,7 @@ namespace Google.Cloud.Logging.V2 {
         = pb::FieldCodec.ForMessage(10, global::Google.Api.MonitoredResourceDescriptor.Parser);
     private readonly pbc::RepeatedField<global::Google.Api.MonitoredResourceDescriptor> resourceDescriptors_ = new pbc::RepeatedField<global::Google.Api.MonitoredResourceDescriptor>();
     /// <summary>
-    ///  A list of resource descriptors.
+    /// A list of resource descriptors.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<global::Google.Api.MonitoredResourceDescriptor> ResourceDescriptors {
@@ -1236,9 +1374,9 @@ namespace Google.Cloud.Logging.V2 {
     public const int NextPageTokenFieldNumber = 2;
     private string nextPageToken_ = "";
     /// <summary>
-    ///  If there might be more results than those appearing in this response, then
-    ///  `nextPageToken` is included.  To get the next set of results, call this
-    ///  method again using the value of `nextPageToken` as `pageToken`.
+    /// If there might be more results than those appearing in this response, then
+    /// `nextPageToken` is included.  To get the next set of results, call this
+    /// method again using the value of `nextPageToken` as `pageToken`.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string NextPageToken {
@@ -1332,7 +1470,7 @@ namespace Google.Cloud.Logging.V2 {
   }
 
   /// <summary>
-  ///  The parameters to ListLogs.
+  /// The parameters to ListLogs.
   /// </summary>
   public sealed partial class ListLogsRequest : pb::IMessage<ListLogsRequest> {
     private static readonly pb::MessageParser<ListLogsRequest> _parser = new pb::MessageParser<ListLogsRequest>(() => new ListLogsRequest());
@@ -1341,7 +1479,7 @@ namespace Google.Cloud.Logging.V2 {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Google.Cloud.Logging.V2.LoggingReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Google.Cloud.Logging.V2.LoggingReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1372,10 +1510,12 @@ namespace Google.Cloud.Logging.V2 {
     public const int ParentFieldNumber = 1;
     private string parent_ = "";
     /// <summary>
-    ///  Required. The resource name that owns the logs:
+    /// Required. The resource name that owns the logs:
     ///
-    ///      "projects/[PROJECT_ID]"
-    ///      "organizations/[ORGANIZATION_ID]"
+    ///     "projects/[PROJECT_ID]"
+    ///     "organizations/[ORGANIZATION_ID]"
+    ///     "billingAccounts/[BILLING_ACCOUNT_ID]"
+    ///     "folders/[FOLDER_ID]"
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string Parent {
@@ -1389,9 +1529,9 @@ namespace Google.Cloud.Logging.V2 {
     public const int PageSizeFieldNumber = 2;
     private int pageSize_;
     /// <summary>
-    ///  Optional. The maximum number of results to return from this request.
-    ///  Non-positive values are ignored.  The presence of `nextPageToken` in the
-    ///  response indicates that more results might be available.
+    /// Optional. The maximum number of results to return from this request.
+    /// Non-positive values are ignored.  The presence of `nextPageToken` in the
+    /// response indicates that more results might be available.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int PageSize {
@@ -1405,10 +1545,10 @@ namespace Google.Cloud.Logging.V2 {
     public const int PageTokenFieldNumber = 3;
     private string pageToken_ = "";
     /// <summary>
-    ///  Optional. If present, then retrieve the next batch of results from the
-    ///  preceding call to this method.  `pageToken` must be the value of
-    ///  `nextPageToken` from the previous response.  The values of other method
-    ///  parameters should be identical to those in the previous call.
+    /// Optional. If present, then retrieve the next batch of results from the
+    /// preceding call to this method.  `pageToken` must be the value of
+    /// `nextPageToken` from the previous response.  The values of other method
+    /// parameters should be identical to those in the previous call.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string PageToken {
@@ -1525,7 +1665,7 @@ namespace Google.Cloud.Logging.V2 {
   }
 
   /// <summary>
-  ///  Result returned from ListLogs.
+  /// Result returned from ListLogs.
   /// </summary>
   public sealed partial class ListLogsResponse : pb::IMessage<ListLogsResponse> {
     private static readonly pb::MessageParser<ListLogsResponse> _parser = new pb::MessageParser<ListLogsResponse>(() => new ListLogsResponse());
@@ -1534,7 +1674,7 @@ namespace Google.Cloud.Logging.V2 {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Google.Cloud.Logging.V2.LoggingReflection.Descriptor.MessageTypes[8]; }
+      get { return global::Google.Cloud.Logging.V2.LoggingReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1566,9 +1706,9 @@ namespace Google.Cloud.Logging.V2 {
         = pb::FieldCodec.ForString(26);
     private readonly pbc::RepeatedField<string> logNames_ = new pbc::RepeatedField<string>();
     /// <summary>
-    ///  A list of log names. For example,
-    ///  `"projects/my-project/syslog"` or
-    ///  `"organizations/123/cloudresourcemanager.googleapis.com%2Factivity"`.
+    /// A list of log names. For example,
+    /// `"projects/my-project/syslog"` or
+    /// `"organizations/123/cloudresourcemanager.googleapis.com%2Factivity"`.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<string> LogNames {
@@ -1579,9 +1719,9 @@ namespace Google.Cloud.Logging.V2 {
     public const int NextPageTokenFieldNumber = 2;
     private string nextPageToken_ = "";
     /// <summary>
-    ///  If there might be more results than those appearing in this response, then
-    ///  `nextPageToken` is included.  To get the next set of results, call this
-    ///  method again using the value of `nextPageToken` as `pageToken`.
+    /// If there might be more results than those appearing in this response, then
+    /// `nextPageToken` is included.  To get the next set of results, call this
+    /// method again using the value of `nextPageToken` as `pageToken`.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string NextPageToken {

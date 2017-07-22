@@ -1,4 +1,4 @@
-// Copyright 2016, Google Inc. All rights reserved.
+// Copyright 2017, Google Inc. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -53,7 +53,10 @@ namespace Google.Cloud.Logging.V2
             CreateSinkSettings = existing.CreateSinkSettings;
             UpdateSinkSettings = existing.UpdateSinkSettings;
             DeleteSinkSettings = existing.DeleteSinkSettings;
+            OnCopy(existing);
         }
+
+        partial void OnCopy(ConfigServiceV2Settings existing);
 
         /// <summary>
         /// The filter specifying which RPC <see cref="StatusCode"/>s are eligible for retry
@@ -63,11 +66,12 @@ namespace Google.Cloud.Logging.V2
         /// The eligible RPC <see cref="StatusCode"/>s for retry for "Idempotent" RPC methods are:
         /// <list type="bullet">
         /// <item><description><see cref="StatusCode.DeadlineExceeded"/></description></item>
+        /// <item><description><see cref="StatusCode.Internal"/></description></item>
         /// <item><description><see cref="StatusCode.Unavailable"/></description></item>
         /// </list>
         /// </remarks>
         public static Predicate<RpcException> IdempotentRetryFilter { get; } =
-            RetrySettings.FilterForStatusCodes(StatusCode.DeadlineExceeded, StatusCode.Unavailable);
+            RetrySettings.FilterForStatusCodes(StatusCode.DeadlineExceeded, StatusCode.Internal, StatusCode.Unavailable);
 
         /// <summary>
         /// The filter specifying which RPC <see cref="StatusCode"/>s are eligible for retry
@@ -137,6 +141,7 @@ namespace Google.Cloud.Logging.V2
         /// Retry will be attempted on the following response status codes:
         /// <list>
         /// <item><description><see cref="StatusCode.DeadlineExceeded"/></description></item>
+        /// <item><description><see cref="StatusCode.Internal"/></description></item>
         /// <item><description><see cref="StatusCode.Unavailable"/></description></item>
         /// </list>
         /// Default RPC expiration is 45000 milliseconds.
@@ -167,6 +172,7 @@ namespace Google.Cloud.Logging.V2
         /// Retry will be attempted on the following response status codes:
         /// <list>
         /// <item><description><see cref="StatusCode.DeadlineExceeded"/></description></item>
+        /// <item><description><see cref="StatusCode.Internal"/></description></item>
         /// <item><description><see cref="StatusCode.Unavailable"/></description></item>
         /// </list>
         /// Default RPC expiration is 45000 milliseconds.
@@ -255,6 +261,7 @@ namespace Google.Cloud.Logging.V2
         /// Retry will be attempted on the following response status codes:
         /// <list>
         /// <item><description><see cref="StatusCode.DeadlineExceeded"/></description></item>
+        /// <item><description><see cref="StatusCode.Internal"/></description></item>
         /// <item><description><see cref="StatusCode.Unavailable"/></description></item>
         /// </list>
         /// Default RPC expiration is 45000 milliseconds.
@@ -378,8 +385,12 @@ namespace Google.Cloud.Logging.V2
         /// Lists sinks.
         /// </summary>
         /// <param name="parent">
-        /// Required. The parent resource whose sinks are to be listed.
-        /// Examples: `"projects/my-logging-project"`, `"organizations/123456789"`.
+        /// Required. The parent resource whose sinks are to be listed:
+        ///
+        ///     "projects/[PROJECT_ID]"
+        ///     "organizations/[ORGANIZATION_ID]"
+        ///     "billingAccounts/[BILLING_ACCOUNT_ID]"
+        ///     "folders/[FOLDER_ID]"
         /// </param>
         /// <param name="pageToken">
         /// The token returned from the previous request.
@@ -402,7 +413,7 @@ namespace Google.Cloud.Logging.V2
             CallSettings callSettings = null) => ListSinksAsync(
                 new ListSinksRequest
                 {
-                    ParentAsParentNameOneof = parent,
+                    ParentAsParentNameOneof = GaxPreconditions.CheckNotNull(parent, nameof(parent)),
                     PageToken = pageToken ?? "",
                     PageSize = pageSize ?? 0,
                 },
@@ -412,8 +423,12 @@ namespace Google.Cloud.Logging.V2
         /// Lists sinks.
         /// </summary>
         /// <param name="parent">
-        /// Required. The parent resource whose sinks are to be listed.
-        /// Examples: `"projects/my-logging-project"`, `"organizations/123456789"`.
+        /// Required. The parent resource whose sinks are to be listed:
+        ///
+        ///     "projects/[PROJECT_ID]"
+        ///     "organizations/[ORGANIZATION_ID]"
+        ///     "billingAccounts/[BILLING_ACCOUNT_ID]"
+        ///     "folders/[FOLDER_ID]"
         /// </param>
         /// <param name="pageToken">
         /// The token returned from the previous request.
@@ -436,7 +451,7 @@ namespace Google.Cloud.Logging.V2
             CallSettings callSettings = null) => ListSinks(
                 new ListSinksRequest
                 {
-                    ParentAsParentNameOneof = parent,
+                    ParentAsParentNameOneof = GaxPreconditions.CheckNotNull(parent, nameof(parent)),
                     PageToken = pageToken ?? "",
                     PageSize = pageSize ?? 0,
                 },
@@ -484,10 +499,12 @@ namespace Google.Cloud.Logging.V2
         /// Gets a sink.
         /// </summary>
         /// <param name="sinkName">
-        /// Required. The parent resource name of the sink:
+        /// Required. The resource name of the sink:
         ///
         ///     "projects/[PROJECT_ID]/sinks/[SINK_ID]"
         ///     "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+        ///     "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+        ///     "folders/[FOLDER_ID]/sinks/[SINK_ID]"
         ///
         /// Example: `"projects/my-project-id/sinks/my-sink-id"`.
         /// </param>
@@ -502,7 +519,7 @@ namespace Google.Cloud.Logging.V2
             CallSettings callSettings = null) => GetSinkAsync(
                 new GetSinkRequest
                 {
-                    SinkNameAsSinkNameOneof = sinkName,
+                    SinkNameAsSinkNameOneof = GaxPreconditions.CheckNotNull(sinkName, nameof(sinkName)),
                 },
                 callSettings);
 
@@ -510,10 +527,12 @@ namespace Google.Cloud.Logging.V2
         /// Gets a sink.
         /// </summary>
         /// <param name="sinkName">
-        /// Required. The parent resource name of the sink:
+        /// Required. The resource name of the sink:
         ///
         ///     "projects/[PROJECT_ID]/sinks/[SINK_ID]"
         ///     "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+        ///     "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+        ///     "folders/[FOLDER_ID]/sinks/[SINK_ID]"
         ///
         /// Example: `"projects/my-project-id/sinks/my-sink-id"`.
         /// </param>
@@ -533,10 +552,12 @@ namespace Google.Cloud.Logging.V2
         /// Gets a sink.
         /// </summary>
         /// <param name="sinkName">
-        /// Required. The parent resource name of the sink:
+        /// Required. The resource name of the sink:
         ///
         ///     "projects/[PROJECT_ID]/sinks/[SINK_ID]"
         ///     "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+        ///     "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+        ///     "folders/[FOLDER_ID]/sinks/[SINK_ID]"
         ///
         /// Example: `"projects/my-project-id/sinks/my-sink-id"`.
         /// </param>
@@ -551,7 +572,7 @@ namespace Google.Cloud.Logging.V2
             CallSettings callSettings = null) => GetSink(
                 new GetSinkRequest
                 {
-                    SinkNameAsSinkNameOneof = sinkName,
+                    SinkNameAsSinkNameOneof = GaxPreconditions.CheckNotNull(sinkName, nameof(sinkName)),
                 },
                 callSettings);
 
@@ -605,6 +626,8 @@ namespace Google.Cloud.Logging.V2
         ///
         ///     "projects/[PROJECT_ID]"
         ///     "organizations/[ORGANIZATION_ID]"
+        ///     "billingAccounts/[BILLING_ACCOUNT_ID]"
+        ///     "folders/[FOLDER_ID]"
         ///
         /// Examples: `"projects/my-logging-project"`, `"organizations/123456789"`.
         /// </param>
@@ -624,8 +647,8 @@ namespace Google.Cloud.Logging.V2
             CallSettings callSettings = null) => CreateSinkAsync(
                 new CreateSinkRequest
                 {
-                    ParentAsParentNameOneof = parent,
-                    Sink = sink,
+                    ParentAsParentNameOneof = GaxPreconditions.CheckNotNull(parent, nameof(parent)),
+                    Sink = GaxPreconditions.CheckNotNull(sink, nameof(sink)),
                 },
                 callSettings);
 
@@ -641,6 +664,8 @@ namespace Google.Cloud.Logging.V2
         ///
         ///     "projects/[PROJECT_ID]"
         ///     "organizations/[ORGANIZATION_ID]"
+        ///     "billingAccounts/[BILLING_ACCOUNT_ID]"
+        ///     "folders/[FOLDER_ID]"
         ///
         /// Examples: `"projects/my-logging-project"`, `"organizations/123456789"`.
         /// </param>
@@ -674,6 +699,8 @@ namespace Google.Cloud.Logging.V2
         ///
         ///     "projects/[PROJECT_ID]"
         ///     "organizations/[ORGANIZATION_ID]"
+        ///     "billingAccounts/[BILLING_ACCOUNT_ID]"
+        ///     "folders/[FOLDER_ID]"
         ///
         /// Examples: `"projects/my-logging-project"`, `"organizations/123456789"`.
         /// </param>
@@ -693,8 +720,8 @@ namespace Google.Cloud.Logging.V2
             CallSettings callSettings = null) => CreateSink(
                 new CreateSinkRequest
                 {
-                    ParentAsParentNameOneof = parent,
-                    Sink = sink,
+                    ParentAsParentNameOneof = GaxPreconditions.CheckNotNull(parent, nameof(parent)),
+                    Sink = GaxPreconditions.CheckNotNull(sink, nameof(sink)),
                 },
                 callSettings);
 
@@ -760,6 +787,8 @@ namespace Google.Cloud.Logging.V2
         ///
         ///     "projects/[PROJECT_ID]/sinks/[SINK_ID]"
         ///     "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+        ///     "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+        ///     "folders/[FOLDER_ID]/sinks/[SINK_ID]"
         ///
         /// Example: `"projects/my-project-id/sinks/my-sink-id"`.
         /// </param>
@@ -780,8 +809,8 @@ namespace Google.Cloud.Logging.V2
             CallSettings callSettings = null) => UpdateSinkAsync(
                 new UpdateSinkRequest
                 {
-                    SinkNameAsSinkNameOneof = sinkName,
-                    Sink = sink,
+                    SinkNameAsSinkNameOneof = GaxPreconditions.CheckNotNull(sinkName, nameof(sinkName)),
+                    Sink = GaxPreconditions.CheckNotNull(sink, nameof(sink)),
                 },
                 callSettings);
 
@@ -801,6 +830,8 @@ namespace Google.Cloud.Logging.V2
         ///
         ///     "projects/[PROJECT_ID]/sinks/[SINK_ID]"
         ///     "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+        ///     "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+        ///     "folders/[FOLDER_ID]/sinks/[SINK_ID]"
         ///
         /// Example: `"projects/my-project-id/sinks/my-sink-id"`.
         /// </param>
@@ -839,6 +870,8 @@ namespace Google.Cloud.Logging.V2
         ///
         ///     "projects/[PROJECT_ID]/sinks/[SINK_ID]"
         ///     "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+        ///     "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+        ///     "folders/[FOLDER_ID]/sinks/[SINK_ID]"
         ///
         /// Example: `"projects/my-project-id/sinks/my-sink-id"`.
         /// </param>
@@ -859,8 +892,8 @@ namespace Google.Cloud.Logging.V2
             CallSettings callSettings = null) => UpdateSink(
                 new UpdateSinkRequest
                 {
-                    SinkNameAsSinkNameOneof = sinkName,
-                    Sink = sink,
+                    SinkNameAsSinkNameOneof = GaxPreconditions.CheckNotNull(sinkName, nameof(sinkName)),
+                    Sink = GaxPreconditions.CheckNotNull(sink, nameof(sink)),
                 },
                 callSettings);
 
@@ -926,10 +959,10 @@ namespace Google.Cloud.Logging.V2
         ///
         ///     "projects/[PROJECT_ID]/sinks/[SINK_ID]"
         ///     "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+        ///     "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+        ///     "folders/[FOLDER_ID]/sinks/[SINK_ID]"
         ///
-        /// It is an error if the sink does not exist.  Example:
-        /// `"projects/my-project-id/sinks/my-sink-id"`.  It is an error if
-        /// the sink does not exist.
+        /// Example: `"projects/my-project-id/sinks/my-sink-id"`.
         /// </param>
         /// <param name="callSettings">
         /// If not null, applies overrides to this RPC call.
@@ -942,7 +975,7 @@ namespace Google.Cloud.Logging.V2
             CallSettings callSettings = null) => DeleteSinkAsync(
                 new DeleteSinkRequest
                 {
-                    SinkNameAsSinkNameOneof = sinkName,
+                    SinkNameAsSinkNameOneof = GaxPreconditions.CheckNotNull(sinkName, nameof(sinkName)),
                 },
                 callSettings);
 
@@ -956,10 +989,10 @@ namespace Google.Cloud.Logging.V2
         ///
         ///     "projects/[PROJECT_ID]/sinks/[SINK_ID]"
         ///     "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+        ///     "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+        ///     "folders/[FOLDER_ID]/sinks/[SINK_ID]"
         ///
-        /// It is an error if the sink does not exist.  Example:
-        /// `"projects/my-project-id/sinks/my-sink-id"`.  It is an error if
-        /// the sink does not exist.
+        /// Example: `"projects/my-project-id/sinks/my-sink-id"`.
         /// </param>
         /// <param name="cancellationToken">
         /// A <see cref="CancellationToken"/> to use for this RPC.
@@ -983,10 +1016,10 @@ namespace Google.Cloud.Logging.V2
         ///
         ///     "projects/[PROJECT_ID]/sinks/[SINK_ID]"
         ///     "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+        ///     "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+        ///     "folders/[FOLDER_ID]/sinks/[SINK_ID]"
         ///
-        /// It is an error if the sink does not exist.  Example:
-        /// `"projects/my-project-id/sinks/my-sink-id"`.  It is an error if
-        /// the sink does not exist.
+        /// Example: `"projects/my-project-id/sinks/my-sink-id"`.
         /// </param>
         /// <param name="callSettings">
         /// If not null, applies overrides to this RPC call.
@@ -999,7 +1032,7 @@ namespace Google.Cloud.Logging.V2
             CallSettings callSettings = null) => DeleteSink(
                 new DeleteSinkRequest
                 {
-                    SinkNameAsSinkNameOneof = sinkName,
+                    SinkNameAsSinkNameOneof = GaxPreconditions.CheckNotNull(sinkName, nameof(sinkName)),
                 },
                 callSettings);
 
@@ -1050,7 +1083,6 @@ namespace Google.Cloud.Logging.V2
     /// </summary>
     public sealed partial class ConfigServiceV2ClientImpl : ConfigServiceV2Client
     {
-        private readonly ClientHelper _clientHelper;
         private readonly ApiCall<ListSinksRequest, ListSinksResponse> _callListSinks;
         private readonly ApiCall<GetSinkRequest, LogSink> _callGetSink;
         private readonly ApiCall<CreateSinkRequest, LogSink> _callCreateSink;
@@ -1066,18 +1098,21 @@ namespace Google.Cloud.Logging.V2
         {
             this.GrpcClient = grpcClient;
             ConfigServiceV2Settings effectiveSettings = settings ?? ConfigServiceV2Settings.GetDefault();
-            _clientHelper = new ClientHelper(effectiveSettings);
-            _callListSinks = _clientHelper.BuildApiCall<ListSinksRequest, ListSinksResponse>(
+            ClientHelper clientHelper = new ClientHelper(effectiveSettings);
+            _callListSinks = clientHelper.BuildApiCall<ListSinksRequest, ListSinksResponse>(
                 GrpcClient.ListSinksAsync, GrpcClient.ListSinks, effectiveSettings.ListSinksSettings);
-            _callGetSink = _clientHelper.BuildApiCall<GetSinkRequest, LogSink>(
+            _callGetSink = clientHelper.BuildApiCall<GetSinkRequest, LogSink>(
                 GrpcClient.GetSinkAsync, GrpcClient.GetSink, effectiveSettings.GetSinkSettings);
-            _callCreateSink = _clientHelper.BuildApiCall<CreateSinkRequest, LogSink>(
+            _callCreateSink = clientHelper.BuildApiCall<CreateSinkRequest, LogSink>(
                 GrpcClient.CreateSinkAsync, GrpcClient.CreateSink, effectiveSettings.CreateSinkSettings);
-            _callUpdateSink = _clientHelper.BuildApiCall<UpdateSinkRequest, LogSink>(
+            _callUpdateSink = clientHelper.BuildApiCall<UpdateSinkRequest, LogSink>(
                 GrpcClient.UpdateSinkAsync, GrpcClient.UpdateSink, effectiveSettings.UpdateSinkSettings);
-            _callDeleteSink = _clientHelper.BuildApiCall<DeleteSinkRequest, Empty>(
+            _callDeleteSink = clientHelper.BuildApiCall<DeleteSinkRequest, Empty>(
                 GrpcClient.DeleteSinkAsync, GrpcClient.DeleteSink, effectiveSettings.DeleteSinkSettings);
+            OnConstruction(grpcClient, effectiveSettings, clientHelper);
         }
+
+        partial void OnConstruction(ConfigServiceV2.ConfigServiceV2Client grpcClient, ConfigServiceV2Settings effectiveSettings, ClientHelper clientHelper);
 
         /// <summary>
         /// The underlying gRPC ConfigServiceV2 client.

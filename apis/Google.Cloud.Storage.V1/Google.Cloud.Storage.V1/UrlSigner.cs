@@ -14,7 +14,6 @@
 
 using Google.Api.Gax;
 using Google.Apis.Auth.OAuth2;
-using Google.Apis.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -22,10 +21,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Google.Cloud.Storage.V1
 {
@@ -39,9 +35,19 @@ namespace Google.Cloud.Storage.V1
     public sealed class UrlSigner
     {
         private const string GoogHeaderPrefix = "x-goog-";
-        private const string GoogEncryptionKeyHeader = "x-goog-encryption-key";
-        private const string GoogEncryptionKeySHA256Header = "x-goog-encryption-key-sha256";
         private const string StorageHost = "https://storage.googleapis.com";
+
+        /// <summary>
+        /// Gets a special HTTP method which can be used to create a signed URL for initiating a resumable upload.
+        /// See https://cloud.google.com/storage/docs/access-control/signed-urls#signing-resumable for more information.
+        /// </summary>
+        /// <remarks>
+        /// Note: When using the RESUMABLE method to create a signed URL, a URL will actually be signed for the POST method with a header of
+        /// 'x-goog-resumable:start'. The caller must perform a POST request with this URL and specify the 'x-goog-resumable:start' header as
+        /// well or signature validation will fail.
+        /// </remarks>
+        public static HttpMethod ResumableHttpMethod { get; } = new HttpMethod("RESUMABLE");
+
         private static readonly DateTimeOffset UnixEpoch = new DateTimeOffset(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc), TimeSpan.Zero);
 
         private readonly ServiceAccountCredential _credentials;
@@ -291,6 +297,17 @@ namespace Google.Cloud.Storage.V1
         {
             StorageClientImpl.ValidateBucketName(bucket);
 
+            bool isResumableUpload = false;
+            if (requestMethod == null)
+            {
+                requestMethod = HttpMethod.Get;
+            }
+            else if (requestMethod == ResumableHttpMethod)
+            {
+                isResumableUpload = true;
+                requestMethod = HttpMethod.Post;
+            }
+
             var expiryUnixSeconds = ((int?)((expiration - UnixEpoch)?.TotalSeconds))?.ToString(CultureInfo.InvariantCulture);
             var resourcePath = $"/{bucket}";
             if (objectName != null)
@@ -298,13 +315,17 @@ namespace Google.Cloud.Storage.V1
                 resourcePath += $"/{Uri.EscapeDataString(objectName)}";
             }
             var extensionHeaders = GetExtensionHeaders(requestHeaders, contentHeaders);
+            if (isResumableUpload)
+            {
+                extensionHeaders["x-goog-resumable"] = new StringBuilder("start");
+            }
 
             var contentMD5 = GetFirstHeaderValue(contentHeaders, "Content-MD5");
             var contentType = GetFirstHeaderValue(contentHeaders, "Content-Type");
 
             var signatureLines = new List<string>
             {
-                (requestMethod ?? HttpMethod.Get).ToString(),
+                requestMethod.ToString(),
                 contentMD5,
                 contentType,
                 expiryUnixSeconds
@@ -359,8 +380,8 @@ namespace Google.Cloud.Storage.V1
             {
                 var key = header.Key.ToLowerInvariant();
                 if (!key.StartsWith(GoogHeaderPrefix) ||
-                    key == GoogEncryptionKeyHeader ||
-                    key == GoogEncryptionKeySHA256Header)
+                    key == EncryptionKey.KeyHeader ||
+                    key == EncryptionKey.KeyHashHeader)
                 {
                     continue;
                 }

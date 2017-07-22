@@ -13,10 +13,24 @@
 // limitations under the License.
 
 using Google.Api.Gax;
+using Google.Api.Gax.Grpc;
 using System;
 
 namespace Google.LongRunning
 {
+    public partial class OperationsSettings
+    {
+        /// <summary>
+        /// The poll settings used by default for repeated polling operations.
+        /// </summary>
+        public PollSettings DefaultPollSettings { get; private set; }
+
+        partial void OnCopy(OperationsSettings existing)
+        {
+            DefaultPollSettings = existing.DefaultPollSettings;
+        }
+    }
+
     public partial class OperationsClient
     {
         /// <summary>
@@ -34,14 +48,60 @@ namespace Google.LongRunning
         {
             get { throw new NotImplementedException(); }
         }
+
+        /// <summary>
+        /// The poll settings used by default for repeated polling operations.
+        /// May be null if no defaults have been set.
+        /// </summary>
+        public virtual PollSettings DefaultPollSettings
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        /// <summary>
+        /// Return the <see cref="CallSettings"/> that would be used by a call to
+        /// <see cref="GetOperation(GetOperationRequest, CallSettings)"/>, using the base
+        /// settings of this client and the specified per-call overrides.
+        /// </summary>
+        /// <remarks>
+        /// This method is used when polling, to determine the appropriate timeout and cancellation
+        /// token to use for each call.
+        /// </remarks>
+        /// <param name="callSettings">The per-call override, if any.</param>
+        /// <returns>The effective call settings for a GetOperation RPC.</returns>
+        protected internal virtual CallSettings GetEffectiveCallSettingsForGetOperation(CallSettings callSettings)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public partial class OperationsClientImpl
     {
-        /// <inheritdoc />
-        public override IClock Clock => _clientHelper.Clock;
+        private IClock _clock;
+        private IScheduler _scheduler;
+        private PollSettings _defaultPollSettings;
 
         /// <inheritdoc />
-        public override IScheduler Scheduler => _clientHelper.Scheduler;
+        public override IClock Clock => _clock;
+
+        /// <inheritdoc />
+        public override IScheduler Scheduler => _scheduler;
+
+        /// <inheritdoc />
+        public override PollSettings DefaultPollSettings => _defaultPollSettings;
+
+        // Note: if we ever have a partial Modify_GetOperationRequest call body,
+        // we'd want to call it here, but cope with not providing a request.
+
+        /// <inheritdoc />
+        protected internal override CallSettings GetEffectiveCallSettingsForGetOperation(CallSettings callSettings) =>
+            _callGetOperation.BaseCallSettings.MergedWith(callSettings);
+
+        partial void OnConstruction(Operations.OperationsClient grpcClient, OperationsSettings effectiveSettings, ClientHelper clientHelper)
+        {
+            _clock = clientHelper.Clock;
+            _scheduler = clientHelper.Scheduler;
+            _defaultPollSettings = effectiveSettings?.DefaultPollSettings;
+        }
     }
 }

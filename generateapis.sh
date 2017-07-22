@@ -7,8 +7,8 @@ set -e
 OS=linux
 [[ ${OS} = "windows" ]] && EXE_SUFFIX=.exe || EXE_SUFFIX=
 
-GRPC_VERSION=1.0.1
-PROTOBUF_VERSION=3.1.0
+GRPC_VERSION=1.4.0
+PROTOBUF_VERSION=3.3.0
 PROTOC=packages/Grpc.Tools.$GRPC_VERSION/tools/${OS}_x64/protoc${EXE_SUFFIX}
 GRPC_PLUGIN=packages/Grpc.Tools.$GRPC_VERSION/tools/${OS}_x64/grpc_csharp_plugin${EXE_SUFFIX}
 CORE_PROTOS_ROOT=packages/Google.Protobuf.Tools.$PROTOBUF_VERSION/tools
@@ -92,7 +92,7 @@ generator:
 EOF
   
   pushd toolkit > /dev/null
-  ./gradlew -q runVGen -Pclargs=--descriptor_set=../$OUTDIR/protos.desc,--service_yaml=../$API_YAML,--gapic_yaml=../$API_TMP_DIR/gapic.yaml,--output=../$API_TMP_DIR
+  ./gradlew -q runCodeGen -Pclargs=--descriptor_set=../$OUTDIR/protos.desc,--service_yaml=../$API_YAML,--gapic_yaml=../$API_TMP_DIR/gapic.yaml,--output=../$API_TMP_DIR
   popd > /dev/null
 
   for f in `find $API_TMP_DIR -type f -name '*.cs'`
@@ -118,7 +118,7 @@ $PROTOC \
   --include_source_info \
   -o $OUTDIR/protos.desc \
   $CORE_PROTOS_ROOT/google/protobuf/*.proto \
-  `find googleapis -name '*.proto'`
+  `find googleapis/google -name '*.proto'`
 
 # Generate LongRunning, after changing the license text (because we use
 # Apache for LRO where other languages use BSD)
@@ -136,12 +136,23 @@ $PROTOC \
   googleapis/google/iam/v1/*.proto
 
 # Now the per-API codegen  
-generate_api Google.Cloud.Vision.V1 google/cloud/vision/v1 vision.yaml
-generate_api Google.Cloud.Language.V1 google/cloud/language/v1 language.yaml
-generate_api Google.Cloud.Speech.V1Beta1 google/cloud/speech/v1beta1 cloud_speech.yaml
-generate_api Google.Cloud.Logging.V2 google/logging/v2 logging.yaml google/logging/type
-generate_api Google.Cloud.Trace.V1 google/devtools/cloudtrace/v1 trace.yaml
-generate_api Google.Cloud.ErrorReporting.V1Beta1 google/devtools/clouderrorreporting/v1beta1 errorreporting.yaml
-generate_api Google.Cloud.PubSub.V1 google/pubsub/v1 pubsub.yaml
+generate_api Google.Cloud.Bigtable.V2 google/bigtable/v2 bigtable.yaml
 generate_api Google.Cloud.Datastore.V1 google/datastore/v1 datastore.yaml
+generate_api Google.Cloud.Dlp.V2Beta1 google/privacy/dlp/v2beta1 dlp.yaml
+generate_api Google.Cloud.ErrorReporting.V1Beta1 google/devtools/clouderrorreporting/v1beta1 errorreporting.yaml
+generate_api Google.Cloud.Language.V1 google/cloud/language/v1 language_v1.yaml
+generate_api Google.Cloud.Language.V1.Experimental google/cloud/language/v1beta2 language_v1beta2.yaml
+generate_api Google.Cloud.Logging.V2 google/logging/v2 logging.yaml google/logging/type
 generate_api Google.Cloud.Monitoring.V3 google/monitoring/v3 monitoring.yaml
+generate_api Google.Cloud.PubSub.V1 google/pubsub/v1 pubsub.yaml
+generate_api Google.Cloud.Spanner.Admin.Database.V1 google/spanner/admin/database/v1 spanner_admin_database.yaml
+generate_api Google.Cloud.Spanner.Admin.Instance.V1 google/spanner/admin/instance/v1 spanner_admin_instance.yaml
+generate_api Google.Cloud.Spanner.V1 google/spanner/v1 spanner.yaml
+generate_api Google.Cloud.Speech.V1 google/cloud/speech/v1 cloud_speech_v1.yaml
+generate_api Google.Cloud.Trace.V1 google/devtools/cloudtrace/v1 trace.yaml
+generate_api Google.Cloud.VideoIntelligence.V1Beta1 google/cloud/videointelligence/v1beta1 videointelligence.yaml
+generate_api Google.Cloud.Vision.V1 google/cloud/vision/v1 vision.yaml
+
+# Cleanup for the logging API's version-agnostic protos (in their own top-level directory)
+mv apis/Google.Cloud.Logging.V2/Google.Cloud.Logging.Type/*.cs apis/Google.Cloud.Logging.Type/Google.Cloud.Logging.Type
+rmdir apis/Google.Cloud.Logging.V2/Google.Cloud.Logging.Type

@@ -1,4 +1,4 @@
-// Copyright 2016, Google Inc. All rights reserved.
+// Copyright 2017, Google Inc. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -52,7 +52,10 @@ namespace Google.Cloud.Language.V1
             AnalyzeEntitiesSettings = existing.AnalyzeEntitiesSettings;
             AnalyzeSyntaxSettings = existing.AnalyzeSyntaxSettings;
             AnnotateTextSettings = existing.AnnotateTextSettings;
+            OnCopy(existing);
         }
+
+        partial void OnCopy(LanguageServiceSettings existing);
 
         /// <summary>
         /// The filter specifying which RPC <see cref="StatusCode"/>s are eligible for retry
@@ -341,8 +344,7 @@ namespace Google.Cloud.Language.V1
         /// Analyzes the sentiment of the provided text.
         /// </summary>
         /// <param name="document">
-        /// Input document. Currently, `analyzeSentiment` only supports English text
-        /// ([Document.language][google.cloud.language.v1.Document.language]="EN").
+        /// Input document.
         /// </param>
         /// <param name="callSettings">
         /// If not null, applies overrides to this RPC call.
@@ -355,7 +357,7 @@ namespace Google.Cloud.Language.V1
             CallSettings callSettings = null) => AnalyzeSentimentAsync(
                 new AnalyzeSentimentRequest
                 {
-                    Document = document,
+                    Document = GaxPreconditions.CheckNotNull(document, nameof(document)),
                 },
                 callSettings);
 
@@ -363,8 +365,7 @@ namespace Google.Cloud.Language.V1
         /// Analyzes the sentiment of the provided text.
         /// </summary>
         /// <param name="document">
-        /// Input document. Currently, `analyzeSentiment` only supports English text
-        /// ([Document.language][google.cloud.language.v1.Document.language]="EN").
+        /// Input document.
         /// </param>
         /// <param name="cancellationToken">
         /// A <see cref="CancellationToken"/> to use for this RPC.
@@ -382,8 +383,7 @@ namespace Google.Cloud.Language.V1
         /// Analyzes the sentiment of the provided text.
         /// </summary>
         /// <param name="document">
-        /// Input document. Currently, `analyzeSentiment` only supports English text
-        /// ([Document.language][google.cloud.language.v1.Document.language]="EN").
+        /// Input document.
         /// </param>
         /// <param name="callSettings">
         /// If not null, applies overrides to this RPC call.
@@ -396,7 +396,7 @@ namespace Google.Cloud.Language.V1
             CallSettings callSettings = null) => AnalyzeSentiment(
                 new AnalyzeSentimentRequest
                 {
-                    Document = document,
+                    Document = GaxPreconditions.CheckNotNull(document, nameof(document)),
                 },
                 callSettings);
 
@@ -439,8 +439,9 @@ namespace Google.Cloud.Language.V1
         }
 
         /// <summary>
-        /// Finds named entities (currently finds proper names) in the text,
-        /// entity types, salience, mentions for each entity, and other properties.
+        /// Finds named entities (currently proper names and common nouns) in the text
+        /// along with entity types, salience, mentions for each entity, and
+        /// other properties.
         /// </summary>
         /// <param name="document">
         /// Input document.
@@ -456,18 +457,19 @@ namespace Google.Cloud.Language.V1
         /// </returns>
         public virtual Task<AnalyzeEntitiesResponse> AnalyzeEntitiesAsync(
             Document document,
-            EncodingType encodingType,
+            EncodingType? encodingType,
             CallSettings callSettings = null) => AnalyzeEntitiesAsync(
                 new AnalyzeEntitiesRequest
                 {
-                    Document = document,
-                    EncodingType = encodingType,
+                    Document = GaxPreconditions.CheckNotNull(document, nameof(document)),
+                    EncodingType = encodingType ?? EncodingType.None, // Optional
                 },
                 callSettings);
 
         /// <summary>
-        /// Finds named entities (currently finds proper names) in the text,
-        /// entity types, salience, mentions for each entity, and other properties.
+        /// Finds named entities (currently proper names and common nouns) in the text
+        /// along with entity types, salience, mentions for each entity, and
+        /// other properties.
         /// </summary>
         /// <param name="document">
         /// Input document.
@@ -483,15 +485,16 @@ namespace Google.Cloud.Language.V1
         /// </returns>
         public virtual Task<AnalyzeEntitiesResponse> AnalyzeEntitiesAsync(
             Document document,
-            EncodingType encodingType,
+            EncodingType? encodingType,
             CancellationToken cancellationToken) => AnalyzeEntitiesAsync(
                 document,
                 encodingType,
                 CallSettings.FromCancellationToken(cancellationToken));
 
         /// <summary>
-        /// Finds named entities (currently finds proper names) in the text,
-        /// entity types, salience, mentions for each entity, and other properties.
+        /// Finds named entities (currently proper names and common nouns) in the text
+        /// along with entity types, salience, mentions for each entity, and
+        /// other properties.
         /// </summary>
         /// <param name="document">
         /// Input document.
@@ -507,18 +510,19 @@ namespace Google.Cloud.Language.V1
         /// </returns>
         public virtual AnalyzeEntitiesResponse AnalyzeEntities(
             Document document,
-            EncodingType encodingType,
+            EncodingType? encodingType,
             CallSettings callSettings = null) => AnalyzeEntities(
                 new AnalyzeEntitiesRequest
                 {
-                    Document = document,
-                    EncodingType = encodingType,
+                    Document = GaxPreconditions.CheckNotNull(document, nameof(document)),
+                    EncodingType = encodingType ?? EncodingType.None, // Optional
                 },
                 callSettings);
 
         /// <summary>
-        /// Finds named entities (currently finds proper names) in the text,
-        /// entity types, salience, mentions for each entity, and other properties.
+        /// Finds named entities (currently proper names and common nouns) in the text
+        /// along with entity types, salience, mentions for each entity, and
+        /// other properties.
         /// </summary>
         /// <param name="request">
         /// The request object containing all of the parameters for the API call.
@@ -537,8 +541,9 @@ namespace Google.Cloud.Language.V1
         }
 
         /// <summary>
-        /// Finds named entities (currently finds proper names) in the text,
-        /// entity types, salience, mentions for each entity, and other properties.
+        /// Finds named entities (currently proper names and common nouns) in the text
+        /// along with entity types, salience, mentions for each entity, and
+        /// other properties.
         /// </summary>
         /// <param name="request">
         /// The request object containing all of the parameters for the API call.
@@ -575,12 +580,12 @@ namespace Google.Cloud.Language.V1
         /// </returns>
         public virtual Task<AnalyzeSyntaxResponse> AnalyzeSyntaxAsync(
             Document document,
-            EncodingType encodingType,
+            EncodingType? encodingType,
             CallSettings callSettings = null) => AnalyzeSyntaxAsync(
                 new AnalyzeSyntaxRequest
                 {
-                    Document = document,
-                    EncodingType = encodingType,
+                    Document = GaxPreconditions.CheckNotNull(document, nameof(document)),
+                    EncodingType = encodingType ?? EncodingType.None, // Optional
                 },
                 callSettings);
 
@@ -603,7 +608,7 @@ namespace Google.Cloud.Language.V1
         /// </returns>
         public virtual Task<AnalyzeSyntaxResponse> AnalyzeSyntaxAsync(
             Document document,
-            EncodingType encodingType,
+            EncodingType? encodingType,
             CancellationToken cancellationToken) => AnalyzeSyntaxAsync(
                 document,
                 encodingType,
@@ -628,12 +633,12 @@ namespace Google.Cloud.Language.V1
         /// </returns>
         public virtual AnalyzeSyntaxResponse AnalyzeSyntax(
             Document document,
-            EncodingType encodingType,
+            EncodingType? encodingType,
             CallSettings callSettings = null) => AnalyzeSyntax(
                 new AnalyzeSyntaxRequest
                 {
-                    Document = document,
-                    EncodingType = encodingType,
+                    Document = GaxPreconditions.CheckNotNull(document, nameof(document)),
+                    EncodingType = encodingType ?? EncodingType.None, // Optional
                 },
                 callSettings);
 
@@ -701,13 +706,13 @@ namespace Google.Cloud.Language.V1
         public virtual Task<AnnotateTextResponse> AnnotateTextAsync(
             Document document,
             AnnotateTextRequest.Types.Features features,
-            EncodingType encodingType,
+            EncodingType? encodingType,
             CallSettings callSettings = null) => AnnotateTextAsync(
                 new AnnotateTextRequest
                 {
-                    Document = document,
-                    Features = features,
-                    EncodingType = encodingType,
+                    Document = GaxPreconditions.CheckNotNull(document, nameof(document)),
+                    Features = GaxPreconditions.CheckNotNull(features, nameof(features)),
+                    EncodingType = encodingType ?? EncodingType.None, // Optional
                 },
                 callSettings);
 
@@ -733,7 +738,7 @@ namespace Google.Cloud.Language.V1
         public virtual Task<AnnotateTextResponse> AnnotateTextAsync(
             Document document,
             AnnotateTextRequest.Types.Features features,
-            EncodingType encodingType,
+            EncodingType? encodingType,
             CancellationToken cancellationToken) => AnnotateTextAsync(
                 document,
                 features,
@@ -762,13 +767,13 @@ namespace Google.Cloud.Language.V1
         public virtual AnnotateTextResponse AnnotateText(
             Document document,
             AnnotateTextRequest.Types.Features features,
-            EncodingType encodingType,
+            EncodingType? encodingType,
             CallSettings callSettings = null) => AnnotateText(
                 new AnnotateTextRequest
                 {
-                    Document = document,
-                    Features = features,
-                    EncodingType = encodingType,
+                    Document = GaxPreconditions.CheckNotNull(document, nameof(document)),
+                    Features = GaxPreconditions.CheckNotNull(features, nameof(features)),
+                    EncodingType = encodingType ?? EncodingType.None, // Optional
                 },
                 callSettings);
 
@@ -819,7 +824,6 @@ namespace Google.Cloud.Language.V1
     /// </summary>
     public sealed partial class LanguageServiceClientImpl : LanguageServiceClient
     {
-        private readonly ClientHelper _clientHelper;
         private readonly ApiCall<AnalyzeSentimentRequest, AnalyzeSentimentResponse> _callAnalyzeSentiment;
         private readonly ApiCall<AnalyzeEntitiesRequest, AnalyzeEntitiesResponse> _callAnalyzeEntities;
         private readonly ApiCall<AnalyzeSyntaxRequest, AnalyzeSyntaxResponse> _callAnalyzeSyntax;
@@ -834,16 +838,19 @@ namespace Google.Cloud.Language.V1
         {
             this.GrpcClient = grpcClient;
             LanguageServiceSettings effectiveSettings = settings ?? LanguageServiceSettings.GetDefault();
-            _clientHelper = new ClientHelper(effectiveSettings);
-            _callAnalyzeSentiment = _clientHelper.BuildApiCall<AnalyzeSentimentRequest, AnalyzeSentimentResponse>(
+            ClientHelper clientHelper = new ClientHelper(effectiveSettings);
+            _callAnalyzeSentiment = clientHelper.BuildApiCall<AnalyzeSentimentRequest, AnalyzeSentimentResponse>(
                 GrpcClient.AnalyzeSentimentAsync, GrpcClient.AnalyzeSentiment, effectiveSettings.AnalyzeSentimentSettings);
-            _callAnalyzeEntities = _clientHelper.BuildApiCall<AnalyzeEntitiesRequest, AnalyzeEntitiesResponse>(
+            _callAnalyzeEntities = clientHelper.BuildApiCall<AnalyzeEntitiesRequest, AnalyzeEntitiesResponse>(
                 GrpcClient.AnalyzeEntitiesAsync, GrpcClient.AnalyzeEntities, effectiveSettings.AnalyzeEntitiesSettings);
-            _callAnalyzeSyntax = _clientHelper.BuildApiCall<AnalyzeSyntaxRequest, AnalyzeSyntaxResponse>(
+            _callAnalyzeSyntax = clientHelper.BuildApiCall<AnalyzeSyntaxRequest, AnalyzeSyntaxResponse>(
                 GrpcClient.AnalyzeSyntaxAsync, GrpcClient.AnalyzeSyntax, effectiveSettings.AnalyzeSyntaxSettings);
-            _callAnnotateText = _clientHelper.BuildApiCall<AnnotateTextRequest, AnnotateTextResponse>(
+            _callAnnotateText = clientHelper.BuildApiCall<AnnotateTextRequest, AnnotateTextResponse>(
                 GrpcClient.AnnotateTextAsync, GrpcClient.AnnotateText, effectiveSettings.AnnotateTextSettings);
+            OnConstruction(grpcClient, effectiveSettings, clientHelper);
         }
+
+        partial void OnConstruction(LanguageService.LanguageServiceClient grpcClient, LanguageServiceSettings effectiveSettings, ClientHelper clientHelper);
 
         /// <summary>
         /// The underlying gRPC LanguageService client.
@@ -897,8 +904,9 @@ namespace Google.Cloud.Language.V1
         }
 
         /// <summary>
-        /// Finds named entities (currently finds proper names) in the text,
-        /// entity types, salience, mentions for each entity, and other properties.
+        /// Finds named entities (currently proper names and common nouns) in the text
+        /// along with entity types, salience, mentions for each entity, and
+        /// other properties.
         /// </summary>
         /// <param name="request">
         /// The request object containing all of the parameters for the API call.
@@ -918,8 +926,9 @@ namespace Google.Cloud.Language.V1
         }
 
         /// <summary>
-        /// Finds named entities (currently finds proper names) in the text,
-        /// entity types, salience, mentions for each entity, and other properties.
+        /// Finds named entities (currently proper names and common nouns) in the text
+        /// along with entity types, salience, mentions for each entity, and
+        /// other properties.
         /// </summary>
         /// <param name="request">
         /// The request object containing all of the parameters for the API call.

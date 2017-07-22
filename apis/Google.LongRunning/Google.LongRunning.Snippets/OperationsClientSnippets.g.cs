@@ -1,4 +1,4 @@
-// Copyright 2016, Google Inc. All rights reserved.
+// Copyright 2017, Google Inc. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -96,7 +96,7 @@ namespace Google.LongRunning.Snippets
             string name = "";
             string filter = "";
             // Make the request
-            PagedAsyncEnumerable<ListOperationsResponse,Operation> response =
+            PagedAsyncEnumerable<ListOperationsResponse, Operation> response =
                 operationsClient.ListOperationsAsync(name, filter);
 
             // Iterate over all response items, lazily performing RPCs as required
@@ -140,7 +140,7 @@ namespace Google.LongRunning.Snippets
             string name = "";
             string filter = "";
             // Make the request
-            PagedEnumerable<ListOperationsResponse,Operation> response =
+            PagedEnumerable<ListOperationsResponse, Operation> response =
                 operationsClient.ListOperations(name, filter);
 
             // Iterate over all response items, lazily performing RPCs as required
@@ -187,7 +187,7 @@ namespace Google.LongRunning.Snippets
                 Filter = "",
             };
             // Make the request
-            PagedAsyncEnumerable<ListOperationsResponse,Operation> response =
+            PagedAsyncEnumerable<ListOperationsResponse, Operation> response =
                 operationsClient.ListOperationsAsync(request);
 
             // Iterate over all response items, lazily performing RPCs as required
@@ -234,7 +234,7 @@ namespace Google.LongRunning.Snippets
                 Filter = "",
             };
             // Make the request
-            PagedEnumerable<ListOperationsResponse,Operation> response =
+            PagedEnumerable<ListOperationsResponse, Operation> response =
                 operationsClient.ListOperations(request);
 
             // Iterate over all response items, lazily performing RPCs as required

@@ -61,8 +61,9 @@ namespace Google.Cloud.Diagnostics.Common
             _timer = timer;
             _timer.Start();
 
-            _lastCallMillis = 0;
             _fixedDelayMillis = Convert.ToInt64(TimeSpan.FromSeconds(1 / qps).TotalMilliseconds);
+            // Allow a trace immediately.
+            _lastCallMillis = -_fixedDelayMillis;
         }
 
         /// <summary>
@@ -74,8 +75,14 @@ namespace Google.Cloud.Diagnostics.Common
         {
             var nowMillis = _timer.GetElapsedMilliseconds();
             var lastCallMillis = _lastCallMillis;
-            return (nowMillis - lastCallMillis > _fixedDelayMillis) &&
+            return (nowMillis - lastCallMillis >= _fixedDelayMillis) &&
                 Interlocked.CompareExchange(ref _lastCallMillis, nowMillis, lastCallMillis) == lastCallMillis;
         }
+
+        /// <summary>
+        /// Reset the rate limiter instance to null.  This will allow a new QPS rate limit to
+        /// be set.  For testing use only.
+        /// </summary>
+        internal static void Reset() => _instance = null;
     }
 }

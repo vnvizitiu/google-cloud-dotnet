@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using Google.Api.Gax;
-using Google.Cloud.ErrorReporting.V1Beta1;
+using Google.Cloud.Diagnostics.Common;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading.Tasks;
@@ -28,16 +28,14 @@ namespace Google.Cloud.Diagnostics.AspNetCore
     public sealed class ErrorReportingExceptionLoggerMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IExceptionLogger<ReportErrorEventResponse> _logger;
+        private readonly IExceptionLogger _logger;
 
         /// <summary>
         /// Create a new instance of <see cref="ErrorReportingExceptionLoggerMiddleware"/>.
         /// </summary>
         /// <param name="next">The next request delegate. Cannot be null.</param>
-        /// <param name="logger">A logger that will report exceptions to the Stackdriver
-        ///     Error Reporting API. Cannot be null.</param>
-        public ErrorReportingExceptionLoggerMiddleware(
-            RequestDelegate next, IExceptionLogger<ReportErrorEventResponse> logger)
+        /// <param name="logger">A logger that will report exceptions. Cannot be null.</param>
+        public ErrorReportingExceptionLoggerMiddleware(RequestDelegate next, IExceptionLogger logger)
         {
             _next = GaxPreconditions.CheckNotNull(next, nameof(next));
             _logger = GaxPreconditions.CheckNotNull(logger, nameof(logger));
@@ -52,11 +50,11 @@ namespace Google.Cloud.Diagnostics.AspNetCore
         {
             try
             {
-                await _next(httpContext);
+                await _next(httpContext).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
-                await _logger.LogAsync(httpContext, exception);
+                await _logger.LogAsync(exception, httpContext).ConfigureAwait(false);
                 throw;
             }
         }

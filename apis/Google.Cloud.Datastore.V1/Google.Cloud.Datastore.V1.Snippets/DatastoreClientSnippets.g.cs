@@ -1,4 +1,4 @@
-// Copyright 2016, Google Inc. All rights reserved.
+// Copyright 2017, Google Inc. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -70,7 +70,6 @@ namespace Google.Cloud.Datastore.V1.Snippets
             LookupRequest request = new LookupRequest
             {
                 ProjectId = "",
-                ReadOptions = new ReadOptions(),
                 Keys = { },
             };
             // Make the request
@@ -87,73 +86,10 @@ namespace Google.Cloud.Datastore.V1.Snippets
             LookupRequest request = new LookupRequest
             {
                 ProjectId = "",
-                ReadOptions = new ReadOptions(),
                 Keys = { },
             };
             // Make the request
             LookupResponse response = datastoreClient.Lookup(request);
-            // End snippet
-        }
-
-        public async Task RunQueryAsync1()
-        {
-            // Snippet: RunQueryAsync(string,PartitionId,ReadOptions,Query,CallSettings)
-            // Additional: RunQueryAsync(string,PartitionId,ReadOptions,Query,CancellationToken)
-            // Create client
-            DatastoreClient datastoreClient = await DatastoreClient.CreateAsync();
-            // Initialize request argument(s)
-            string projectId = "";
-            PartitionId partitionId = new PartitionId();
-            ReadOptions readOptions = new ReadOptions();
-            Query query = new Query();
-            // Make the request
-            RunQueryResponse response = await datastoreClient.RunQueryAsync(projectId, partitionId, readOptions, query);
-            // End snippet
-        }
-
-        public void RunQuery1()
-        {
-            // Snippet: RunQuery(string,PartitionId,ReadOptions,Query,CallSettings)
-            // Create client
-            DatastoreClient datastoreClient = DatastoreClient.Create();
-            // Initialize request argument(s)
-            string projectId = "";
-            PartitionId partitionId = new PartitionId();
-            ReadOptions readOptions = new ReadOptions();
-            Query query = new Query();
-            // Make the request
-            RunQueryResponse response = datastoreClient.RunQuery(projectId, partitionId, readOptions, query);
-            // End snippet
-        }
-
-        public async Task RunQueryAsync2()
-        {
-            // Snippet: RunQueryAsync(string,PartitionId,ReadOptions,GqlQuery,CallSettings)
-            // Additional: RunQueryAsync(string,PartitionId,ReadOptions,GqlQuery,CancellationToken)
-            // Create client
-            DatastoreClient datastoreClient = await DatastoreClient.CreateAsync();
-            // Initialize request argument(s)
-            string projectId = "";
-            PartitionId partitionId = new PartitionId();
-            ReadOptions readOptions = new ReadOptions();
-            GqlQuery gqlQuery = new GqlQuery();
-            // Make the request
-            RunQueryResponse response = await datastoreClient.RunQueryAsync(projectId, partitionId, readOptions, gqlQuery);
-            // End snippet
-        }
-
-        public void RunQuery2()
-        {
-            // Snippet: RunQuery(string,PartitionId,ReadOptions,GqlQuery,CallSettings)
-            // Create client
-            DatastoreClient datastoreClient = DatastoreClient.Create();
-            // Initialize request argument(s)
-            string projectId = "";
-            PartitionId partitionId = new PartitionId();
-            ReadOptions readOptions = new ReadOptions();
-            GqlQuery gqlQuery = new GqlQuery();
-            // Make the request
-            RunQueryResponse response = datastoreClient.RunQuery(projectId, partitionId, readOptions, gqlQuery);
             // End snippet
         }
 
@@ -167,7 +103,6 @@ namespace Google.Cloud.Datastore.V1.Snippets
             {
                 ProjectId = "",
                 PartitionId = new PartitionId(),
-                ReadOptions = new ReadOptions(),
             };
             // Make the request
             RunQueryResponse response = await datastoreClient.RunQueryAsync(request);
@@ -184,7 +119,6 @@ namespace Google.Cloud.Datastore.V1.Snippets
             {
                 ProjectId = "",
                 PartitionId = new PartitionId(),
-                ReadOptions = new ReadOptions(),
             };
             // Make the request
             RunQueryResponse response = datastoreClient.RunQuery(request);

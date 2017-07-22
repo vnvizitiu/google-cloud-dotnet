@@ -1,4 +1,4 @@
-// Copyright 2016, Google Inc. All rights reserved.
+// Copyright 2017, Google Inc. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -55,7 +55,10 @@ namespace Google.Cloud.Monitoring.V3
             UpdateGroupSettings = existing.UpdateGroupSettings;
             DeleteGroupSettings = existing.DeleteGroupSettings;
             ListGroupMembersSettings = existing.ListGroupMembersSettings;
+            OnCopy(existing);
         }
+
+        partial void OnCopy(GroupServiceSettings existing);
 
         /// <summary>
         /// The filter specifying which RPC <see cref="StatusCode"/>s are eligible for retry
@@ -461,7 +464,7 @@ namespace Google.Cloud.Monitoring.V3
             CallSettings callSettings = null) => GetGroupAsync(
                 new GetGroupRequest
                 {
-                    GroupName = name,
+                    GroupName = GaxPreconditions.CheckNotNull(name, nameof(name)),
                 },
                 callSettings);
 
@@ -502,7 +505,7 @@ namespace Google.Cloud.Monitoring.V3
             CallSettings callSettings = null) => GetGroup(
                 new GetGroupRequest
                 {
-                    GroupName = name,
+                    GroupName = GaxPreconditions.CheckNotNull(name, nameof(name)),
                 },
                 callSettings);
 
@@ -567,8 +570,8 @@ namespace Google.Cloud.Monitoring.V3
             CallSettings callSettings = null) => CreateGroupAsync(
                 new CreateGroupRequest
                 {
-                    ProjectName = name,
-                    Group = group,
+                    ProjectName = GaxPreconditions.CheckNotNull(name, nameof(name)),
+                    Group = GaxPreconditions.CheckNotNull(group, nameof(group)),
                 },
                 callSettings);
 
@@ -620,8 +623,8 @@ namespace Google.Cloud.Monitoring.V3
             CallSettings callSettings = null) => CreateGroup(
                 new CreateGroupRequest
                 {
-                    ProjectName = name,
-                    Group = group,
+                    ProjectName = GaxPreconditions.CheckNotNull(name, nameof(name)),
+                    Group = GaxPreconditions.CheckNotNull(group, nameof(group)),
                 },
                 callSettings);
 
@@ -682,7 +685,7 @@ namespace Google.Cloud.Monitoring.V3
             CallSettings callSettings = null) => UpdateGroupAsync(
                 new UpdateGroupRequest
                 {
-                    Group = group,
+                    Group = GaxPreconditions.CheckNotNull(group, nameof(group)),
                 },
                 callSettings);
 
@@ -725,7 +728,7 @@ namespace Google.Cloud.Monitoring.V3
             CallSettings callSettings = null) => UpdateGroup(
                 new UpdateGroupRequest
                 {
-                    Group = group,
+                    Group = GaxPreconditions.CheckNotNull(group, nameof(group)),
                 },
                 callSettings);
 
@@ -787,7 +790,7 @@ namespace Google.Cloud.Monitoring.V3
             CallSettings callSettings = null) => DeleteGroupAsync(
                 new DeleteGroupRequest
                 {
-                    GroupName = name,
+                    GroupName = GaxPreconditions.CheckNotNull(name, nameof(name)),
                 },
                 callSettings);
 
@@ -828,7 +831,7 @@ namespace Google.Cloud.Monitoring.V3
             CallSettings callSettings = null) => DeleteGroup(
                 new DeleteGroupRequest
                 {
-                    GroupName = name,
+                    GroupName = GaxPreconditions.CheckNotNull(name, nameof(name)),
                 },
                 callSettings);
 
@@ -898,7 +901,7 @@ namespace Google.Cloud.Monitoring.V3
             CallSettings callSettings = null) => ListGroupMembersAsync(
                 new ListGroupMembersRequest
                 {
-                    GroupName = name,
+                    GroupName = GaxPreconditions.CheckNotNull(name, nameof(name)),
                     PageToken = pageToken ?? "",
                     PageSize = pageSize ?? 0,
                 },
@@ -932,7 +935,7 @@ namespace Google.Cloud.Monitoring.V3
             CallSettings callSettings = null) => ListGroupMembers(
                 new ListGroupMembersRequest
                 {
-                    GroupName = name,
+                    GroupName = GaxPreconditions.CheckNotNull(name, nameof(name)),
                     PageToken = pageToken ?? "",
                     PageSize = pageSize ?? 0,
                 },
@@ -983,7 +986,6 @@ namespace Google.Cloud.Monitoring.V3
     /// </summary>
     public sealed partial class GroupServiceClientImpl : GroupServiceClient
     {
-        private readonly ClientHelper _clientHelper;
         private readonly ApiCall<ListGroupsRequest, ListGroupsResponse> _callListGroups;
         private readonly ApiCall<GetGroupRequest, Group> _callGetGroup;
         private readonly ApiCall<CreateGroupRequest, Group> _callCreateGroup;
@@ -1000,20 +1002,23 @@ namespace Google.Cloud.Monitoring.V3
         {
             this.GrpcClient = grpcClient;
             GroupServiceSettings effectiveSettings = settings ?? GroupServiceSettings.GetDefault();
-            _clientHelper = new ClientHelper(effectiveSettings);
-            _callListGroups = _clientHelper.BuildApiCall<ListGroupsRequest, ListGroupsResponse>(
+            ClientHelper clientHelper = new ClientHelper(effectiveSettings);
+            _callListGroups = clientHelper.BuildApiCall<ListGroupsRequest, ListGroupsResponse>(
                 GrpcClient.ListGroupsAsync, GrpcClient.ListGroups, effectiveSettings.ListGroupsSettings);
-            _callGetGroup = _clientHelper.BuildApiCall<GetGroupRequest, Group>(
+            _callGetGroup = clientHelper.BuildApiCall<GetGroupRequest, Group>(
                 GrpcClient.GetGroupAsync, GrpcClient.GetGroup, effectiveSettings.GetGroupSettings);
-            _callCreateGroup = _clientHelper.BuildApiCall<CreateGroupRequest, Group>(
+            _callCreateGroup = clientHelper.BuildApiCall<CreateGroupRequest, Group>(
                 GrpcClient.CreateGroupAsync, GrpcClient.CreateGroup, effectiveSettings.CreateGroupSettings);
-            _callUpdateGroup = _clientHelper.BuildApiCall<UpdateGroupRequest, Group>(
+            _callUpdateGroup = clientHelper.BuildApiCall<UpdateGroupRequest, Group>(
                 GrpcClient.UpdateGroupAsync, GrpcClient.UpdateGroup, effectiveSettings.UpdateGroupSettings);
-            _callDeleteGroup = _clientHelper.BuildApiCall<DeleteGroupRequest, Empty>(
+            _callDeleteGroup = clientHelper.BuildApiCall<DeleteGroupRequest, Empty>(
                 GrpcClient.DeleteGroupAsync, GrpcClient.DeleteGroup, effectiveSettings.DeleteGroupSettings);
-            _callListGroupMembers = _clientHelper.BuildApiCall<ListGroupMembersRequest, ListGroupMembersResponse>(
+            _callListGroupMembers = clientHelper.BuildApiCall<ListGroupMembersRequest, ListGroupMembersResponse>(
                 GrpcClient.ListGroupMembersAsync, GrpcClient.ListGroupMembers, effectiveSettings.ListGroupMembersSettings);
+            OnConstruction(grpcClient, effectiveSettings, clientHelper);
         }
+
+        partial void OnConstruction(GroupService.GroupServiceClient grpcClient, GroupServiceSettings effectiveSettings, ClientHelper clientHelper);
 
         /// <summary>
         /// The underlying gRPC GroupService client.

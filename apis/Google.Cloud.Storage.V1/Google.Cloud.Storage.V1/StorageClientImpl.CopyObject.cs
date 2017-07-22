@@ -71,12 +71,12 @@ namespace Google.Cloud.Storage.V1
             GaxPreconditions.CheckNotNull(sourceObjectName, nameof(sourceObjectName));
             GaxPreconditions.CheckNotNull(destinationBucket, nameof(destinationBucket));
             GaxPreconditions.CheckNotNull(destinationObjectName, nameof(destinationObjectName));
-            if (destinationBucket == sourceBucket && destinationObjectName == sourceObjectName)
-            {
-                throw new ArgumentException("Cannot copy an object to itself. Specify either a different destination bucket or a different destination object name");
-            }
-            var request = Service.Objects.Rewrite(new Object(), sourceBucket, sourceObjectName, destinationBucket, destinationObjectName);
+            Object obj = options?.ExtraMetadata ?? new Object();
+            var request = Service.Objects.Rewrite(obj, sourceBucket, sourceObjectName, destinationBucket, destinationObjectName);
             options?.ModifyRequest(request);
+            ApplyEncryptionKey(options?.EncryptionKey, request);
+            request.ModifyRequest += (options?.SourceEncryptionKey ?? EncryptionKey).ModifyRequestForRewriteSource;
+            request.ModifyRequest += _versionHeaderAction;
             return request;
         }
     }

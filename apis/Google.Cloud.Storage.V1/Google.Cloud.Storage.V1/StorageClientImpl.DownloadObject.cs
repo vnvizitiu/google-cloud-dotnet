@@ -103,8 +103,7 @@ namespace Google.Cloud.Storage.V1
         {
             // URI will definitely not be null; that's constructed internally.
             GaxPreconditions.CheckNotNull(destination, nameof(destination));
-            var downloader = new HashValidatingDownloader(Service);
-            options?.ModifyDownloader(downloader);
+            var downloader = CreateDownloader(options);
             string uri = options == null ? baseUri : options.GetUri(baseUri);
             if (progress != null)
             {
@@ -118,29 +117,38 @@ namespace Google.Cloud.Storage.V1
             }
         }
 
-        private async Task DownloadObjectAsyncImpl(
+        private Task DownloadObjectAsyncImpl(
             string baseUri,
             Stream destination,
             DownloadObjectOptions options,
             CancellationToken cancellationToken,
-            IProgress<IDownloadProgress> progress)
+            IProgress<IDownloadProgress> progress) =>
+            // Use Task.Run to prevent reporting progress synchronously in the original call.
+            // We used to await Task.Yield(), but that doesn't actually achieve what we want.
+            Task.Run(async () =>
+            {
+                GaxPreconditions.CheckNotNull(destination, nameof(destination));
+                var downloader = CreateDownloader(options);
+                string uri = options == null ? baseUri : options.GetUri(baseUri);
+                if (progress != null)
+                {
+                    downloader.ProgressChanged += progress.Report;
+                    progress.Report(InitialDownloadProgress.Instance);
+                }
+                var result = await downloader.DownloadAsync(uri, destination, cancellationToken).ConfigureAwait(false);
+                if (result.Status == DownloadStatus.Failed)
+                {
+                    throw result.Exception;
+                }
+            });
+
+        private HashValidatingDownloader CreateDownloader(DownloadObjectOptions options)
         {
-            GaxPreconditions.CheckNotNull(destination, nameof(destination));
             var downloader = new HashValidatingDownloader(Service);
+            downloader.ModifyRequest += _versionHeaderAction;
             options?.ModifyDownloader(downloader);
-            string uri = options == null ? baseUri : options.GetUri(baseUri);
-            if (progress != null)
-            {
-                downloader.ProgressChanged += progress.Report;
-                // Avoid reporting progress synchronously in the original call.
-                await Task.Yield();
-                progress.Report(InitialDownloadProgress.Instance);
-            }
-            var result = await downloader.DownloadAsync(uri, destination, cancellationToken).ConfigureAwait(false);
-            if (result.Status == DownloadStatus.Failed)
-            {
-                throw result.Exception;
-            }
+            ApplyEncryptionKey(options?.EncryptionKey, downloader);
+            return downloader;
         }
 
         // MediaDownloader doesn't report progress until the first chunk has been fetched. It can be useful to

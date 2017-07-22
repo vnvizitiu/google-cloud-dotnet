@@ -8,27 +8,41 @@
 * [Homepage](https://cloud.google.com/dotnet/)
 * [API Documentation](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/)
 
+The following libraries are available at a [GA](#versioning) quality level:
+
+* [Google Cloud Datastore](https://cloud.google.com/datastore/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Datastore.V1/) (GA)
+* [Google Stackdriver Logging](https://cloud.google.com/logging/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Logging.V2/) (GA)
+  * Integration with Log4Net is provided via [Google.Cloud.Logging.Log4Net](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Logging.Log4Net/) (GA)
+* [Google Cloud Storage](https://cloud.google.com/storage/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Storage.V1/) (GA)
+* [Google Cloud Translation](https://cloud.google.com/translate/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Translation.V2/) (GA)
+
 The following libraries are available at a [late beta](#versioning) quality level:
 
-* [Google Cloud Storage](https://cloud.google.com/storage/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Storage.V1/) (late beta)
 * [Google BigQuery](https://cloud.google.com/bigquery/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.BigQuery.V2/) (late beta)
-* [Google Cloud Datastore](https://cloud.google.com/datastore/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Datastore.V1/) (late beta)
-* [Google Stackdriver Logging](https://cloud.google.com/logging/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Logging.V2/) (late beta)
+* [Google Cloud Natural Language](https://cloud.google.com/natural-language/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Language.V1/) (late beta)
+  * Additionally, [a separate package containing experimental features](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Language.V1.Experimental/) is available
+* [Google Cloud Speech](https://cloud.google.com/speech/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Speech.V1/) (late beta)
+* [Google Cloud Vision](https://cloud.google.com/vision/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Vision.V1/) (late beta)
 
 The following libraries are available at a [beta](#versioning) quality level:
 
-* [Google Cloud Pub/Sub](https://cloud.google.com/pubsub/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.PubSub.V1/) (beta)
-* [Google Cloud Natural Language](https://cloud.google.com/natural-language/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Language.V1/) (beta)
-* [Stackdriver Monitoring](https://cloud.google.com/monitoring/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Monitoring.V3/) (beta)
-* [Stackdriver Error Reporting](https://cloud.google.com/error-reporting/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.ErrorReporting.V1Beta1/) (beta)
-* [Stackdriver Trace](https://cloud.google.com/trace/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Trace.V1/) (beta)
 * Google Cloud Diagnostics for ASP.NET - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Diagnostics.AspNet/) (beta)
+* Google Cloud Diagnostics for ASP.NET Core - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Diagnostics.AspNetCore/) (beta)
+* [Stackdriver Error Reporting](https://cloud.google.com/error-reporting/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.ErrorReporting.V1Beta1/) (beta)
+* [Stackdriver Monitoring](https://cloud.google.com/monitoring/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Monitoring.V3/) (beta)
+* [Google Cloud Pub/Sub](https://cloud.google.com/pubsub/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.PubSub.V1/) (beta)
+* [Stackdriver Trace](https://cloud.google.com/trace/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Trace.V1/) (beta)
+* [Google Cloud Spanner](https://cloud.google.com/spanner/): four packages are available, all beta:
+  * [Google.Cloud.Spanner.Data](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Spanner.Data/): ADO.NET provider for Google Cloud Spanner (recommended)
+  * [Google.Cloud.Spanner.V1](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Spanner.V1/): Low-level access to Spanner API
+  * [Google.Cloud.Spanner.Admin.Database.V1](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Spanner.Admin.Database.V1/): Database administration API
+  * [Google.Cloud.Spanner.Admin.Instance.V1](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Spanner.Admin.Instance.V1/): Instance administration API
 
 The following libraries are available at an [alpha](#versioning) quality level:
 
 * Google Cloud Metadata - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Metadata.V1) (alpha)
-* [Google Cloud Vision](https://cloud.google.com/vision/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Vision.V1/) (alpha)
-* [Google Cloud Speech](https://cloud.google.com/speech/) - [API docs](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Speech.V1Beta1/) (alpha)
+* [Google Cloud Video Intelligence](https://cloud.google.com/video-intelligence/) - [API docs](https://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.VideoIntelligence.V1Beta1/) (alpha)
+* [Google Cloud Data Loss Prevention](https://cloud.google.com/dlp/) - [API docs](https://googlecloudplatform.github.io/google-cloud-dotnet/docs/Google.Cloud.Dlp.V2Beta1/) (alpha)
 
 See the [API documentation](http://googlecloudplatform.github.io/google-cloud-dotnet/docs/) for details of the status
 of each library.
@@ -76,8 +90,15 @@ Next, choose a method for authenticating API requests from within your project:
       Download the SDK if you haven't already, then login by running the following in the command line:
 
       ```
-      gcloud auth login
+      gcloud auth application-default login
       ```
+
+## Supported platforms
+
+See the [Supported Platforms
+documentation](https://googlecloudplatform.github.io/google-cloud-dotnet/docs/guides/platforms.html)
+for details on where the Google Cloud Libraries for .NET are
+supported.
 
 ## Contributing
 
@@ -93,6 +114,10 @@ The version number in the package *name* (and .NET namespace)
 represents the version of the underlying API; the version number for
 the package itself indicates the status of the client library, according to
 the following quality levels:
+
+**GA**: Libraries defined at a GA (General Availability) quality level are
+expected to be stable: breaking API changes will not be made without a new major
+release.
 
 **Late Beta**: Libraries defined at a Late Beta quality level are
 expected to be mostly stable and we're working towards their release

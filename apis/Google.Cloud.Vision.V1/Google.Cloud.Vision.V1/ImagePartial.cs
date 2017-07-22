@@ -23,47 +23,73 @@ namespace Google.Cloud.Vision.V1
 {
     public partial class Image
     {
+        private static readonly HttpClient s_defaultHttpClient = new HttpClient();
+
         /// <summary>
-        /// Constructs an <see cref="Image"/> with a <see cref="Image.Source"/> property referring to a Google Cloud
-        /// Storage URI.
+        /// Constructs an <see cref="Image"/> with a <see cref="Image.Source"/> property referring to a URI,
+        /// which may either be a Google Cloud Storage URI or a publicly accessible HTTP or HTTPS URI. The
+        /// image is fetched from the URI by the Google Cloud Vision server.
         /// </summary>
-        /// <param name="storageUri">A Google Cloud Storage URI, of the form <c>gs://bucket-name/file-name</c>. Must not be null.</param>
+        /// <param name="uri">The URI of the image, which may either be a Google Cloud Storage URI of the form <c>gs://bucket-name/file-name</c>
+        /// or a publicly accessibly HTTP or HTTPS URI. Must not be null.</param>
         /// <returns>The newly created image.</returns>
-        public static Image FromStorageUri(string storageUri)
+        public static Image FromUri(string uri)
         {
-            GaxPreconditions.CheckNotNull(storageUri, nameof(storageUri));
-            // TODO: Validate that it looks like gs://bucket/object
-            return new Image { Source = new ImageSource { GcsImageUri = storageUri } };
+            GaxPreconditions.CheckNotNull(uri, nameof(uri));
+            return new Image { Source = new ImageSource { ImageUri = uri } };
+        }
+
+        /// <summary>
+        /// Constructs an <see cref="Image"/> with a <see cref="Image.Source"/> property referring to a URI,
+        /// which may either be a Google Cloud Storage URI or a publicly accessible HTTP or HTTPS URI. The
+        /// image is fetched from the URI by the Google Cloud Vision server.
+        /// </summary>
+        /// <param name="uri">The URI of the image, which may either be a Google Cloud Storage URI of the form <c>gs://bucket-name/file-name</c>
+        /// or a publicly accessibly HTTP or HTTPS URI. Must not be null.</param>
+        /// <returns>The newly created image.</returns>
+        public static Image FromUri(Uri uri)
+        {
+            GaxPreconditions.CheckNotNull(uri, nameof(uri));
+            GaxPreconditions.CheckArgument(uri.IsAbsoluteUri, nameof(uri), "URI must be absolute");
+            return new Image { Source = new ImageSource { ImageUri = uri.AbsoluteUri } };
         }
 
         /// <summary>
         /// Asynchronously constructs an <see cref="Image"/> by downloading data from the given URI.
         /// </summary>
+        /// <remarks>
+        /// <para>Unlike <see cref="FromUri(Uri)"/>, this method downloads the image locally then uploads
+        /// it to the Google Cloud Vision server.</para>
+        /// </remarks>
         /// <param name="uri">The URI to fetch. Must not be null.</param>
+        /// <param name="httpClient">The <see cref="HttpClient"/> to use to fetch the image, or
+        /// <c>null</c> to use a default client.</param>
         /// <returns>A task representing the asynchronous operation. The result will be the newly created image.</returns>
-        public async static Task<Image> FromUriAsync(Uri uri)
+        public async static Task<Image> FetchFromUriAsync(Uri uri, HttpClient httpClient = null)
         {
             GaxPreconditions.CheckNotNull(uri, nameof(uri));
-            using (var client = new HttpClient())
-            {
-                var bytes = await client.GetByteArrayAsync(uri).ConfigureAwait(false);
-                return FromBytes(bytes);
-            }
+            httpClient = httpClient ?? s_defaultHttpClient;
+            var bytes = await httpClient.GetByteArrayAsync(uri).ConfigureAwait(false);
+            return FromBytes(bytes);
         }
 
         /// <summary>
         /// Asynchronously constructs an <see cref="Image"/> by downloading data from the given URI.
         /// </summary>
+        /// <remarks>
+        /// <para>Unlike <see cref="FromUri(Uri)"/>, this method downloads the image locally then uploads
+        /// it to the Google Cloud Vision server.</para>
+        /// </remarks>
         /// <param name="uri">The URI to fetch. Must not be null.</param>
+        /// <param name="httpClient">The <see cref="HttpClient"/> to use to fetch the image, or
+        /// <c>null</c> to use a default client.</param>
         /// <returns>A task representing the asynchronous operation. The result will be the newly created image.</returns>
-        public async static Task<Image> FromUriAsync(string uri)
+        public async static Task<Image> FetchFromUriAsync(string uri, HttpClient httpClient = null)
         {
             GaxPreconditions.CheckNotNull(uri, nameof(uri));
-            using (var client = new HttpClient())
-            {
-                var bytes = await client.GetByteArrayAsync(uri).ConfigureAwait(false);
-                return FromBytes(bytes);
-            }
+            httpClient = httpClient ?? s_defaultHttpClient;
+            var bytes = await httpClient.GetByteArrayAsync(uri).ConfigureAwait(false);
+            return FromBytes(bytes);
         }
 
         // TODO: Find better synchronous HTTP fetching?
@@ -71,23 +97,36 @@ namespace Google.Cloud.Vision.V1
         /// <summary>
         /// Constructs an <see cref="Image"/> by downloading data from the given URI.
         /// </summary>
+        /// <remarks>
+        /// <para>Unlike <see cref="FromUri(string)"/>, this method downloads the image locally then uploads
+        /// it to the Google Cloud Vision server.</para>
+        /// </remarks>
         /// <param name="uri">The URI to fetch. Must not be null.</param>
+        /// <param name="httpClient">The <see cref="HttpClient"/> to use to fetch the image, or
+        /// <c>null</c> to use a default client.</param>
         /// <returns>The newly created image.</returns>
-        public static Image FromUri(string uri)
+        public static Image FetchFromUri(string uri, HttpClient httpClient = null)
         {
             GaxPreconditions.CheckNotNull(uri, nameof(uri));
-            return Task.Run(() => FromUriAsync(uri)).Result;
+            return Task.Run(() => FetchFromUriAsync(uri, httpClient)).ResultWithUnwrappedExceptions();
         }
 
         /// <summary>
         /// Constructs an <see cref="Image"/> by downloading data from the given URI.
         /// </summary>
+        /// <remarks>
+        /// <para>Unlike <see cref="FromUri(string)"/>, this method downloads the image locally then uploads
+        /// it to the Google Cloud Vision server.</para>
+        /// </remarks>
         /// <param name="uri">The URI to fetch. Must not be null.</param>
+        /// <param name="httpClient">The <see cref="HttpClient"/> to use to fetch the image, or
+        /// <c>null</c> to use a default client.</param>
         /// <returns>The newly created image.</returns>
-        public static Image FromUri(Uri uri)
+        public static Image FetchFromUri(Uri uri, HttpClient httpClient = null)
         {
             GaxPreconditions.CheckNotNull(uri, nameof(uri));
-            return Task.Run(() => FromUriAsync(uri)).Result;
+            // TODO: Use ResultWithUnwrappedExceptions when it's public in GAX.
+            return Task.Run(() => FetchFromUriAsync(uri, httpClient)).ResultWithUnwrappedExceptions();
         }
 
         /// <summary>
@@ -106,16 +145,17 @@ namespace Google.Cloud.Vision.V1
         /// </summary>
         /// <param name="path">The file path to load image data from. Must not be null.</param>
         /// <returns>The newly created image.</returns>
-        public static async Task<Image> FromFileAsync(string path)
-        {
-            GaxPreconditions.CheckNotNull(path, nameof(path));
-            // We don't want any file system access to occur synchronously.
-            await Task.Yield();
-            using (var input = File.OpenRead(path))
+        public static Task<Image> FromFileAsync(string path) =>
+            // We don't want any file system access to occur synchronously, including opening.
+            // The ConfigureAwait(false) inside is unnecessary but harmless.
+            Task.Run(async () =>
             {
-                return await FromStreamAsync(input).ConfigureAwait(false);
-            }
-        }
+                GaxPreconditions.CheckNotNull(path, nameof(path));
+                using (var input = File.OpenRead(path))
+                {
+                    return await FromStreamAsync(input).ConfigureAwait(false);
+                }
+            });
 
         /// <summary>
         /// Constructs an <see cref="Image"/> by loading data from the given stream.
@@ -125,13 +165,7 @@ namespace Google.Cloud.Vision.V1
         public static Image FromStream(Stream stream)
         {
             GaxPreconditions.CheckNotNull(stream, nameof(stream));
-            var output = new MemoryStream();
-            stream.CopyTo(output);
-#if NETSTANDARD1_5
-            return FromBytes(output.ToArray());
-#else
-            return FromBytes(output.GetBuffer(), 0, checked((int)output.Length));
-#endif
+            return new Image { Content = ByteString.FromStream(stream) };
         }
 
         /// <summary>
@@ -141,13 +175,8 @@ namespace Google.Cloud.Vision.V1
         /// <returns>The newly created image.</returns>
         public static async Task<Image> FromStreamAsync(Stream stream)
         {
-            var output = new MemoryStream();
-            await stream.CopyToAsync(output).ConfigureAwait(false);
-#if NETSTANDARD1_5
-            return FromBytes(output.ToArray());
-#else
-            return FromBytes(output.GetBuffer(), 0, checked((int)output.Length));
-#endif
+            GaxPreconditions.CheckNotNull(stream, nameof(stream));
+            return new Image { Content = await ByteString.FromStreamAsync(stream).ConfigureAwait(false) };
         }
 
         /// <summary>

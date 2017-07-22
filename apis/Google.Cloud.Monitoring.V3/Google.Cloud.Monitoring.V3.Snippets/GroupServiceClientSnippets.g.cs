@@ -1,4 +1,4 @@
-// Copyright 2016, Google Inc. All rights reserved.
+// Copyright 2017, Google Inc. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ namespace Google.Cloud.Monitoring.V3.Snippets
                 ProjectName = new ProjectName("[PROJECT]"),
             };
             // Make the request
-            PagedAsyncEnumerable<ListGroupsResponse,Group> response =
+            PagedAsyncEnumerable<ListGroupsResponse, Group> response =
                 groupServiceClient.ListGroupsAsync(request);
 
             // Iterate over all response items, lazily performing RPCs as required
@@ -90,7 +90,7 @@ namespace Google.Cloud.Monitoring.V3.Snippets
                 ProjectName = new ProjectName("[PROJECT]"),
             };
             // Make the request
-            PagedEnumerable<ListGroupsResponse,Group> response =
+            PagedEnumerable<ListGroupsResponse, Group> response =
                 groupServiceClient.ListGroups(request);
 
             // Iterate over all response items, lazily performing RPCs as required
@@ -357,7 +357,7 @@ namespace Google.Cloud.Monitoring.V3.Snippets
             // Initialize request argument(s)
             GroupName name = new GroupName("[PROJECT]", "[GROUP]");
             // Make the request
-            PagedAsyncEnumerable<ListGroupMembersResponse,MonitoredResource> response =
+            PagedAsyncEnumerable<ListGroupMembersResponse, MonitoredResource> response =
                 groupServiceClient.ListGroupMembersAsync(name);
 
             // Iterate over all response items, lazily performing RPCs as required
@@ -400,7 +400,7 @@ namespace Google.Cloud.Monitoring.V3.Snippets
             // Initialize request argument(s)
             GroupName name = new GroupName("[PROJECT]", "[GROUP]");
             // Make the request
-            PagedEnumerable<ListGroupMembersResponse,MonitoredResource> response =
+            PagedEnumerable<ListGroupMembersResponse, MonitoredResource> response =
                 groupServiceClient.ListGroupMembers(name);
 
             // Iterate over all response items, lazily performing RPCs as required
@@ -446,7 +446,7 @@ namespace Google.Cloud.Monitoring.V3.Snippets
                 GroupName = new GroupName("[PROJECT]", "[GROUP]"),
             };
             // Make the request
-            PagedAsyncEnumerable<ListGroupMembersResponse,MonitoredResource> response =
+            PagedAsyncEnumerable<ListGroupMembersResponse, MonitoredResource> response =
                 groupServiceClient.ListGroupMembersAsync(request);
 
             // Iterate over all response items, lazily performing RPCs as required
@@ -492,7 +492,7 @@ namespace Google.Cloud.Monitoring.V3.Snippets
                 GroupName = new GroupName("[PROJECT]", "[GROUP]"),
             };
             // Make the request
-            PagedEnumerable<ListGroupMembersResponse,MonitoredResource> response =
+            PagedEnumerable<ListGroupMembersResponse, MonitoredResource> response =
                 groupServiceClient.ListGroupMembers(request);
 
             // Iterate over all response items, lazily performing RPCs as required

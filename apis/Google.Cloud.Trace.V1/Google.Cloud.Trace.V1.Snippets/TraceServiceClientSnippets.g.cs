@@ -1,4 +1,4 @@
-// Copyright 2016, Google Inc. All rights reserved.
+// Copyright 2017, Google Inc. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -158,7 +158,7 @@ namespace Google.Cloud.Trace.V1.Snippets
             // Initialize request argument(s)
             string projectId = "";
             // Make the request
-            PagedAsyncEnumerable<ListTracesResponse,Trace> response =
+            PagedAsyncEnumerable<ListTracesResponse, Trace> response =
                 traceServiceClient.ListTracesAsync(projectId);
 
             // Iterate over all response items, lazily performing RPCs as required
@@ -201,7 +201,7 @@ namespace Google.Cloud.Trace.V1.Snippets
             // Initialize request argument(s)
             string projectId = "";
             // Make the request
-            PagedEnumerable<ListTracesResponse,Trace> response =
+            PagedEnumerable<ListTracesResponse, Trace> response =
                 traceServiceClient.ListTraces(projectId);
 
             // Iterate over all response items, lazily performing RPCs as required
@@ -247,7 +247,7 @@ namespace Google.Cloud.Trace.V1.Snippets
                 ProjectId = "",
             };
             // Make the request
-            PagedAsyncEnumerable<ListTracesResponse,Trace> response =
+            PagedAsyncEnumerable<ListTracesResponse, Trace> response =
                 traceServiceClient.ListTracesAsync(request);
 
             // Iterate over all response items, lazily performing RPCs as required
@@ -293,7 +293,7 @@ namespace Google.Cloud.Trace.V1.Snippets
                 ProjectId = "",
             };
             // Make the request
-            PagedEnumerable<ListTracesResponse,Trace> response =
+            PagedEnumerable<ListTracesResponse, Trace> response =
                 traceServiceClient.ListTraces(request);
 
             // Iterate over all response items, lazily performing RPCs as required

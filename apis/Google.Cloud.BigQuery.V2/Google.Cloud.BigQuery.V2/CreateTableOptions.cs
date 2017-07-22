@@ -54,6 +54,16 @@ namespace Google.Cloud.BigQuery.V2
         /// </summary>
         public TimePartitionType? TimePartitionType { get; set; }
 
+        /// <summary>
+        /// The external data configuration, if the table should be created to use external data.
+        /// </summary>
+        public ExternalDataConfiguration ExternalDataConfiguration { get; set; }
+
+        /// <summary>
+        /// The view definition, if the table should be configured as a view.
+        /// </summary>
+        public ViewDefinition View { get; set; }
+
         internal void ModifyRequest(Table table, InsertRequest request)
         {
             if (Description != null)
@@ -86,6 +96,18 @@ namespace Google.Cloud.BigQuery.V2
                     throw new ArgumentException($"Cannot specify {nameof(TimePartitionExpiration)} when not using time partitioning.");
                 }
                 table.TimePartitioning.ExpirationMs = (long) TimePartitionExpiration.Value.TotalMilliseconds;
+            }
+            if (ExternalDataConfiguration != null && View != null)
+            {
+                throw new ArgumentException($"Cannot specify both {nameof(ExternalDataConfiguration)} and {nameof(View)}");
+            }
+            if (ExternalDataConfiguration != null)
+            {
+                table.ExternalDataConfiguration = ExternalDataConfiguration;
+            }
+            if (View != null)
+            {
+                table.View = View;
             }
         }
     }

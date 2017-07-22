@@ -1,26 +1,10 @@
-# Google.Cloud.PubSub.V1
+{{title}}
 
-`Google.Cloud.PubSub.V1` is a .NET client library for [Cloud
-Pub/Sub](https://cloud.google.com/pubsub/).
+{{description}}
 
-# Installation
+{{installation}}
 
-Install the `Google.Cloud.PubSub.V1` package from NuGet. Add it to
-your project in the normal way (for example by right-clicking on the
-project in Visual Studio and choosing "Manage NuGet Packages...").
-Please ensure you enable pre-release packages (for example, in the
-Visual Studio NuGet user interface, check the "Include prerelease"
-box).
-
-# Authentication
-
-To authenticate all your API calls, first install and setup the
-[Google Cloud SDK](https://cloud.google.com/sdk/). After that is
-installed, run the following command in a Google Cloud SDK Shell:
-
-```sh
-> gcloud auth application-default login
-```
+{{auth}}
 
 # Getting started
 
@@ -30,6 +14,15 @@ provide a general-purpose abstraction over raw the RPC API, providing
 features such as page streaming to make client code cleaner and
 simpler.
 
+[SimplePublisher](obj/api/Google.Cloud.PubSub.V1.SimplePublisher.yml) and [SimpleSubscriber](obj/api/Google.Cloud.PubSub.V1.SimpleSubscriber.yml) provide simpler APIs for message publishing and subscribing. These classes offer considerably higher performance and simplicity, especially when working with higher message throughput.
+
 # Sample code
+
+Using [SimplePublisher](obj/api/Google.Cloud.PubSub.V1.SimplePublisher.yml) and [SimpleSubscriber](obj/api/Google.Cloud.PubSub.V1.SimpleSubscriber.yml) for message publishing and subscribing:
+
+[!code-cs[](obj/snippets/Google.Cloud.PubSub.V1.SubscriberClient.txt#SimpleOverview)]
+
+Using [PublisherClient](obj/api/Google.Cloud.PubSub.V1.PublisherClient.yml) and
+[SubscriberClient](obj/api/Google.Cloud.PubSub.V1.SubscriberClient.yml) only:
 
 [!code-cs[](obj/snippets/Google.Cloud.PubSub.V1.SubscriberClient.txt#Overview)]

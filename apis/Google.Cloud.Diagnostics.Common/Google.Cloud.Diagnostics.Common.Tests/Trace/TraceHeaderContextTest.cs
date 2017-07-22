@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using System;
 using Xunit;
 
 namespace Google.Cloud.Diagnostics.Common.Tests
@@ -42,7 +43,7 @@ namespace Google.Cloud.Diagnostics.Common.Tests
         {
             Assert.Null(context.SpanId);
             Assert.Null(context.TraceId);
-            Assert.False(context.ShouldTrace);
+            Assert.Null(context.ShouldTrace);
         }
 
         [Fact]
@@ -64,7 +65,7 @@ namespace Google.Cloud.Diagnostics.Common.Tests
 
             Assert.True(SpanId == context.SpanId);
             Assert.Equal(TraceId, context.TraceId);
-            Assert.False(context.ShouldTrace);
+            Assert.Null(context.ShouldTrace);
 
         }
 
@@ -88,6 +89,46 @@ namespace Google.Cloud.Diagnostics.Common.Tests
             Assert.True(context.ShouldTrace);
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        [InlineData(null)]
+        public void FromRequest_ForceTrace(bool? shouldTrace)
+        {
+            var context = TraceHeaderContext.FromHeader(
+                CreateTraceHeaderValue(), () => shouldTrace);
+
+            Assert.Equal(TraceId, context.TraceId);
+            Assert.Equal(SpanId, context.SpanId);
+            Assert.Equal(shouldTrace, context.ShouldTrace);
+        }
+
+        [Fact]
+        public void FromRequest_ForceTrace_NoHeader()
+        {
+            var context = TraceHeaderContext.FromHeader("", () => true);
+
+            Assert.NotNull(context.TraceId);
+            Assert.Equal((ulong)0, context.SpanId);
+            Assert.True(context.ShouldTrace);
+        }
+
+        [Fact]
+        public void FromRequest_ForceTrace_NullFunc()
+        {
+            var context = TraceHeaderContext.FromHeader(CreateTraceHeaderValue(1), null);
+
+            Assert.Equal(SpanId, context.SpanId);
+            Assert.Equal(TraceId, context.TraceId);
+            Assert.True(context.ShouldTrace);
+        }
+
+        [Fact]
+        public void FromRequest_ForceTrace_NullFunc_Invalid()
+        {
+            CheckInvalid(TraceHeaderContext.FromHeader("", null));
+        }
+
         [Fact]
         public void Create()
         {
@@ -102,6 +143,9 @@ namespace Google.Cloud.Diagnostics.Common.Tests
         {
             var context = TraceHeaderContext.Create(TraceId, SpanId, true);
             Assert.Equal($"{TraceId}/{SpanId};o=1", context.ToString());
+
+            context = TraceHeaderContext.Create(TraceId, SpanId, null);
+            Assert.Equal($"{TraceId}/{SpanId};", context.ToString());
 
             context = TraceHeaderContext.Create(TraceId, SpanId, false);
             Assert.Equal($"{TraceId}/{SpanId};o=0", context.ToString());

@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Google.Cloud.Diagnostics.Common
 {
@@ -27,12 +29,39 @@ namespace Google.Cloud.Diagnostics.Common
         /// </summary>
         /// <param name="name">The name of the span, cannot be null.</param>
         /// <param name="options">The span options to override default values.</param>
-        void StartSpan(string name, StartSpanOptions options = null);
+        /// <returns>
+        /// An <see cref="ISpan"/> that will end the current span when disposed.
+        /// </returns>
+        ISpan StartSpan(string name, StartSpanOptions options = null);
 
         /// <summary>
-        /// Ends the current span.
+        /// Runs the function in a span and will add a stacktrace from a thrown
+        /// exception (the exception will be re-thrown) to the span.
         /// </summary>
-        void EndSpan();
+        /// <param name="action">The action to run in a span.</param>
+        /// <param name="name">The name of the span, cannot be null.</param>
+        /// <param name="options">The span options to override default values.</param>
+        void RunInSpan(Action action, string name, StartSpanOptions options = null);
+
+        /// <summary>
+        /// Runs the function in a span and will add a stacktrace from a thrown
+        /// exception (the exception will be re-thrown) to the span.
+        /// </summary>
+        /// <param name="func">The function to run in a span.</param>
+        /// <param name="name">The name of the span, cannot be null.</param>
+        /// <param name="options">The span options to override default values.</param>
+        /// <returns>The result from the call to <paramref name="func"/></returns>
+        T RunInSpan<T>(Func<T> func, string name, StartSpanOptions options = null);
+
+        /// <summary>
+        /// Runs the function asynchronously in a span and will add a stacktrace
+        /// from a thrown exception (the exception will be re-thrown) to the span.
+        /// </summary>
+        /// <param name="func">The function to run in a span.</param>
+        /// <param name="name">The name of the span, cannot be null.</param>
+        /// <param name="options">The span options to override default values.</param>
+        /// <returns>The result from the call to <paramref name="func"/></returns>
+        Task<T> RunInSpanAsync<T>(Func<Task<T>> func, string name, StartSpanOptions options = null);
 
         /// <summary>
         /// Annotates the current span with the given labels. 

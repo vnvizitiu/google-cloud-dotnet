@@ -38,9 +38,10 @@ namespace Google.Cloud.Iam.V1 {
             "bVBvbGljeToBKhKaAQoSVGVzdElhbVBlcm1pc3Npb25zEiguZ29vZ2xlLmlh",
             "bS52MS5UZXN0SWFtUGVybWlzc2lvbnNSZXF1ZXN0GikuZ29vZ2xlLmlhbS52",
             "MS5UZXN0SWFtUGVybWlzc2lvbnNSZXNwb25zZSIvgtPkkwIpIiQvdjEve3Jl",
-            "c291cmNlPSoqfTp0ZXN0SWFtUGVybWlzc2lvbnM6ASpCPgoRY29tLmdvb2ds",
-            "ZS5pYW0udjFCDklhbVBvbGljeVByb3RvUAH4AQGqAhNHb29nbGUuQ2xvdWQu",
-            "SWFtLlYxYgZwcm90bzM="));
+            "c291cmNlPSoqfTp0ZXN0SWFtUGVybWlzc2lvbnM6ASpCcAoRY29tLmdvb2ds",
+            "ZS5pYW0udjFCDklhbVBvbGljeVByb3RvUAFaMGdvb2dsZS5nb2xhbmcub3Jn",
+            "L2dlbnByb3RvL2dvb2dsZWFwaXMvaWFtL3YxO2lhbfgBAaoCE0dvb2dsZS5D",
+            "bG91ZC5JYW0uVjFiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Api.AnnotationsReflection.Descriptor, global::Google.Cloud.Iam.V1.PolicyReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
@@ -55,7 +56,7 @@ namespace Google.Cloud.Iam.V1 {
   }
   #region Messages
   /// <summary>
-  ///  Request message for `SetIamPolicy` method.
+  /// Request message for `SetIamPolicy` method.
   /// </summary>
   public sealed partial class SetIamPolicyRequest : pb::IMessage<SetIamPolicyRequest> {
     private static readonly pb::MessageParser<SetIamPolicyRequest> _parser = new pb::MessageParser<SetIamPolicyRequest>(() => new SetIamPolicyRequest());
@@ -94,9 +95,9 @@ namespace Google.Cloud.Iam.V1 {
     public const int ResourceFieldNumber = 1;
     private string resource_ = "";
     /// <summary>
-    ///  REQUIRED: The resource for which the policy is being specified.
-    ///  `resource` is usually specified as a path. For example, a Project
-    ///  resource is specified as `projects/{project}`.
+    /// REQUIRED: The resource for which the policy is being specified.
+    /// `resource` is usually specified as a path. For example, a Project
+    /// resource is specified as `projects/{project}`.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string Resource {
@@ -110,10 +111,10 @@ namespace Google.Cloud.Iam.V1 {
     public const int PolicyFieldNumber = 2;
     private global::Google.Cloud.Iam.V1.Policy policy_;
     /// <summary>
-    ///  REQUIRED: The complete policy to be applied to the `resource`. The size of
-    ///  the policy is limited to a few 10s of KB. An empty policy is a
-    ///  valid policy but certain Cloud Platform services (such as Projects)
-    ///  might reject them.
+    /// REQUIRED: The complete policy to be applied to the `resource`. The size of
+    /// the policy is limited to a few 10s of KB. An empty policy is a
+    /// valid policy but certain Cloud Platform services (such as Projects)
+    /// might reject them.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::Google.Cloud.Iam.V1.Policy Policy {
@@ -220,7 +221,7 @@ namespace Google.Cloud.Iam.V1 {
   }
 
   /// <summary>
-  ///  Request message for `GetIamPolicy` method.
+  /// Request message for `GetIamPolicy` method.
   /// </summary>
   public sealed partial class GetIamPolicyRequest : pb::IMessage<GetIamPolicyRequest> {
     private static readonly pb::MessageParser<GetIamPolicyRequest> _parser = new pb::MessageParser<GetIamPolicyRequest>(() => new GetIamPolicyRequest());
@@ -258,9 +259,9 @@ namespace Google.Cloud.Iam.V1 {
     public const int ResourceFieldNumber = 1;
     private string resource_ = "";
     /// <summary>
-    ///  REQUIRED: The resource for which the policy is being requested.
-    ///  `resource` is usually specified as a path. For example, a Project
-    ///  resource is specified as `projects/{project}`.
+    /// REQUIRED: The resource for which the policy is being requested.
+    /// `resource` is usually specified as a path. For example, a Project
+    /// resource is specified as `projects/{project}`.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string Resource {
@@ -345,7 +346,7 @@ namespace Google.Cloud.Iam.V1 {
   }
 
   /// <summary>
-  ///  Request message for `TestIamPermissions` method.
+  /// Request message for `TestIamPermissions` method.
   /// </summary>
   public sealed partial class TestIamPermissionsRequest : pb::IMessage<TestIamPermissionsRequest> {
     private static readonly pb::MessageParser<TestIamPermissionsRequest> _parser = new pb::MessageParser<TestIamPermissionsRequest>(() => new TestIamPermissionsRequest());
@@ -384,9 +385,9 @@ namespace Google.Cloud.Iam.V1 {
     public const int ResourceFieldNumber = 1;
     private string resource_ = "";
     /// <summary>
-    ///  REQUIRED: The resource for which the policy detail is being requested.
-    ///  `resource` is usually specified as a path. For example, a Project
-    ///  resource is specified as `projects/{project}`.
+    /// REQUIRED: The resource for which the policy detail is being requested.
+    /// `resource` is usually specified as a path. For example, a Project
+    /// resource is specified as `projects/{project}`.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string Resource {
@@ -402,10 +403,10 @@ namespace Google.Cloud.Iam.V1 {
         = pb::FieldCodec.ForString(18);
     private readonly pbc::RepeatedField<string> permissions_ = new pbc::RepeatedField<string>();
     /// <summary>
-    ///  The set of permissions to check for the `resource`. Permissions with
-    ///  wildcards (such as '*' or 'storage.*') are not allowed. For more
-    ///  information see
-    ///  [IAM Overview](https://cloud.google.com/iam/docs/overview#permissions).
+    /// The set of permissions to check for the `resource`. Permissions with
+    /// wildcards (such as '*' or 'storage.*') are not allowed. For more
+    /// information see
+    /// [IAM Overview](https://cloud.google.com/iam/docs/overview#permissions).
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<string> Permissions {
@@ -496,7 +497,7 @@ namespace Google.Cloud.Iam.V1 {
   }
 
   /// <summary>
-  ///  Response message for `TestIamPermissions` method.
+  /// Response message for `TestIamPermissions` method.
   /// </summary>
   public sealed partial class TestIamPermissionsResponse : pb::IMessage<TestIamPermissionsResponse> {
     private static readonly pb::MessageParser<TestIamPermissionsResponse> _parser = new pb::MessageParser<TestIamPermissionsResponse>(() => new TestIamPermissionsResponse());
@@ -536,8 +537,8 @@ namespace Google.Cloud.Iam.V1 {
         = pb::FieldCodec.ForString(10);
     private readonly pbc::RepeatedField<string> permissions_ = new pbc::RepeatedField<string>();
     /// <summary>
-    ///  A subset of `TestPermissionsRequest.permissions` that the caller is
-    ///  allowed.
+    /// A subset of `TestPermissionsRequest.permissions` that the caller is
+    /// allowed.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public pbc::RepeatedField<string> Permissions {

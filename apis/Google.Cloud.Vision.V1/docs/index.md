@@ -1,29 +1,10 @@
-# Google.Cloud.Vision.V1
+{{title}}
 
-`Google.Cloud.Vision.V1` is a .NET client library for the [Google
-Cloud Vision API](https://cloud.google.com/vision).
+{{description}}
 
-# Installation
+{{installation}}
 
-Install the `Google.Cloud.Vision.V1` package from NuGet. Add it to
-your project in the normal way (for example by right-clicking on the
-project in Visual Studio and choosing "Manage NuGet Packages...").
-Please ensure you enable pre-release packages (for example, in the
-Visual Studio NuGet user interface, check the "Include prerelease"
-box).
-
-# Authentication
-
-When running on Google Cloud Platform, no action needs to be taken to authenticate.
-
-Otherwise, the simplest way of authenticating your API calls is to
-[download a service account JSON file](https://developers.google.com/identity/protocols/OAuth2ServiceAccount),
-then set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to refer to it. The
-credentials will automatically be used to authenticate.
-
-Note that the default credentials obtained by running `gcloud auth application-default login` from the Google Cloud SDK
-are not suitable for use with this API. (They will work initially, but implicitly have a very
-small request quota.)
+{{auth}}
 
 # Getting started
 
@@ -56,6 +37,10 @@ All IO-related methods have async equivalents.
 
 [!code-cs[](obj/snippets/Google.Cloud.Vision.V1.ImageAnnotatorClient.txt#DetectText)]
 
+## Detect document text in a single image
+
+[!code-cs[](obj/snippets/Google.Cloud.Vision.V1.ImageAnnotatorClient.txt#DetectDocumentText)]
+
 ## Detect labels in a single image
 
 [!code-cs[](obj/snippets/Google.Cloud.Vision.V1.ImageAnnotatorClient.txt#DetectLabels)]
@@ -76,6 +61,14 @@ All IO-related methods have async equivalents.
 
 [!code-cs[](obj/snippets/Google.Cloud.Vision.V1.ImageAnnotatorClient.txt#DetectImageProperties)]
 
+## Suggest crop hints for a single image
+
+[!code-cs[](obj/snippets/Google.Cloud.Vision.V1.ImageAnnotatorClient.txt#DetectCropHints)]
+
+## Perform analysis for other web references on a single image
+
+[!code-cs[](obj/snippets/Google.Cloud.Vision.V1.ImageAnnotatorClient.txt#DetectWebInformation)]
+
 ## Detect faces and landmarks in a single image
 
 [!code-cs[](obj/snippets/Google.Cloud.Vision.V1.ImageAnnotatorClient.txt#Annotate)]
@@ -87,7 +80,7 @@ All IO-related methods have async equivalents.
 ## Error handling
 
 All the methods which annotate a single image (and therefore have a single response) throw
-([AnnotateImageException](obj/api/Google.Cloud.Vision.V1.AnnotateImageException.yml) if the response
+[AnnotateImageException](obj/api/Google.Cloud.Vision.V1.AnnotateImageException.yml) if the response
 contains an error.
 
 [!code-cs[](obj/snippets/Google.Cloud.Vision.V1.ImageAnnotatorClient.txt#ErrorHandling_SingleImage)]

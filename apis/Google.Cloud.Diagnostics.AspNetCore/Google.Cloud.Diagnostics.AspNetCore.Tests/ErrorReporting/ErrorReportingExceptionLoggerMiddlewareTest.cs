@@ -12,41 +12,40 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Google.Cloud.ErrorReporting.V1Beta1;
+using Google.Cloud.Diagnostics.Common;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Google.Cloud.Diagnostics.AspNetCore.Tests.ErrorReporting
+namespace Google.Cloud.Diagnostics.AspNetCore.Tests
 {
     public class ErrorReportingExceptionLoggerMiddlewareTest
     {
         [Fact]
         public async Task Invoke_NoLogs()
         {
-            var mockLogger = new Mock<IExceptionLogger<ReportErrorEventResponse>>();
+            var mockLogger = new Mock<IExceptionLogger>();
             RequestDelegate requestDelegate = context => Task.CompletedTask;
             var middleware = new ErrorReportingExceptionLoggerMiddleware(requestDelegate, mockLogger.Object);
 
             await middleware.Invoke(new DefaultHttpContext());
 
-            mockLogger.Verify(l => l.LogAsync(It.IsAny<DefaultHttpContext>(), It.IsAny<Exception>()), Times.Never());
-            mockLogger.Verify(l => l.Log(It.IsAny<DefaultHttpContext>(), It.IsAny<Exception>()), Times.Never());
+            mockLogger.Verify(l => l.LogAsync(It.IsAny<Exception>(), It.IsAny<DefaultHttpContext>(), CancellationToken.None), Times.Never());
         }
 
         [Fact]
         public async Task Invoke_LogsAndThrows()
         {
-            var mockLogger = new Mock<IExceptionLogger<ReportErrorEventResponse>>();
+            var mockLogger = new Mock<IExceptionLogger>();
             RequestDelegate requestDelegate = context => { throw new Exception(); };
             var middleware = new ErrorReportingExceptionLoggerMiddleware(requestDelegate, mockLogger.Object);
 
             await Assert.ThrowsAsync<Exception>(() => middleware.Invoke(new DefaultHttpContext()));
 
-            mockLogger.Verify(l => l.LogAsync(It.IsAny<DefaultHttpContext>(), It.IsAny<Exception>()), Times.Once());
-            mockLogger.Verify(l => l.Log(It.IsAny<DefaultHttpContext>(), It.IsAny<Exception>()), Times.Never());
+            mockLogger.Verify(l => l.LogAsync(It.IsAny<Exception>(), It.IsAny<DefaultHttpContext>(), CancellationToken.None), Times.Once());
         }
     }
 }

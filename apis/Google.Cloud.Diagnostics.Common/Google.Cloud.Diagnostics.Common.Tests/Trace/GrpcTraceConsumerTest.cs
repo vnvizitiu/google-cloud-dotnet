@@ -16,6 +16,7 @@
 using Google.Cloud.Trace.V1;
 using Moq;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -36,9 +37,8 @@ namespace Google.Cloud.Diagnostics.Common.Tests
             Traces traces = GetTraces();
 
             var mockClient = new Mock<TraceServiceClient>();
-            mockClient.Setup(c => c.PatchTracesAsync(ProjectId, traces, null));
-            var taskClient = Task.FromResult(mockClient.Object);
-            var consumer = new GrpcTraceConsumer(taskClient);
+            mockClient.Setup(c => c.PatchTraces(ProjectId, traces, null));
+            var consumer = new GrpcTraceConsumer(mockClient.Object);
 
             consumer.Receive(traces.Traces_);
             mockClient.VerifyAll();
@@ -48,10 +48,33 @@ namespace Google.Cloud.Diagnostics.Common.Tests
         public void Receive_EmptyTracesIgnored()
         {
             var mockClient = new Mock<TraceServiceClient>();
-            var taskClient = Task.FromResult(mockClient.Object);
-            var consumer = new GrpcTraceConsumer(taskClient);
+            var consumer = new GrpcTraceConsumer(mockClient.Object);
 
             consumer.Receive(new List<TraceProto>());
+            mockClient.Verify(c => c.PatchTraces(It.IsAny<string>(), It.IsAny<Traces>(), null), Times.Never());
+        }
+
+        [Fact]
+        public async Task ReceiveAsync()
+        {
+            Traces traces = GetTraces();
+
+            var mockClient = new Mock<TraceServiceClient>();
+            mockClient.Setup(c => c.PatchTracesAsync(
+                ProjectId, traces, CancellationToken.None)).Returns(CommonUtils.CompletedTask);
+            var consumer = new GrpcTraceConsumer(mockClient.Object);
+
+            await consumer.ReceiveAsync(traces.Traces_, CancellationToken.None);
+            mockClient.VerifyAll();
+        }
+
+        [Fact]
+        public async Task ReceiveAsync_EmptyTracesIgnored()
+        {
+            var mockClient = new Mock<TraceServiceClient>();
+            var consumer = new GrpcTraceConsumer(mockClient.Object);
+
+            await consumer.ReceiveAsync(new List<TraceProto>());
             mockClient.Verify(c => c.PatchTracesAsync(It.IsAny<string>(), It.IsAny<Traces>(), null), Times.Never());
         }
     }

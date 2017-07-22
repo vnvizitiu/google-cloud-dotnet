@@ -13,21 +13,19 @@
 // limitations under the License.
 
 using Google.Api.Gax;
-using Google.Api.Gax.Rest;
 using Google.Apis.Bigquery.v2.Data;
 using Google.Cloud.ClientTesting;
 using Moq;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Xunit;
-using System.Collections;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace Google.Cloud.BigQuery.V2.Tests
 {
@@ -70,6 +68,10 @@ namespace Google.Cloud.BigQuery.V2.Tests
             if (parameter.ParameterType == typeof(BigQueryInsertRow))
             {
                 return new BigQueryInsertRow();
+            }
+            if (parameter.ParameterType == typeof(TableReference))
+            {
+                return new TableReference();
             }
             return base.GetArgument(parameter);
         }
@@ -304,22 +306,6 @@ namespace Google.Cloud.BigQuery.V2.Tests
         }
 
         [Fact]
-        public void PollQueryUntilCompletedEquivalents()
-        {
-            var jobId = "job";
-            var reference = GetJobReference(jobId);
-            var getQueryResultsOptions = new GetQueryResultsOptions();
-            var pollSettings = new PollSettings(Expiration.None, TimeSpan.Zero);
-            VerifyEquivalent(
-                new BigQueryResults(new DerivedBigQueryClient(), new GetQueryResultsResponse { JobReference = reference }, getQueryResultsOptions),
-                client => client.PollQueryUntilCompleted(MatchesWhenSerialized(reference), getQueryResultsOptions, pollSettings),
-                client => client.PollQueryUntilCompleted(jobId, getQueryResultsOptions, pollSettings),
-                client => client.PollQueryUntilCompleted(ProjectId, jobId, getQueryResultsOptions, pollSettings),
-                client => new BigQueryJob(client, GetJob(reference)).PollQueryUntilCompleted(getQueryResultsOptions, pollSettings),
-                client => new BigQueryResults(client, new GetQueryResultsResponse { JobReference = reference }, getQueryResultsOptions).PollUntilCompleted(pollSettings));
-        }
-
-        [Fact]
         public void ListJobsEquivalents()
         {
             var reference = new ProjectReference { ProjectId = ProjectId };
@@ -407,10 +393,10 @@ namespace Google.Cloud.BigQuery.V2.Tests
             var stream = new MemoryStream();
             var row = new BigQueryInsertRow();
             VerifyEquivalent(
-                client => client.Insert(MatchesWhenSerialized(reference), new[] { row }, options),
-                client => client.Insert(datasetId, tableId, row, options),
-                client => client.Insert(ProjectId, datasetId, tableId, row, options),
-                client => new BigQueryTable(client, GetTable(reference)).Insert(row, options));
+                client => client.InsertRows(MatchesWhenSerialized(reference), new[] { row }, options),
+                client => client.InsertRow(datasetId, tableId, row, options),
+                client => client.InsertRow(ProjectId, datasetId, tableId, row, options),
+                client => new BigQueryTable(client, GetTable(reference)).InsertRow(row, options));
         }
 
         [Fact]
@@ -424,10 +410,10 @@ namespace Google.Cloud.BigQuery.V2.Tests
             var stream = new MemoryStream();
             var rows = new[] { new BigQueryInsertRow(), new BigQueryInsertRow() };
             VerifyEquivalent(
-                client => client.Insert(MatchesWhenSerialized(reference), rows, options),
-                client => client.Insert(datasetId, tableId, rows, options),
-                client => client.Insert(ProjectId, datasetId, tableId, rows, options),
-                client => new BigQueryTable(client, GetTable(reference)).Insert(rows, options));
+                client => client.InsertRows(MatchesWhenSerialized(reference), rows, options),
+                client => client.InsertRows(datasetId, tableId, rows, options),
+                client => client.InsertRows(ProjectId, datasetId, tableId, rows, options),
+                client => new BigQueryTable(client, GetTable(reference)).InsertRows(rows, options));
         }
 
         [Fact]
@@ -441,10 +427,47 @@ namespace Google.Cloud.BigQuery.V2.Tests
             var stream = new MemoryStream();
             var rows = new[] { new BigQueryInsertRow(), new BigQueryInsertRow() };
             VerifyEquivalent(
-                client => client.Insert(MatchesWhenSerialized(reference), rows, null),
-                client => client.Insert(datasetId, tableId, rows[0], rows[1]),
-                client => client.Insert(ProjectId, datasetId, tableId, rows[0], rows[1]),
-                client => new BigQueryTable(client, GetTable(reference)).Insert(rows[0], rows[1]));
+                client => client.InsertRows(MatchesWhenSerialized(reference), rows, null),
+                client => client.InsertRows(datasetId, tableId, rows[0], rows[1]),
+                client => client.InsertRows(ProjectId, datasetId, tableId, rows[0], rows[1]),
+                client => new BigQueryTable(client, GetTable(reference)).InsertRows(rows[0], rows[1]));
+        }
+
+        [Fact]
+        public void CreateExtractJobEquivalents()
+        {
+            var datasetId = "dataset";
+            var tableId = "table";
+            var jobReference = GetJobReference("job");
+            var tableReference = GetTableReference(datasetId, tableId);
+            var uri = "gs://bucket/object";
+            var options = new CreateExtractJobOptions();
+
+            VerifyEquivalent(new BigQueryJob(new DerivedBigQueryClient(), new Job { JobReference = jobReference }),
+                client => client.CreateExtractJob(MatchesWhenSerialized(tableReference), new[] { uri }, options),
+                client => client.CreateExtractJob(ProjectId, datasetId, tableId, uri, options),
+                client => client.CreateExtractJob(datasetId, tableId, uri, options),
+                client => client.CreateExtractJob(tableReference, uri, options),
+                client => client.CreateExtractJob(ProjectId, datasetId, tableId, new[] { uri }, options),
+                client => client.CreateExtractJob(datasetId, tableId, uri, options),
+                client => client.CreateExtractJob(datasetId, tableId, uri, options),
+                client => client.CreateExtractJob(ProjectId, datasetId, tableId, uri, options),
+                client => new BigQueryTable(client, GetTable(tableReference)).CreateExtractJob(uri, options),
+                client => new BigQueryTable(client, GetTable(tableReference)).CreateExtractJob(new[] { uri }, options));
+        }
+
+        [Fact]
+        public void CreateCopyJobEquivalents()
+        {
+            var jobReference = GetJobReference("job");
+            var sourceTableReference = GetTableReference("sourceDataset", "sourceTable");
+            var destinationTableReference = GetTableReference("destDataset", "destTable");
+            var options = new CreateCopyJobOptions();
+
+            VerifyEquivalent(new BigQueryJob(new DerivedBigQueryClient(), new Job { JobReference = jobReference }),
+                client => client.CreateCopyJob(MatchesWhenSerialized(new[] { sourceTableReference }), MatchesWhenSerialized(destinationTableReference), options),
+                client => client.CreateCopyJob(sourceTableReference, destinationTableReference, options),
+                client => new BigQueryTable(client, GetTable(sourceTableReference)).CreateCopyJob(destinationTableReference, options));
         }
 
         [Fact]
@@ -632,23 +655,6 @@ namespace Google.Cloud.BigQuery.V2.Tests
         }
 
         [Fact]
-        public void PollQueryUntilCompletedAsyncEquivalents()
-        {
-            var jobId = "job";
-            var reference = GetJobReference(jobId);
-            var getQueryResultsOptions = new GetQueryResultsOptions();
-            var pollSettings = new PollSettings(Expiration.None, TimeSpan.Zero);
-            var token = new CancellationTokenSource().Token;
-            VerifyEquivalentAsync(
-                new BigQueryResults(new DerivedBigQueryClient(), new GetQueryResultsResponse { JobReference = reference }, getQueryResultsOptions),
-                client => client.PollQueryUntilCompletedAsync(MatchesWhenSerialized(reference), getQueryResultsOptions, pollSettings, token),
-                client => client.PollQueryUntilCompletedAsync(jobId, getQueryResultsOptions, pollSettings, token),
-                client => client.PollQueryUntilCompletedAsync(ProjectId, jobId, getQueryResultsOptions, pollSettings, token),
-                client => new BigQueryJob(client, GetJob(reference)).PollQueryUntilCompletedAsync(getQueryResultsOptions, pollSettings, token),
-                client => new BigQueryResults(client, new GetQueryResultsResponse { JobReference = reference }, getQueryResultsOptions).PollUntilCompletedAsync(pollSettings, token));
-        }
-
-        [Fact]
         public void ListJobsAsyncEquivalents()
         {
             var reference = new ProjectReference { ProjectId = ProjectId };
@@ -740,10 +746,10 @@ namespace Google.Cloud.BigQuery.V2.Tests
             var stream = new MemoryStream();
             var row = new BigQueryInsertRow();
             VerifyEquivalentAsync(
-                client => client.InsertAsync(MatchesWhenSerialized(reference), new[] { row }, options, token),
-                client => client.InsertAsync(datasetId, tableId, row, options, token),
-                client => client.InsertAsync(ProjectId, datasetId, tableId, row, options, token),
-                client => new BigQueryTable(client, GetTable(reference)).InsertAsync(row, options, token));
+                client => client.InsertRowsAsync(MatchesWhenSerialized(reference), new[] { row }, options, token),
+                client => client.InsertRowAsync(datasetId, tableId, row, options, token),
+                client => client.InsertRowAsync(ProjectId, datasetId, tableId, row, options, token),
+                client => new BigQueryTable(client, GetTable(reference)).InsertRowAsync(row, options, token));
         }
 
         [Fact]
@@ -758,10 +764,10 @@ namespace Google.Cloud.BigQuery.V2.Tests
             var stream = new MemoryStream();
             var rows = new[] { new BigQueryInsertRow(), new BigQueryInsertRow() };
             VerifyEquivalentAsync(
-                client => client.InsertAsync(MatchesWhenSerialized(reference), rows, options, token),
-                client => client.InsertAsync(datasetId, tableId, rows, options, token),
-                client => client.InsertAsync(ProjectId, datasetId, tableId, rows, options, token),
-                client => new BigQueryTable(client, GetTable(reference)).InsertAsync(rows, options, token));
+                client => client.InsertRowsAsync(MatchesWhenSerialized(reference), rows, options, token),
+                client => client.InsertRowsAsync(datasetId, tableId, rows, options, token),
+                client => client.InsertRowsAsync(ProjectId, datasetId, tableId, rows, options, token),
+                client => new BigQueryTable(client, GetTable(reference)).InsertRowsAsync(rows, options, token));
         }
 
         [Fact]
@@ -776,10 +782,49 @@ namespace Google.Cloud.BigQuery.V2.Tests
             var stream = new MemoryStream();
             var rows = new[] { new BigQueryInsertRow(), new BigQueryInsertRow() };
             VerifyEquivalentAsync(
-                client => client.InsertAsync(MatchesWhenSerialized(reference), rows, null, default(CancellationToken)),
-                client => client.InsertAsync(datasetId, tableId, rows[0], rows[1]),
-                client => client.InsertAsync(ProjectId, datasetId, tableId, rows[0], rows[1]),
-                client => new BigQueryTable(client, GetTable(reference)).InsertAsync(rows[0], rows[1]));
+                client => client.InsertRowsAsync(MatchesWhenSerialized(reference), rows, null, default(CancellationToken)),
+                client => client.InsertRowsAsync(datasetId, tableId, rows[0], rows[1]),
+                client => client.InsertRowsAsync(ProjectId, datasetId, tableId, rows[0], rows[1]),
+                client => new BigQueryTable(client, GetTable(reference)).InsertRowsAsync(rows[0], rows[1]));
+        }
+
+        [Fact]
+        public void CreateExtractJobAsyncEquivalents()
+        {
+            var datasetId = "dataset";
+            var tableId = "table";
+            var jobReference = GetJobReference("job");
+            var tableReference = GetTableReference(datasetId, tableId);
+            var uri = "gs://bucket/object";
+            var options = new CreateExtractJobOptions();
+            var token = new CancellationTokenSource().Token;
+
+            VerifyEquivalentAsync(new BigQueryJob(new DerivedBigQueryClient(), new Job { JobReference = jobReference }),
+                client => client.CreateExtractJobAsync(MatchesWhenSerialized(tableReference), new[] { uri }, options, token),
+                client => client.CreateExtractJobAsync(ProjectId, datasetId, tableId, uri, options, token),
+                client => client.CreateExtractJobAsync(datasetId, tableId, uri, options, token),
+                client => client.CreateExtractJobAsync(tableReference, uri, options, token),
+                client => client.CreateExtractJobAsync(ProjectId, datasetId, tableId, new[] { uri }, options, token),
+                client => client.CreateExtractJobAsync(datasetId, tableId, uri, options, token),
+                client => client.CreateExtractJobAsync(datasetId, tableId, uri, options, token),
+                client => client.CreateExtractJobAsync(ProjectId, datasetId, tableId, uri, options, token),
+                client => new BigQueryTable(client, GetTable(tableReference)).CreateExtractJobAsync(uri, options, token),
+                client => new BigQueryTable(client, GetTable(tableReference)).CreateExtractJobAsync(new[] { uri }, options, token));
+        }
+
+        [Fact]
+        public void CreateCopyJobAsyncEquivalents()
+        {
+            var jobReference = GetJobReference("job");
+            var sourceTableReference = GetTableReference("sourceDataset", "sourceTable");
+            var destinationTableReference = GetTableReference("destDataset", "destTable");
+            var options = new CreateCopyJobOptions();
+            var token = new CancellationTokenSource().Token;
+
+            VerifyEquivalentAsync(new BigQueryJob(new DerivedBigQueryClient(), new Job { JobReference = jobReference }),
+                client => client.CreateCopyJobAsync(MatchesWhenSerialized(new[] { sourceTableReference }), MatchesWhenSerialized(destinationTableReference), options, token),
+                client => client.CreateCopyJobAsync(sourceTableReference, destinationTableReference, options, token),
+                client => new BigQueryTable(client, GetTable(sourceTableReference)).CreateCopyJobAsync(destinationTableReference, options, token));
         }
 
         private T MatchesWhenSerialized<T>(T expected)
@@ -795,8 +840,7 @@ namespace Google.Cloud.BigQuery.V2.Tests
         {
             foreach (var call in equivalentCalls)
             {
-                var mock = new Mock<DerivedBigQueryClient>();
-                mock.CallBase = true;
+                var mock = new Mock<DerivedBigQueryClient>() { CallBase = true };
                 mock.Setup(underlyingCall).Returns(result);
                 Assert.Same(result, call(mock.Object));
                 mock.VerifyAll();
@@ -809,8 +853,7 @@ namespace Google.Cloud.BigQuery.V2.Tests
         {
             foreach (var call in equivalentCalls)
             {
-                var mock = new Mock<DerivedBigQueryClient>();
-                mock.CallBase = true;
+                var mock = new Mock<DerivedBigQueryClient>() { CallBase = true };
                 mock.Setup(underlyingCall);
                 call(mock.Object);
                 mock.VerifyAll();
@@ -825,8 +868,7 @@ namespace Google.Cloud.BigQuery.V2.Tests
             var taskResult = Task.FromResult(result);
             foreach (var call in equivalentCalls)
             {
-                var mock = new Mock<DerivedBigQueryClient>();
-                mock.CallBase = true;
+                var mock = new Mock<DerivedBigQueryClient>() { CallBase = true };
                 mock.Setup(underlyingCall).Returns(taskResult);
                 Assert.Same(taskResult, call(mock.Object));
                 mock.VerifyAll();
@@ -840,8 +882,7 @@ namespace Google.Cloud.BigQuery.V2.Tests
             var taskResult = Task.FromResult(0);
             foreach (var call in equivalentCalls)
             {
-                var mock = new Mock<DerivedBigQueryClient>();
-                mock.CallBase = true;
+                var mock = new Mock<DerivedBigQueryClient>() { CallBase = true };
                 mock.Setup(underlyingCall).Returns(taskResult);
                 Assert.Same(taskResult, call(mock.Object));
                 mock.VerifyAll();

@@ -13,9 +13,12 @@
 // limitations under the License.
 
 using Google.Api.Gax;
+using Grpc.Core;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Google.Cloud.Diagnostics.Common.Tests
@@ -23,51 +26,23 @@ namespace Google.Cloud.Diagnostics.Common.Tests
     public class TimedBufferingConsumerTest
     {
         private static TimeSpan _waitTime = TimeSpan.FromSeconds(5);
-
-        private DateTime _start = DateTime.UtcNow;
-
-        private TimedBufferingConsumer<int> GetConsumer(IConsumer<int> consumer, IClock clock)
-        {
-            return TimedBufferingConsumer<int>.Create(consumer, _waitTime, clock);
-        }
-
-        /// <summary>
-        /// Creates an <see cref="IClock"/> that returns the given times in order.
-        /// </summary>
-        private IClock GetClock(DateTime[] times) {
-            var returnQueue = new Queue<DateTime>(times);
-            var mockClock = new Mock<IClock>();
-            mockClock.Setup(w => w.GetCurrentDateTimeUtc()).Returns(() => returnQueue.Dequeue());
-            return mockClock.Object;
-        }
         
         [Fact]
         public void Receive()
         {
-            var clock = GetClock(new[] { _start, _start, _start.AddSeconds(_waitTime.TotalSeconds + 1) });
             var mockConsumer = new Mock<IConsumer<int>>();
-            var consumer = GetConsumer(mockConsumer.Object, clock);
-            consumer.Receive(new[] { 1, 2 });
-
-            // Ensure ints have not been sent as the wait time hasn't been passed.
+            var consumer = TimedBufferingConsumer<int>.Create(mockConsumer.Object, _waitTime);
+            consumer.Receive(new[] { 1, 2, 3, 4, 5 });
             mockConsumer.Verify(c => c.Receive(It.IsAny<IEnumerable<int>>()), Times.Never());
-
-            // Add the initial ints the list.  This ensures we verify the right 
-            // values where received.
-            mockConsumer.Setup(c => c.Receive(new[] { 1, 2, 3, 4, 5 }));
-            consumer.Receive(new[] { 3, 4, 5 });
-            mockConsumer.VerifyAll();
         }
-        
 
         [Fact]
         public void Flush()
         {
-            var clock = GetClock(new[] { _start, _start });
             int[] intArray = { 1, 2, 3, 4 };
             var mockConsumer = new Mock<IConsumer<int>>();
             mockConsumer.Setup(c => c.Receive(intArray));
-            var consumer = GetConsumer(mockConsumer.Object, clock);
+            var consumer = TimedBufferingConsumer<int>.Create(mockConsumer.Object, _waitTime);
 
             consumer.Receive(intArray);
             mockConsumer.Verify(c => c.Receive(It.IsAny<IEnumerable<int>>()), Times.Never());
@@ -79,14 +54,107 @@ namespace Google.Cloud.Diagnostics.Common.Tests
         [Fact]
         public void Flush_NoTraces()
         {
-            var clock = GetClock(new[] { _start, _start });
             var mockConsumer = new Mock<IConsumer<int>>();
             mockConsumer.Setup(c => c.Receive(new int[] { }));
-            var consumer = GetConsumer(mockConsumer.Object, clock);
+            var consumer = TimedBufferingConsumer<int>.Create(mockConsumer.Object, _waitTime);
 
             consumer.Receive(new int[] { });
             consumer.Flush();
             mockConsumer.Verify(c => c.Receive(It.IsAny<IEnumerable<int>>()), Times.Never());
+        }
+
+        [Fact]
+        public async Task ReceiveAsync()
+        {
+            var mockConsumer = new Mock<IConsumer<int>>();
+            var consumer = TimedBufferingConsumer<int>.Create(mockConsumer.Object, _waitTime);
+            await consumer.ReceiveAsync(new[] { 1, 2, 3, 4, 5 }, CancellationToken.None);
+            mockConsumer.Verify(c => c.ReceiveAsync(
+                It.IsAny<IEnumerable<int>>(), CancellationToken.None), Times.Never());
+        }
+
+
+        [Fact]
+        public async Task FlushAsync()
+        {
+            int[] intArray = { 1, 2, 3, 4 };
+            var mockConsumer = new Mock<IConsumer<int>>();
+            mockConsumer.Setup(c => c.ReceiveAsync(
+                intArray, CancellationToken.None)).Returns(CommonUtils.CompletedTask);
+            var consumer = TimedBufferingConsumer<int>.Create(mockConsumer.Object, _waitTime);
+
+            await consumer.ReceiveAsync(intArray, CancellationToken.None);
+            mockConsumer.Verify(c => c.ReceiveAsync(
+                It.IsAny<IEnumerable<int>>(), CancellationToken.None), Times.Never());
+
+            await consumer.FlushAsync();
+            mockConsumer.VerifyAll();
+        }
+
+        [Fact]
+        public async Task FlushAsync_NoTraces()
+        {
+            var mockConsumer = new Mock<IConsumer<int>>();
+            mockConsumer.Setup(c => c.ReceiveAsync(
+                new int[] { }, CancellationToken.None));
+            var consumer = TimedBufferingConsumer<int>.Create(mockConsumer.Object, _waitTime);
+
+            await consumer.ReceiveAsync(new int[] { }, CancellationToken.None);
+            await consumer.FlushAsync();
+            mockConsumer.Verify(c => c.ReceiveAsync(
+                It.IsAny<IEnumerable<int>>(), CancellationToken.None), Times.Never());
+        }
+
+        [Fact]
+        public void Timer()
+        {
+            var mockConsumer = new Mock<IConsumer<int>>();
+            var fakeTimer = new FakeThreadingTimer();
+            var consumer = new TimedBufferingConsumer<int>(mockConsumer.Object, _waitTime, fakeTimer);
+
+            var intArray = new[] { 1, 2, 3, 4, 5 };
+            consumer.Receive(intArray);
+            mockConsumer.Verify(c => c.Receive(It.IsAny<IEnumerable<int>>()), Times.Never());
+            fakeTimer.FullTick();
+            mockConsumer.Verify(c => c.Receive(intArray), Times.Once());
+
+            var intArrayTwo = new[] { 10, 9, 8, 7, 6 };
+            consumer.Receive(intArrayTwo);
+            fakeTimer.FullTick();
+            mockConsumer.Verify(c => c.Receive(intArrayTwo), Times.Once());
+        }
+
+        [Fact]
+        public void Timer_SwallowRpcException()
+        {
+            var mockConsumer = new Mock<IConsumer<int>>();
+            var fakeTimer = new FakeThreadingTimer();
+            var consumer = new TimedBufferingConsumer<int>(mockConsumer.Object, _waitTime, fakeTimer);
+
+            mockConsumer.Setup(c => c.Receive(It.IsAny<IEnumerable<int>>())).Throws(new RpcException(Status.DefaultCancelled));
+            consumer.Receive(new[] { 1, 2, 3, 4, 5 });
+            fakeTimer.FullTick();
+            mockConsumer.Verify(c => c.Receive(It.IsAny<IEnumerable<int>>()), Times.Once());
+        }
+
+        [Fact]
+        public void Timer_Exception()
+        {
+            var mockConsumer = new Mock<IConsumer<int>>();
+            var fakeTimer = new FakeThreadingTimer();
+            var consumer = new TimedBufferingConsumer<int>(mockConsumer.Object, _waitTime, fakeTimer);
+
+            mockConsumer.Setup(c => c.Receive(It.IsAny<IEnumerable<int>>())).Throws(new DivideByZeroException());
+            consumer.Receive(new[] { 1, 2, 3, 4, 5 });
+            try
+            {
+                fakeTimer.FullTick();
+                Assert.True(false);
+            }
+            catch (Exception e) when (!(e is Xunit.Sdk.XunitException))
+            {
+            }
+            mockConsumer.Verify(c => c.Receive(It.IsAny<IEnumerable<int>>()), Times.Once());
         }
     }
 }

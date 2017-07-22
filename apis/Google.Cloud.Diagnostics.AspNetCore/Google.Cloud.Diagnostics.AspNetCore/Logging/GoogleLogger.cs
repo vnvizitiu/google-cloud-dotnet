@@ -18,7 +18,6 @@ using Google.Protobuf.WellKnownTypes;
 using Google.Api.Gax;
 using Microsoft.Extensions.Logging;
 using System;
-using Google.Api;
 
 namespace Google.Cloud.Diagnostics.AspNetCore
 {
@@ -56,25 +55,19 @@ namespace Google.Cloud.Diagnostics.AspNetCore
         /// <summary>A clock for getting the current timestamp.</summary>
         private readonly IClock _clock;
 
-        internal GoogleLogger(IConsumer<LogEntry> consumer, LogTo logTo, LoggerOptions loggerOptions, 
+        internal GoogleLogger(IConsumer<LogEntry> consumer, LogTarget logTarget, LoggerOptions loggerOptions, 
             string logName, IClock clock = null)
         {
-            GaxPreconditions.CheckNotNull(logTo, nameof(logTo));
+            GaxPreconditions.CheckNotNull(logTarget, nameof(logTarget));
             GaxPreconditions.CheckNotNullOrEmpty(logName, nameof(logName));
             _consumer = GaxPreconditions.CheckNotNull(consumer, nameof(consumer));
             _loggerOptions = GaxPreconditions.CheckNotNull(loggerOptions, nameof(loggerOptions)); ;
-            _logName = logTo.GetFullLogName(logName);
+            _logName = logTarget.GetFullLogName(logName);
             _clock = clock ?? SystemClock.Instance;
         }
 
-        /// <summary>
-        /// Currently unsupported, always return null.
-        /// </summary>
-        public IDisposable BeginScope<TState>(TState state)
-        {
-            // TODO(talarico): Implement.
-            return null;
-        }
+        /// <inheritdoc />
+        public IDisposable BeginScope<TState>(TState state) => new GoogleLoggerScope(state);
 
         /// <inheritdoc />
         public bool IsEnabled(LogLevel logLevel) => logLevel >= _loggerOptions.LogLevel;
@@ -96,12 +89,13 @@ namespace Google.Cloud.Diagnostics.AspNetCore
             }
 
             LogEntry entry = new LogEntry
-            {   
+            {
                 Resource = _loggerOptions.MonitoredResource,
                 LogName = _logName,
                 Severity = logLevel.ToLogSeverity(),
                 Timestamp = Timestamp.FromDateTime(_clock.GetCurrentDateTimeUtc()),
-                TextPayload = message,
+                TextPayload = string.Concat(GoogleLoggerScope.Current, message),
+                Labels = { _loggerOptions.Labels },
             };
 
             _consumer.Receive(new[] { entry });

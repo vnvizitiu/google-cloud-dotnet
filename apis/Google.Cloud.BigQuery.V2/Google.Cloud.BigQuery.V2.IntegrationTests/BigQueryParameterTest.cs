@@ -32,7 +32,7 @@ namespace Google.Cloud.BigQuery.V2.IntegrationTests
         public void IntegerParameter()
         {
             var client = BigQueryClient.Create(_fixture.ProjectId);
-            var command = new BigQueryCommand("SELECT value FROM UNNEST([0, 1, 2, 3, 4]) AS value WHERE value > @value")
+            var command = new BigQueryCommand("SELECT value FROM UNNEST([0, 1, 2, 3, 4]) AS value WHERE value > @value ORDER BY value")
             {
                 Parameters = { { "value", BigQueryDbType.Int64, 2 } }
             };
@@ -44,7 +44,7 @@ namespace Google.Cloud.BigQuery.V2.IntegrationTests
         public void IntegerArrayParameter()
         {
             var client = BigQueryClient.Create(_fixture.ProjectId);
-            var command = new BigQueryCommand("SELECT value FROM UNNEST([0, 1, 2, 3, 4]) AS value WHERE value IN UNNEST(@p)")
+            var command = new BigQueryCommand("SELECT value FROM UNNEST([0, 1, 2, 3, 4]) AS value WHERE value IN UNNEST(@p) ORDER BY value")
             {
                 Parameters = { { "p", BigQueryDbType.Array, new[] { 1, 3, 5 } } }
             };
@@ -78,6 +78,7 @@ namespace Google.Cloud.BigQuery.V2.IntegrationTests
         [Fact]
         public void NullParameter()
         {
+            // Assumption: no other test inserts a row with a null player name.
             var client = BigQueryClient.Create(_fixture.ProjectId);
             var table = client.GetTable(_fixture.DatasetId, _fixture.HighScoreTableId);
             var parameter = new BigQueryParameter("player", BigQueryDbType.String, "Angela");

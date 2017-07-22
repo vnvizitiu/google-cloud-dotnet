@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Google.Cloud.Diagnostics.Common;
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using System.Web.Http.ExceptionHandling;
 using System.Web.Mvc;
 
 namespace Google.Cloud.Diagnostics.AspNet.Snippets
@@ -31,7 +32,7 @@ namespace Google.Cloud.Diagnostics.AspNet.Snippets
             string serviceName = "[Name of service]";
             string version = "[Version of service]";
             // Add a catch all for the uncaught exceptions.
-            config.Services.Add(typeof(IExceptionLogger),
+            config.Services.Add(typeof(System.Web.Http.ExceptionHandling.IExceptionLogger),
                 ErrorReportingExceptionLogger.Create(projectId, serviceName, version));
         }
         // End sample
@@ -47,6 +48,27 @@ namespace Google.Cloud.Diagnostics.AspNet.Snippets
         }
         // End sample
 
+        
+        public void ReadFile()
+        {
+            // Sample: LogExceptions
+            string projectId = "[Google Cloud Platform project ID]";
+            string serviceName = "[Name of service]";
+            string version = "[Version of service]";
+            var exceptionLogger = GoogleExceptionLogger.Create(projectId, serviceName, version);
+
+            try
+            {
+                string scores = File.ReadAllText(@"C:\Scores.txt");
+                Console.WriteLine(scores);
+            }
+            catch (IOException e)
+            {
+                exceptionLogger.Log(e);
+            }
+            // End sample
+        }
+
         // Sample: InitializeTrace
         public class Global : HttpApplication
         {
@@ -55,31 +77,41 @@ namespace Google.Cloud.Diagnostics.AspNet.Snippets
                 base.Init();
                 string projectId = "[Google Cloud Platform project ID]";
                 // Trace a sampling of incoming Http requests.
-                CloudTrace.Initialize(projectId, this);
+                CloudTrace.Initialize(this, projectId);
             }
         }
         // End sample
-        
+
         public void TraceHelloWorld()
         {
             // Sample: UseTracer
             // Manually trace a specific operation.
-            CloudTrace.CurrentTracer.StartSpan("hello-world");
-            Console.Out.WriteLine("Hello, World!");
-            CloudTrace.CurrentTracer.EndSpan();
+            using (CloudTrace.Tracer.StartSpan("hello-world"))
+            {
+                Console.Out.WriteLine("Hello, World!");
+            }
+            // End sample
+
+
+            // Sample: UseTracerRunIn
+            // Manually trace a specific Action or Func<T>.
+            CloudTrace.Tracer.RunInSpan(
+                () => Console.Out.WriteLine("Hello, World!"),
+                "hello-world");
             // End sample
         }
-
+        
         public async Task<HttpResponseMessage> TraceOutgoing()
         {
             // Sample: TraceOutgoing
             // Add a handler to trace outgoing requests and to propagate the trace header.
-            var traceHeaderHandler = TraceHeaderPropagatingHandler.Create();
-            using (var httpClient = HttpClientFactory.Create(traceHeaderHandler))
+            var traceHeaderHandler = CloudTrace.CreateTracingHttpMessageHandler();
+            using (var httpClient = new HttpClient(traceHeaderHandler))
             {
                 return await httpClient.GetAsync("https://weather.com/");
             }
             // End sample
         }
+
     }
 }

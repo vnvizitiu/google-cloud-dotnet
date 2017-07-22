@@ -31,14 +31,15 @@ namespace Google.Cloud.Diagnostics.Common
         RpcServer,
     }
 
-    public static class Extensions
+    /// <summary>
+    /// Common extensions.
+    /// </summary>
+    internal static class Extensions
     {
         /// <summary>
-        /// Converts a <see cref="Google.Cloud.Diagnostics.AspNet.SpanKind"/> to a <see cref="TraceSpan.Types.SpanKind"/>.
+        /// Converts a <see cref="SpanKind"/> to a <see cref="TraceSpan.Types.SpanKind"/>.
         /// </summary>
-        /// <param name="kind"></param>
-        /// <returns></returns>
-        public static TraceSpan.Types.SpanKind Convert(this SpanKind kind)
+        internal static TraceSpan.Types.SpanKind Convert(this SpanKind kind)
         {
             switch (kind)
             {

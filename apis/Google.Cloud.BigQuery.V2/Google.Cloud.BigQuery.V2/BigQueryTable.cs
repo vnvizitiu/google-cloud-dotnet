@@ -129,29 +129,29 @@ namespace Google.Cloud.BigQuery.V2
 
         /// <summary>
         /// Inserts a single row of data into this table.
-        /// This method just creates a <see cref="TableReference"/> and delegates to <see cref="BigQueryClient.Insert(TableReference, BigQueryInsertRow, InsertOptions)"/>.
+        /// This method just creates a <see cref="TableReference"/> and delegates to <see cref="BigQueryClient.InsertRow(TableReference, BigQueryInsertRow, InsertOptions)"/>.
         /// </summary>
         /// <param name="row">The data to insert. Must not be null.</param>
         /// <param name="options">The options for the operation. May be null, in which case defaults will be supplied.</param>
-        public void Insert(BigQueryInsertRow row, InsertOptions options = null) =>
-            _client.Insert(Reference, row, options);
+        public void InsertRow(BigQueryInsertRow row, InsertOptions options = null) =>
+            _client.InsertRow(Reference, row, options);
 
         /// <summary>
         /// Inserts all the given rows of data into this table.
-        /// This method just creates a <see cref="TableReference"/> and delegates to <see cref="BigQueryClient.Insert(TableReference, IEnumerable{BigQueryInsertRow}, InsertOptions)"/>.
+        /// This method just creates a <see cref="TableReference"/> and delegates to <see cref="BigQueryClient.InsertRows(TableReference, IEnumerable{BigQueryInsertRow}, InsertOptions)"/>.
         /// </summary>
         /// <param name="rows">The rows to insert. Must not be null or contain null entries.</param>
         /// <param name="options">The options for the operation. May be null, in which case defaults will be supplied.</param>
-        public void Insert(IEnumerable<BigQueryInsertRow> rows, InsertOptions options = null) =>
-            _client.Insert(Reference, rows, options);
+        public void InsertRows(IEnumerable<BigQueryInsertRow> rows, InsertOptions options = null) =>
+            _client.InsertRows(Reference, rows, options);
 
         /// <summary>
         /// Inserts all the given rows of data into this table.
-        /// This method just creates a <see cref="TableReference"/> and delegates to <see cref="BigQueryClient.Insert(TableReference, BigQueryInsertRow[])"/>.
+        /// This method just creates a <see cref="TableReference"/> and delegates to <see cref="BigQueryClient.InsertRows(TableReference, BigQueryInsertRow[])"/>.
         /// </summary>
         /// <param name="rows">The rows to insert. Must not be null or contain null entries.</param>
-        public void Insert(params BigQueryInsertRow[] rows) =>
-            _client.Insert(Reference, rows);
+        public void InsertRows(params BigQueryInsertRow[] rows) =>
+            _client.InsertRows(Reference, rows);
 
         /// <summary>
         /// Deletes this table.
@@ -159,6 +159,42 @@ namespace Google.Cloud.BigQuery.V2
         /// </summary>
         /// <param name="options">The options for the operation. May be null, in which case defaults will be supplied.</param>
         public void Delete(DeleteTableOptions options = null) => _client.DeleteTable(Reference, options);
+
+        /// <summary>
+        /// Creates a job to extract data from this table to Google Cloud Storage.
+        /// This method just creates a <see cref="TableReference"/> and delegates to <see cref="BigQueryClient.CreateExtractJob(TableReference, String, CreateExtractJobOptions)"/>.
+        /// See [the BigQuery documentation](https://cloud.google.com/bigquery/docs/exporting-data) for more information on extract jobs.
+        /// </summary>
+        /// <param name="destinationUri">The Google Cloud Storage URI (possibly including a wildcard) to extract the data to. Must not be null.</param>
+        /// <param name="options">The options for the operation. May be null, in which case defaults will be supplied.</param>
+        /// <returns>The job created for the extract operation.</returns>
+        public BigQueryJob CreateExtractJob(string destinationUri, CreateExtractJobOptions options = null) =>
+            _client.CreateExtractJob(Reference, destinationUri, options);
+
+        /// <summary>
+        /// Creates a job to extract data from this table to Google Cloud Storage.
+        /// This method just creates a <see cref="TableReference"/> and delegates to <see cref="BigQueryClient.CreateExtractJob(TableReference, IEnumerable{String}, CreateExtractJobOptions)"/>.
+        /// See [the BigQuery documentation](https://cloud.google.com/bigquery/docs/exporting-data) for more information on extract jobs.
+        /// </summary>
+        /// <param name="destinationUris">The Google Cloud Storage URIs (possibly including a wildcard) to extract the data to. Must not be null or empty.</param>
+        /// <param name="options">The options for the operation. May be null, in which case defaults will be supplied.</param>
+        /// <returns>The job created for the extract operation.</returns>
+        public BigQueryJob CreateExtractJob(IEnumerable<string> destinationUris, CreateExtractJobOptions options = null) =>
+            _client.CreateExtractJob(Reference, destinationUris, options);
+
+        /// <summary>
+        /// Creates a job to copy data from this table to another.
+        /// This method just creates a <see cref="TableReference"/> and delegates to <see cref="BigQueryClient.CreateCopyJob(TableReference, TableReference, CreateCopyJobOptions)"/>.
+        /// </summary>
+        /// <remarks>
+        /// This method only allows one table (this one) to be used as the source table. To copy multiple tables to one destination table,
+        /// use <see cref="BigQueryClient.CreateCopyJob(IEnumerable{TableReference}, TableReference, CreateCopyJobOptions)"/>.
+        /// </remarks>
+        /// <param name="destination">The destination table to copy to. Must not be null.</param>
+        /// <param name="options">The options for the operation. May be null, in which case defaults will be supplied.</param>
+        /// <returns>The job created for the copy operation.</returns>
+        public BigQueryJob CreateCopyJob(TableReference destination, CreateCopyJobOptions options = null) =>
+            _client.CreateCopyJob(Reference, destination, options);
 
         /// <summary>
         /// Asynchronously uploads a stream of CSV data to this table.
@@ -223,34 +259,34 @@ namespace Google.Cloud.BigQuery.V2
 
         /// <summary>
         /// Asynchronously inserts a single row of data into this table.
-        /// This method just creates a <see cref="TableReference"/> and delegates to <see cref="BigQueryClient.InsertAsync(TableReference, BigQueryInsertRow, InsertOptions, CancellationToken)"/>.
+        /// This method just creates a <see cref="TableReference"/> and delegates to <see cref="BigQueryClient.InsertRowAsync(TableReference, BigQueryInsertRow, InsertOptions, CancellationToken)"/>.
         /// </summary>
         /// <param name="row">The data to insert. Must not be null.</param>
         /// <param name="options">The options for the operation. May be null, in which case defaults will be supplied.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public Task InsertAsync(BigQueryInsertRow row, InsertOptions options = null, CancellationToken cancellationToken = default(CancellationToken)) =>
-            _client.InsertAsync(Reference, row, options, cancellationToken);
+        public Task InsertRowAsync(BigQueryInsertRow row, InsertOptions options = null, CancellationToken cancellationToken = default(CancellationToken)) =>
+            _client.InsertRowAsync(Reference, row, options, cancellationToken);
 
         /// <summary>
         /// Asynchronously inserts all the given rows of data into this table.
-        /// This method just creates a <see cref="TableReference"/> and delegates to <see cref="BigQueryClient.InsertAsync(TableReference, IEnumerable{BigQueryInsertRow}, InsertOptions, CancellationToken)"/>.
+        /// This method just creates a <see cref="TableReference"/> and delegates to <see cref="BigQueryClient.InsertRowsAsync(TableReference, IEnumerable{BigQueryInsertRow}, InsertOptions, CancellationToken)"/>.
         /// </summary>
         /// <param name="rows">The rows to insert. Must not be null or contain null entries.</param>
         /// <param name="options">The options for the operation. May be null, in which case defaults will be supplied.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public Task InsertAsync(IEnumerable<BigQueryInsertRow> rows, InsertOptions options = null, CancellationToken cancellationToken = default(CancellationToken)) =>
-            _client.InsertAsync(Reference, rows, options, cancellationToken);
+        public Task InsertRowsAsync(IEnumerable<BigQueryInsertRow> rows, InsertOptions options = null, CancellationToken cancellationToken = default(CancellationToken)) =>
+            _client.InsertRowsAsync(Reference, rows, options, cancellationToken);
 
         /// <summary>
         /// Asynchronously inserts all the given rows of data into this table.
-        /// This method just creates a <see cref="TableReference"/> and delegates to <see cref="BigQueryClient.InsertAsync(TableReference, BigQueryInsertRow[])"/>.
+        /// This method just creates a <see cref="TableReference"/> and delegates to <see cref="BigQueryClient.InsertRowsAsync(TableReference, BigQueryInsertRow[])"/>.
         /// </summary>
         /// <param name="rows">The rows to insert. Must not be null or contain null entries.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public Task InsertAsync(params BigQueryInsertRow[] rows) =>
-            _client.InsertAsync(Reference, rows);
+        public Task InsertRowsAsync(params BigQueryInsertRow[] rows) =>
+            _client.InsertRowsAsync(Reference, rows);
 
         /// <summary>
         /// Asynchronously deletes this table.
@@ -261,6 +297,45 @@ namespace Google.Cloud.BigQuery.V2
         /// <returns>A task representing the asynchronous operation.</returns>
         public Task DeleteAsync(DeleteTableOptions options = null, CancellationToken cancellationToken = default(CancellationToken)) =>
             _client.DeleteTableAsync(Reference, options, cancellationToken);
+
+        /// <summary>
+        /// Asynchronously creates a job to extract data from this table to Google Cloud Storage.
+        /// This method just creates a <see cref="TableReference"/> and delegates to <see cref="BigQueryClient.CreateExtractJobAsync(TableReference, String, CreateExtractJobOptions, CancellationToken)"/>.
+        /// See [the BigQuery documentation](https://cloud.google.com/bigquery/docs/exporting-data) for more information on extract jobs.
+        /// </summary>
+        /// <param name="destinationUri">The Google Cloud Storage URI (possibly including a wildcard) to extract the data to. Must not be null.</param>
+        /// <param name="options">The options for the operation. May be null, in which case defaults will be supplied.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task representing the asynchronous operation. When complete, the result is the job created for the extract operation.</returns>
+        public Task<BigQueryJob> CreateExtractJobAsync(string destinationUri, CreateExtractJobOptions options = null, CancellationToken cancellationToken = default(CancellationToken)) =>
+            _client.CreateExtractJobAsync(Reference, destinationUri, options, cancellationToken);
+
+        /// <summary>
+        /// Asynchronously creates a job to extract data from this table to Google Cloud Storage.
+        /// This method just creates a <see cref="TableReference"/> and delegates to <see cref="BigQueryClient.CreateExtractJobAsync(TableReference, IEnumerable{String}, CreateExtractJobOptions, CancellationToken)"/>.
+        /// See [the BigQuery documentation](https://cloud.google.com/bigquery/docs/exporting-data) for more information on extract jobs.
+        /// </summary>
+        /// <param name="destinationUris">The Google Cloud Storage URIs (possibly including a wildcard) to extract the data to. Must not be null or empty.</param>
+        /// <param name="options">The options for the operation. May be null, in which case defaults will be supplied.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task representing the asynchronous operation. When complete, the result is the job created for the extract operation.</returns>
+        public Task<BigQueryJob> CreateExtractJobAsync(IEnumerable<string> destinationUris, CreateExtractJobOptions options = null, CancellationToken cancellationToken = default(CancellationToken)) =>
+            _client.CreateExtractJobAsync(Reference, destinationUris, options, cancellationToken);
+
+        /// <summary>
+        /// Asynchronously creates a job to copy data from this table to another.
+        /// This method just creates a <see cref="TableReference"/> and delegates to <see cref="BigQueryClient.CreateCopyJobAsync(TableReference, TableReference, CreateCopyJobOptions, CancellationToken)"/>.
+        /// </summary>
+        /// <remarks>
+        /// This method only allows one table (this one) to be used as the source table. To copy multiple tables to one destination table,
+        /// use <see cref="BigQueryClient.CreateCopyJobAsync(IEnumerable{TableReference}, TableReference, CreateCopyJobOptions, CancellationToken)"/>.
+        /// </remarks>
+        /// <param name="destination">The destination table to copy to. Must not be null.</param>
+        /// <param name="options">The options for the operation. May be null, in which case defaults will be supplied.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task representing the asynchronous operation. When complete, the result is the job created for the copy operation.</returns>
+        public Task<BigQueryJob> CreateCopyJobAsync(TableReference destination, CreateCopyJobOptions options = null, CancellationToken cancellationToken = default(CancellationToken)) =>
+            _client.CreateCopyJobAsync(Reference, destination, options, cancellationToken);
 
         /// <summary>
         /// Returns the fully-qualified ID of the table in Legacy SQL format. The Legacy SQL

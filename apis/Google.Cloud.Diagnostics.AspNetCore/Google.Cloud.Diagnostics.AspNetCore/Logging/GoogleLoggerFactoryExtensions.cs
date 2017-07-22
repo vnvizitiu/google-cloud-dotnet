@@ -44,36 +44,41 @@ namespace Google.Cloud.Diagnostics.AspNetCore
         /// <summary>
         /// Adds a <see cref="GoogleLoggerProvider"/> for <see cref="GoogleLogger"/>s.
         /// </summary>
-        /// <param name="projectId">The Google Cloud Platform project ID.</param>
+        /// <param name="factory">The logger factory. Cannot be null.</param>
+        /// <param name="projectId">Optional if running on Google App Engine or Google Compute Engine.
+        ///     The Google Cloud Platform project ID. If unspecified and running on GAE or GCE the project ID will be
+        ///     detected from the platform.</param>
         /// <param name="options">Optional, options for the logger.</param>
         /// <param name="client">Optional, logging client.</param>
-        public static ILoggerFactory AddGoogle(this ILoggerFactory factory, string projectId,
+        public static ILoggerFactory AddGoogle(this ILoggerFactory factory, string projectId = null,
             LoggerOptions options = null, LoggingServiceV2Client client = null)
         {
-            GaxPreconditions.CheckNotNull(projectId, nameof(projectId));
-            return factory.AddGoogle(LogTo.Project(projectId), options, client);
+            options = options ?? LoggerOptions.Create();
+            projectId = CommonUtils.GetAndCheckProjectId(projectId, options.MonitoredResource);
+            return factory.AddGoogle(LogTarget.ForProject(projectId), options, client);
         }
 
         /// <summary>
         /// Adds a <see cref="GoogleLoggerProvider"/> for <see cref="GoogleLogger"/>s.
         /// </summary>
-        /// <param name="logTo">Where to log to. Cannot be null.</param>
+        /// <param name="factory">The logger factory. Cannot be null.</param>
+        /// <param name="logTarget">Where to log to. Cannot be null.</param>
         /// <param name="options">Optional, options for the logger.</param>
         /// <param name="client">Optional, logging client.</param>
-        public static ILoggerFactory AddGoogle(this ILoggerFactory factory, LogTo logTo,
+        public static ILoggerFactory AddGoogle(this ILoggerFactory factory, LogTarget logTarget,
             LoggerOptions options = null, LoggingServiceV2Client client = null)
         {
             // Check params and set defaults if unset.
             GaxPreconditions.CheckNotNull(factory, nameof(factory));
-            GaxPreconditions.CheckNotNull(logTo, nameof(logTo));
+            GaxPreconditions.CheckNotNull(logTarget, nameof(logTarget));
             client = client ?? LoggingServiceV2Client.Create();
             options = options ?? LoggerOptions.Create();
 
             // Get the proper consumer from the options and add a logger provider.
             GrpcLogConsumer grpcConsumer = new GrpcLogConsumer(client);
             IConsumer<LogEntry> consumer = ConsumerFactory<LogEntry>.GetConsumer(
-                grpcConsumer, LogEntrySizer.Instance, options.BufferOptions);
-            GoogleLoggerProvider provider = new GoogleLoggerProvider(consumer, logTo, options);
+                grpcConsumer, MessageSizer<LogEntry>.GetSize, options.BufferOptions, options.RetryOptions);
+            GoogleLoggerProvider provider = new GoogleLoggerProvider(consumer, logTarget, options);
             factory.AddProvider(provider);
             return factory;
         }

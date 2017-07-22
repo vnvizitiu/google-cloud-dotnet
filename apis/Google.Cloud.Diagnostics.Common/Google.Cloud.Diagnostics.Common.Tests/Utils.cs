@@ -14,6 +14,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Google.Cloud.Diagnostics.Common.Tests
 {
@@ -35,22 +38,26 @@ namespace Google.Cloud.Diagnostics.Common.Tests
             return projectId;
         }
 
+        public static bool IsWindows()
+        {
+#if NET452
+            return Environment.OSVersion.ToString().Contains("Windows");
+#else
+            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+#endif
+
+        }
+
         /// <summary>A unique test Id.</summary>
         public static string GetTestId()
         {
             return Guid.NewGuid().ToString();
         }
 
-        /// <summary>A sizer for ints.</summary>
-        public class IntSizer : ISizer<int>
+        public static class ConstantSizer<T>
         {
-            /// <summary>The single instance of the <see cref="IntSizer"/>.</summary>
-            public static readonly IntSizer Instance = new IntSizer();
-
-            private IntSizer() { }
-
             /// <summary>Always returns 2.</summary>
-            public int GetSize(int item) => 2;
+            public static int GetSize(T item) => 2;
         }
 
         /// <summary>
@@ -60,6 +67,13 @@ namespace Google.Cloud.Diagnostics.Common.Tests
         {
             /// <summary>Does nothing with the passed in items.</summary>
             public void Receive(IEnumerable<int> items) {}
+
+            /// <summary>Does nothing with the passed in items.</summary>
+            public Task ReceiveAsync(IEnumerable<int> items, CancellationToken cancellationToken) => 
+                CommonUtils.CompletedTask;
+
+            /// <inheritdoc />
+            public void Dispose() { }
         }
     }
 }

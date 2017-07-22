@@ -17,9 +17,13 @@ using Google.Apis.Storage.v1.Data;
 using Google.Apis.Upload;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Google.Cloud.Storage.V1.Snippets
@@ -75,6 +79,30 @@ namespace Google.Cloud.Storage.V1.Snippets
         }
 
         [Fact]
+        public void CustomerSuppliedEncryptionKeys()
+        {
+            var bucketName = _fixture.BucketName;
+
+            // Sample: CustomerSuppliedEncryptionKeys
+            // Use EncryptionKey.Create if you already have a key.
+            EncryptionKey key = EncryptionKey.Generate();
+            
+            // This will affect all relevant object-based operations by default.
+            var client = StorageClient.Create(encryptionKey: key);
+            var content = Encoding.UTF8.GetBytes("hello, world");
+            client.UploadObject(bucketName, "encrypted.txt", "text/plain", new MemoryStream(content));
+
+            // When downloading, either use a client with the same key...
+            client.DownloadObject(bucketName, "encrypted.txt", new MemoryStream());
+
+            // Or specify a key just for that operation.
+            var client2 = StorageClient.Create();
+            client2.DownloadObject(bucketName, "encrypted.txt", new MemoryStream(),
+                new DownloadObjectOptions { EncryptionKey = key });
+            // End sample
+        }
+
+        [Fact]
         public void ListBuckets()
         {
             var projectId = _fixture.ProjectId;
@@ -88,6 +116,11 @@ namespace Google.Cloud.Storage.V1.Snippets
 
             Assert.Contains(buckets, b => _fixture.BucketName == b.Name);
         }
+
+        // See-also: ListBuckets
+        // Member: ListBucketsAsync
+        // See [ListBuckets](ref) for a synchronous example.
+        // End see-also
 
         [Fact]
         public void CreateBucket()
@@ -109,6 +142,18 @@ namespace Google.Cloud.Storage.V1.Snippets
             Assert.Equal(bucketName, bucket.Name);
             Assert.True(!string.IsNullOrWhiteSpace(bucket.Id));
         }
+
+        // See-also: CreateBucket(string,string,*)
+        // Member: CreateBucket(string,Bucket,*)
+        // See [CreateBucket](ref) for an example using an alternative overload.
+        // End see-also
+
+        // See-also: CreateBucket(string,string,*)
+        // Member: CreateBucketAsync(string,Bucket,*,*)
+        // Member: CreateBucketAsync(string,string,*,*)
+        // See [CreateBucket](ref) for a synchronous example.
+        // End see-also
+
 
         [Fact]
         public void UpdateBucket()
@@ -137,6 +182,11 @@ namespace Google.Cloud.Storage.V1.Snippets
             Assert.Equal(bucketName, fetchedBucket.Name);
             Assert.Equal(bucket.Website.MainPageSuffix, fetchedBucket.Website.MainPageSuffix);
         }
+
+        // See-also: UpdateBucket
+        // Member: UpdateBucketAsync
+        // See [UpdateBucket](ref) for a synchronous example.
+        // End see-also
 
         [Fact]
         public void PatchBucket()
@@ -171,6 +221,11 @@ namespace Google.Cloud.Storage.V1.Snippets
             Assert.Equal(bucket.Website.MainPageSuffix, fetchedBucket.Website.MainPageSuffix);
         }
 
+        // See-also: PatchBucket
+        // Member: PatchBucketAsync
+        // See [PatchBucket](ref) for a synchronous example.
+        // End see-also
+
         [Fact]
         public void ListObjects()
         {
@@ -186,13 +241,18 @@ namespace Google.Cloud.Storage.V1.Snippets
             Assert.Contains(objects, o => _fixture.HelloStorageObjectName == o.Name);
         }
 
+        // See-also: ListObjects
+        // Member: ListObjectsAsync
+        // See [ListObjects](ref) for a synchronous example.
+        // End see-also
+
         [Fact]
         public void DownloadObject()
         {
             var bucketName = _fixture.BucketName;
             var projectId = _fixture.ProjectId;
 
-            // Snippet: DownloadObject(string,*,*,*,*)
+            // Snippet: DownloadObject(string,string,*,*,*)
             var client = StorageClient.Create();
             var source = "greetings/hello.txt";
             var destination = "hello.txt";
@@ -218,12 +278,23 @@ namespace Google.Cloud.Storage.V1.Snippets
             Assert.Equal(_fixture.HelloWorldContent, File.ReadAllText(destination));
         }
 
+        // See-also: DownloadObject(string,string,*,*,*)
+        // Member: DownloadObject(Object,*,*,*)
+        // See [DownloadObject](ref) for an example using an alternative overload.
+        // End see-also
+
+        // See-also: DownloadObject(string,string,*,*,*)
+        // Member: DownloadObjectAsync(string,string,*,*,*,*)
+        // Member: DownloadObjectAsync(Object,*,*,*,*)
+        // See [DownloadObject](ref) for a synchronous example.
+        // End see-also
+
         [Fact]
         public void UploadObject()
         {
             var bucketName = _fixture.BucketName;
 
-            // Snippet: UploadObject(string,*,*,*,*,*)
+            // Snippet: UploadObject(string,string,*,*,*,*)
             var client = StorageClient.Create();
             var source = "world.txt";
             var destination = "places/world.txt";
@@ -248,6 +319,54 @@ namespace Google.Cloud.Storage.V1.Snippets
             Assert.Equal(source, _fixture.WorldLocalFileName);
         }
 
+        // See-also: UploadObject(string,string,*,*,*,*)
+        // Member: UploadObject(Object,*,*,*)
+        // See [UploadObject](ref) for an example using an alternative overload.
+        // End see-also
+
+        // See-also: UploadObject(string,string,*,*,*,*)
+        // Member: UploadObjectAsync(string,string,*,*,*,*,*)
+        // Member: UploadObjectAsync(Object,*,*,*,*)
+        // See [UploadObject](ref) for a synchronous example.
+        // End see-also
+
+        [Fact]
+        public async Task UploadObjectWithSessionUri()
+        {
+            var bucketName = _fixture.BucketName;
+
+            // Sample: UploadObjectWithSessionUri
+            var client = StorageClient.Create();
+            var source = "world.txt";
+            var destination = "places/world.txt";
+            var contentType = "text/plain";
+
+            // var acl = PredefinedAcl.PublicRead // public
+            var acl = PredefinedObjectAcl.AuthenticatedRead; // private
+            var options = new UploadObjectOptions { PredefinedAcl = acl };
+            // Create a temporary uploader so the upload session can be manually initiated without actually uploading.
+            var tempUploader = client.CreateObjectUploader(bucketName, destination, contentType, new MemoryStream(), options);
+            var uploadUri = await tempUploader.InitiateSessionAsync();
+
+            // Send uploadUri to (unauthenticated) client application, so it can perform the upload:
+            using (var stream = File.OpenRead(source))
+            {
+                // IUploadProgress defined in Google.Apis.Upload namespace
+                IProgress<IUploadProgress> progress = new Progress<IUploadProgress>(
+                  p => Console.WriteLine($"bytes: {p.BytesSent}, status: {p.Status}")
+                );
+
+                var actualUploader = ResumableUpload.CreateFromUploadUri(uploadUri, stream);
+                actualUploader.ProgressChanged += progress.Report;
+                await actualUploader.UploadAsync();
+            }
+            // End sample
+
+            // want to show the source in the snippet, but also
+            // want to make sure it matches the one in the fixture
+            Assert.Equal(source, _fixture.WorldLocalFileName);
+        }
+
         [Fact]
         public void GetObject()
         {
@@ -264,6 +383,11 @@ namespace Google.Cloud.Storage.V1.Snippets
             Console.WriteLine($"TimeCreated: {obj.TimeCreated}");
             // End snippet
         }
+
+        // See-also: GetObject
+        // Member: GetObjectAsync
+        // See [GetObject](ref) for a synchronous example.
+        // End see-also
 
         [Fact]
         public void UpdateObject()
@@ -300,6 +424,11 @@ namespace Google.Cloud.Storage.V1.Snippets
             Assert.Equal("updated-value2", fetchedObject.Metadata["key2"]);
             Assert.Equal("value3", fetchedObject.Metadata["key3"]);
         }
+
+        // See-also: UpdateObject
+        // Member: UpdateObjectAsync
+        // See [UpdateObject](ref) for a synchronous example.
+        // End see-also
 
         [Fact]
         public void PatchObject()
@@ -348,6 +477,11 @@ namespace Google.Cloud.Storage.V1.Snippets
             Assert.Equal("value3", fetchedObject.Metadata["key3"]);
         }
 
+        // See-also: PatchObject
+        // Member: PatchObjectAsync
+        // See [PatchObject](ref) for a synchronous example.
+        // End see-also
+
         [Fact]
         public void CopyObject()
         {
@@ -371,6 +505,11 @@ namespace Google.Cloud.Storage.V1.Snippets
             Assert.Equal((ulong)Encoding.UTF8.GetByteCount(_fixture.HelloWorldContent), obj.Size.Value);
         }
 
+        // See-also: CopyObject
+        // Member: CopyObjectAsync
+        // See [CopyObject](ref) for a synchronous example.
+        // End see-also
+
         // TODO:
         // - ComposeObject? (or ConcatenateObjects?)
         // - MoveObject? (Copy then delete, as per node)
@@ -391,6 +530,11 @@ namespace Google.Cloud.Storage.V1.Snippets
             Console.WriteLine($"TimeCreated: {bucket.TimeCreated}");
             // End snippet
         }
+
+        // See-also: GetBucket
+        // Member: GetBucketAsync
+        // See [GetBucket](ref) for a synchronous example.
+        // End see-also
 
         // TODO: Flag to delete all versions of an object?
 
@@ -416,6 +560,18 @@ namespace Google.Cloud.Storage.V1.Snippets
             Assert.DoesNotContain(client.ListObjects(bucketName, ""), o => o.Name == objectName);
         }
 
+        // See-also: DeleteObject(string,string,*)
+        // Member: DeleteObject(Object,*)
+        // See [DeleteObject](ref) for an example using an alternative overload.
+        // End see-also
+
+        // See-also: DeleteObject(string,string,*)
+        // Member: DeleteObjectAsync(Object,*,*)
+        // Member: DeleteObjectAsync(string,string,*,*)
+        // See [DeleteObject](ref) for a synchronous example.
+        // End see-also
+
+
         [Fact]
         public void DeleteBucket()
         {
@@ -430,5 +586,215 @@ namespace Google.Cloud.Storage.V1.Snippets
 
             Assert.DoesNotContain(client.ListBuckets(_fixture.ProjectId), b => b.Name == bucketName);
         }
+
+        // See-also: DeleteBucket(string,*)
+        // Member: DeleteBucket(Bucket,*)
+        // See [DeleteBucket](ref) for an example using an alternative overload.
+        // End see-also
+
+        // See-also: DeleteBucket(string,*)
+        // Member: DeleteBucketAsync(Bucket,*,*)
+        // Member: DeleteBucketAsync(string,*,*)
+        // See [DeleteBucket](ref) for a synchronous example.
+        // End see-also
+
+        [Fact]
+        public void GetBucketIamPolicy()
+        {
+            var bucketName = _fixture.BucketName;
+            // Snippet: GetBucketIamPolicy(string,*)
+            StorageClient client = StorageClient.Create();
+
+            Policy policy = client.GetBucketIamPolicy(bucketName);
+            foreach (Policy.BindingsData binding in policy.Bindings)
+            {
+                Console.WriteLine($"Role: {binding.Role}");
+                foreach (var permission in binding.Members)
+                {
+                    Console.WriteLine($"  {permission}");
+                }
+            }
+            // End snippet
+        }
+
+        // See-also: GetBucketIamPolicy(string,*)
+        // Member: GetBucketIamPolicyAsync(string,*,*)
+        // See [GetBucketIamPolicy](ref) for a synchronous example.
+        // End see-also
+
+        [Fact]
+        public async Task SetBucketIamPolicy()
+        {
+            var projectId = _fixture.ProjectId;
+            var bucketName = Guid.NewGuid().ToString();
+            _fixture.RegisterBucketToDelete(bucketName);
+
+            // Snippet: SetBucketIamPolicy(string, *, *)
+            // Create a new bucket and an empty file within it
+            StorageClient client = StorageClient.Create();
+            Bucket bucket = client.CreateBucket(projectId, bucketName);
+            var obj = client.UploadObject(bucketName, "empty.txt", "text/plain", new MemoryStream());
+
+            // Demonstrate that without authentication, we can't download the object
+            HttpClient httpClient = new HttpClient();
+            HttpResponseMessage response1 = await httpClient.GetAsync(obj.MediaLink);
+            Console.WriteLine($"Response code before setting policy: {response1.StatusCode}");
+
+            // Fetch the current IAM policy, and modify it in memory to allow all users
+            // to view objects.
+            Policy policy = client.GetBucketIamPolicy(bucketName);
+            string role = "roles/storage.objectViewer";
+            Policy.BindingsData binding = policy.Bindings
+                .Where(b => b.Role == role)
+                .FirstOrDefault();
+            if (binding == null)
+            {
+                binding = new Policy.BindingsData { Role = role, Members = new List<string>() };
+                policy.Bindings.Add(binding);
+            }
+            binding.Members.Add("allUsers");
+
+            // Update the IAM policy on the bucket.
+            client.SetBucketIamPolicy(bucketName, policy);
+
+            // Download the object again: this time the response should be OK
+            HttpResponseMessage response2 = await httpClient.GetAsync(obj.MediaLink);
+            Console.WriteLine($"Response code after setting policy: {response2.StatusCode}");
+
+            // End snippet
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response1.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, response2.StatusCode);
+        }
+
+        // See-also: SetBucketIamPolicy(string, *, *)
+        // Member: SetBucketIamPolicyAsync(string,*,*,*)
+        // See [SetBucketIamPolicy](ref) for a synchronous example.
+        // End see-also
+
+        [Fact]
+        public void TestBucketIamPermissions()
+        {
+            var bucketName = _fixture.BucketName;
+            // Snippet: TestBucketIamPermissions(string,*,*)
+            StorageClient client = StorageClient.Create();
+            
+            IList<string> permissions = client.TestBucketIamPermissions(bucketName,
+                new[] { "storage.buckets.get", "storage.objects.list" });
+            Console.WriteLine("Permissions held:");
+            foreach (string permission in permissions)
+            {
+                Console.WriteLine($"  {permission}");
+            }
+            // End snippet
+        }
+
+        // See-also: TestBucketIamPermissions(string,*,*)
+        // Member: TestBucketIamPermissionsAsync(string,*,*,*)
+        // See [TestBucketIamPermissions](ref) for a synchronous example.
+        // End see-also
+
+        [Fact]
+        public void SetBucketLabel()
+        {
+            var bucketName = _fixture.BucketName;
+            // Snippet: SetBucketLabel(string, string, string, *)
+            StorageClient client = StorageClient.Create();
+
+            string now = DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss", CultureInfo.InvariantCulture);
+            string newValue = "new_value_" + now;
+            string oldValue = client.SetBucketLabel(bucketName, "label", newValue);
+            Console.WriteLine($"Old value: {oldValue}");
+            // Verify the label is now correct...
+            Bucket bucket = client.GetBucket(bucketName);
+            string fetchedValue = bucket.Labels?["label"];
+            Console.WriteLine($"Fetched value: {fetchedValue}");
+            // End snippet
+
+            Assert.Equal(newValue, fetchedValue);
+        }
+
+        // See-also: SetBucketLabel(string, string, string, *)
+        // Member: SetBucketLabelAsync(string, string, string, *, *)
+        // See [SetBucketLabel](ref) for a synchronous example.
+        // End see-also
+
+        [Fact]
+        public void RemoveBucketLabel()
+        {
+            var bucketName = _fixture.BucketName;
+            // Snippet: RemoveBucketLabel(string, string, *)
+            StorageClient client = StorageClient.Create();
+
+            string oldValue = client.RemoveBucketLabel(bucketName, "label");
+            Console.WriteLine($"Old value: {oldValue}");
+            // Verify the label is now gone...
+            Bucket bucket = client.GetBucket(bucketName);
+            string fetchedValue = null;
+            bucket.Labels?.TryGetValue("label", out fetchedValue);
+            Console.WriteLine($"Fetched value: {fetchedValue}");
+            // End snippet
+
+            Assert.Null(fetchedValue);
+        }
+
+        // See-also: RemoveBucketLabel(string, string, *)
+        // Member: RemoveBucketLabelAsync(string, string, *, *)
+        // See [RemoveBucketLabel](ref) for a synchronous example.
+        // End see-also
+
+        [Fact]
+        public void ClearBucketLabels()
+        {
+            var bucketName = _fixture.BucketName;
+            // Snippet: ClearBucketLabels(string, *)
+            StorageClient client = StorageClient.Create();
+
+            IDictionary<string, string> oldLabels = client.ClearBucketLabels(bucketName);
+            Console.WriteLine($"Number of labels before clearing: {oldLabels.Count}");
+            // End snippet
+
+            Assert.Null(client.GetBucket(bucketName).Labels);
+        }
+
+        // See-also: ClearBucketLabels(string, *)
+        // Member: ClearBucketLabelsAsync(string, *, *)
+        // See [ClearBucketLabels](ref) for a synchronous example.
+        // End see-also
+
+        [Fact]
+        public void ModifyBucketLabels()
+        {
+            var bucketName = _fixture.BucketName;
+
+            // Snippet: ModifyBucketLabels(string, *, *)
+            StorageClient client = StorageClient.Create();
+
+            string now = DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss", CultureInfo.InvariantCulture);
+            IDictionary<string, string> labelChanges = new Dictionary<string, string>
+            {
+                { "label1", "new_value_1_" + now },
+                { "label2", "new_value_2_" + now },
+            };
+
+            IDictionary<string, string> oldValues = client.ModifyBucketLabels(bucketName, labelChanges);
+            Console.WriteLine("Old values for changed labels:");
+            foreach (KeyValuePair<string, string> entry in oldValues)
+            {
+                Console.WriteLine($"  {entry.Key}: {entry.Value}");
+            }
+            Console.WriteLine("All labels:");
+            IDictionary<string, string> allLabels = client.GetBucket(bucketName).Labels ?? new Dictionary<string, string>();
+            foreach (KeyValuePair<string, string> entry in allLabels)
+            {
+                Console.WriteLine($"  {entry.Key}: {entry.Value}");
+            }
+            // End snippet
+        }
+
+        // See-also: ModifyBucketLabels(string, *, *)
+        // Member: ModifyBucketLabelsAsync(string, *, *, *)
+        // See [ModifyBucketLabels](ref) for a synchronous example.
+        // End see-also
     }
 }

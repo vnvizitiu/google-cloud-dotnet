@@ -1,4 +1,4 @@
-// Copyright 2016, Google Inc. All rights reserved.
+// Copyright 2017, Google Inc. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -52,7 +52,10 @@ namespace Google.LongRunning
             ListOperationsSettings = existing.ListOperationsSettings;
             CancelOperationSettings = existing.CancelOperationSettings;
             DeleteOperationSettings = existing.DeleteOperationSettings;
+            OnCopy(existing);
         }
+
+        partial void OnCopy(OperationsSettings existing);
 
         /// <summary>
         /// The filter specifying which RPC <see cref="StatusCode"/>s are eligible for retry
@@ -107,14 +110,14 @@ namespace Google.LongRunning
         /// <remarks>
         /// The "Default" timeout backoff for <see cref="OperationsClient"/> RPC methods is defined as:
         /// <list type="bullet">
-        /// <item><description>Initial timeout: 20000 milliseconds</description></item>
+        /// <item><description>Initial timeout: 90000 milliseconds</description></item>
         /// <item><description>Timeout multiplier: 1.0</description></item>
-        /// <item><description>Maximum timeout: 20000 milliseconds</description></item>
+        /// <item><description>Maximum timeout: 90000 milliseconds</description></item>
         /// </list>
         /// </remarks>
         public static BackoffSettings GetDefaultTimeoutBackoff() => new BackoffSettings(
-            delay: TimeSpan.FromMilliseconds(20000),
-            maxDelay: TimeSpan.FromMilliseconds(20000),
+            delay: TimeSpan.FromMilliseconds(90000),
+            maxDelay: TimeSpan.FromMilliseconds(90000),
             delayMultiplier: 1.0
         );
 
@@ -129,9 +132,9 @@ namespace Google.LongRunning
         /// <item><description>Initial retry delay: 100 milliseconds</description></item>
         /// <item><description>Retry delay multiplier: 1.3</description></item>
         /// <item><description>Retry maximum delay: 60000 milliseconds</description></item>
-        /// <item><description>Initial timeout: 20000 milliseconds</description></item>
+        /// <item><description>Initial timeout: 90000 milliseconds</description></item>
         /// <item><description>Timeout multiplier: 1.0</description></item>
-        /// <item><description>Timeout maximum delay: 20000 milliseconds</description></item>
+        /// <item><description>Timeout maximum delay: 90000 milliseconds</description></item>
         /// </list>
         /// Retry will be attempted on the following response status codes:
         /// <list>
@@ -159,9 +162,9 @@ namespace Google.LongRunning
         /// <item><description>Initial retry delay: 100 milliseconds</description></item>
         /// <item><description>Retry delay multiplier: 1.3</description></item>
         /// <item><description>Retry maximum delay: 60000 milliseconds</description></item>
-        /// <item><description>Initial timeout: 20000 milliseconds</description></item>
+        /// <item><description>Initial timeout: 90000 milliseconds</description></item>
         /// <item><description>Timeout multiplier: 1.0</description></item>
-        /// <item><description>Timeout maximum delay: 20000 milliseconds</description></item>
+        /// <item><description>Timeout maximum delay: 90000 milliseconds</description></item>
         /// </list>
         /// Retry will be attempted on the following response status codes:
         /// <list>
@@ -189,9 +192,9 @@ namespace Google.LongRunning
         /// <item><description>Initial retry delay: 100 milliseconds</description></item>
         /// <item><description>Retry delay multiplier: 1.3</description></item>
         /// <item><description>Retry maximum delay: 60000 milliseconds</description></item>
-        /// <item><description>Initial timeout: 20000 milliseconds</description></item>
+        /// <item><description>Initial timeout: 90000 milliseconds</description></item>
         /// <item><description>Timeout multiplier: 1.0</description></item>
-        /// <item><description>Timeout maximum delay: 20000 milliseconds</description></item>
+        /// <item><description>Timeout maximum delay: 90000 milliseconds</description></item>
         /// </list>
         /// Retry will be attempted on the following response status codes:
         /// <list>
@@ -219,9 +222,9 @@ namespace Google.LongRunning
         /// <item><description>Initial retry delay: 100 milliseconds</description></item>
         /// <item><description>Retry delay multiplier: 1.3</description></item>
         /// <item><description>Retry maximum delay: 60000 milliseconds</description></item>
-        /// <item><description>Initial timeout: 20000 milliseconds</description></item>
+        /// <item><description>Initial timeout: 90000 milliseconds</description></item>
         /// <item><description>Timeout multiplier: 1.0</description></item>
-        /// <item><description>Timeout maximum delay: 20000 milliseconds</description></item>
+        /// <item><description>Timeout maximum delay: 90000 milliseconds</description></item>
         /// </list>
         /// Retry will be attempted on the following response status codes:
         /// <list>
@@ -354,7 +357,7 @@ namespace Google.LongRunning
             CallSettings callSettings = null) => GetOperationAsync(
                 new GetOperationRequest
                 {
-                    Name = name,
+                    Name = GaxPreconditions.CheckNotNullOrEmpty(name, nameof(name)),
                 },
                 callSettings);
 
@@ -397,7 +400,7 @@ namespace Google.LongRunning
             CallSettings callSettings = null) => GetOperation(
                 new GetOperationRequest
                 {
-                    Name = name,
+                    Name = GaxPreconditions.CheckNotNullOrEmpty(name, nameof(name)),
                 },
                 callSettings);
 
@@ -478,8 +481,8 @@ namespace Google.LongRunning
             CallSettings callSettings = null) => ListOperationsAsync(
                 new ListOperationsRequest
                 {
-                    Name = name,
-                    Filter = filter,
+                    Name = GaxPreconditions.CheckNotNullOrEmpty(name, nameof(name)),
+                    Filter = GaxPreconditions.CheckNotNullOrEmpty(filter, nameof(filter)),
                     PageToken = pageToken ?? "",
                     PageSize = pageSize ?? 0,
                 },
@@ -520,8 +523,8 @@ namespace Google.LongRunning
             CallSettings callSettings = null) => ListOperations(
                 new ListOperationsRequest
                 {
-                    Name = name,
-                    Filter = filter,
+                    Name = GaxPreconditions.CheckNotNullOrEmpty(name, nameof(name)),
+                    Filter = GaxPreconditions.CheckNotNullOrEmpty(filter, nameof(filter)),
                     PageToken = pageToken ?? "",
                     PageSize = pageSize ?? 0,
                 },
@@ -599,7 +602,7 @@ namespace Google.LongRunning
             CallSettings callSettings = null) => CancelOperationAsync(
                 new CancelOperationRequest
                 {
-                    Name = name,
+                    Name = GaxPreconditions.CheckNotNullOrEmpty(name, nameof(name)),
                 },
                 callSettings);
 
@@ -656,7 +659,7 @@ namespace Google.LongRunning
             CallSettings callSettings = null) => CancelOperation(
                 new CancelOperationRequest
                 {
-                    Name = name,
+                    Name = GaxPreconditions.CheckNotNullOrEmpty(name, nameof(name)),
                 },
                 callSettings);
 
@@ -736,7 +739,7 @@ namespace Google.LongRunning
             CallSettings callSettings = null) => DeleteOperationAsync(
                 new DeleteOperationRequest
                 {
-                    Name = name,
+                    Name = GaxPreconditions.CheckNotNullOrEmpty(name, nameof(name)),
                 },
                 callSettings);
 
@@ -781,7 +784,7 @@ namespace Google.LongRunning
             CallSettings callSettings = null) => DeleteOperation(
                 new DeleteOperationRequest
                 {
-                    Name = name,
+                    Name = GaxPreconditions.CheckNotNullOrEmpty(name, nameof(name)),
                 },
                 callSettings);
 
@@ -836,7 +839,6 @@ namespace Google.LongRunning
     /// </summary>
     public sealed partial class OperationsClientImpl : OperationsClient
     {
-        private readonly ClientHelper _clientHelper;
         private readonly ApiCall<GetOperationRequest, Operation> _callGetOperation;
         private readonly ApiCall<ListOperationsRequest, ListOperationsResponse> _callListOperations;
         private readonly ApiCall<CancelOperationRequest, Empty> _callCancelOperation;
@@ -851,16 +853,19 @@ namespace Google.LongRunning
         {
             this.GrpcClient = grpcClient;
             OperationsSettings effectiveSettings = settings ?? OperationsSettings.GetDefault();
-            _clientHelper = new ClientHelper(effectiveSettings);
-            _callGetOperation = _clientHelper.BuildApiCall<GetOperationRequest, Operation>(
+            ClientHelper clientHelper = new ClientHelper(effectiveSettings);
+            _callGetOperation = clientHelper.BuildApiCall<GetOperationRequest, Operation>(
                 GrpcClient.GetOperationAsync, GrpcClient.GetOperation, effectiveSettings.GetOperationSettings);
-            _callListOperations = _clientHelper.BuildApiCall<ListOperationsRequest, ListOperationsResponse>(
+            _callListOperations = clientHelper.BuildApiCall<ListOperationsRequest, ListOperationsResponse>(
                 GrpcClient.ListOperationsAsync, GrpcClient.ListOperations, effectiveSettings.ListOperationsSettings);
-            _callCancelOperation = _clientHelper.BuildApiCall<CancelOperationRequest, Empty>(
+            _callCancelOperation = clientHelper.BuildApiCall<CancelOperationRequest, Empty>(
                 GrpcClient.CancelOperationAsync, GrpcClient.CancelOperation, effectiveSettings.CancelOperationSettings);
-            _callDeleteOperation = _clientHelper.BuildApiCall<DeleteOperationRequest, Empty>(
+            _callDeleteOperation = clientHelper.BuildApiCall<DeleteOperationRequest, Empty>(
                 GrpcClient.DeleteOperationAsync, GrpcClient.DeleteOperation, effectiveSettings.DeleteOperationSettings);
+            OnConstruction(grpcClient, effectiveSettings, clientHelper);
         }
+
+        partial void OnConstruction(Operations.OperationsClient grpcClient, OperationsSettings effectiveSettings, ClientHelper clientHelper);
 
         /// <summary>
         /// The underlying gRPC Operations client.

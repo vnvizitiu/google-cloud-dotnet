@@ -1,4 +1,4 @@
-// Copyright 2016, Google Inc. All rights reserved.
+// Copyright 2017, Google Inc. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -85,6 +85,38 @@ namespace Google.Cloud.PubSub.V1.Snippets
             };
             // Make the request
             Topic response = publisherClient.CreateTopic(request);
+            // End snippet
+        }
+
+        public async Task UpdateTopicAsync_RequestObject()
+        {
+            // Snippet: UpdateTopicAsync(UpdateTopicRequest,CallSettings)
+            // Create client
+            PublisherClient publisherClient = await PublisherClient.CreateAsync();
+            // Initialize request argument(s)
+            UpdateTopicRequest request = new UpdateTopicRequest
+            {
+                Topic = new Topic(),
+                UpdateMask = new FieldMask(),
+            };
+            // Make the request
+            Topic response = await publisherClient.UpdateTopicAsync(request);
+            // End snippet
+        }
+
+        public void UpdateTopic_RequestObject()
+        {
+            // Snippet: UpdateTopic(UpdateTopicRequest,CallSettings)
+            // Create client
+            PublisherClient publisherClient = PublisherClient.Create();
+            // Initialize request argument(s)
+            UpdateTopicRequest request = new UpdateTopicRequest
+            {
+                Topic = new Topic(),
+                UpdateMask = new FieldMask(),
+            };
+            // Make the request
+            Topic response = publisherClient.UpdateTopic(request);
             // End snippet
         }
 
@@ -232,7 +264,7 @@ namespace Google.Cloud.PubSub.V1.Snippets
             // Initialize request argument(s)
             ProjectName project = new ProjectName("[PROJECT]");
             // Make the request
-            PagedAsyncEnumerable<ListTopicsResponse,Topic> response =
+            PagedAsyncEnumerable<ListTopicsResponse, Topic> response =
                 publisherClient.ListTopicsAsync(project);
 
             // Iterate over all response items, lazily performing RPCs as required
@@ -275,7 +307,7 @@ namespace Google.Cloud.PubSub.V1.Snippets
             // Initialize request argument(s)
             ProjectName project = new ProjectName("[PROJECT]");
             // Make the request
-            PagedEnumerable<ListTopicsResponse,Topic> response =
+            PagedEnumerable<ListTopicsResponse, Topic> response =
                 publisherClient.ListTopics(project);
 
             // Iterate over all response items, lazily performing RPCs as required
@@ -321,7 +353,7 @@ namespace Google.Cloud.PubSub.V1.Snippets
                 ProjectAsProjectName = new ProjectName("[PROJECT]"),
             };
             // Make the request
-            PagedAsyncEnumerable<ListTopicsResponse,Topic> response =
+            PagedAsyncEnumerable<ListTopicsResponse, Topic> response =
                 publisherClient.ListTopicsAsync(request);
 
             // Iterate over all response items, lazily performing RPCs as required
@@ -367,7 +399,7 @@ namespace Google.Cloud.PubSub.V1.Snippets
                 ProjectAsProjectName = new ProjectName("[PROJECT]"),
             };
             // Make the request
-            PagedEnumerable<ListTopicsResponse,Topic> response =
+            PagedEnumerable<ListTopicsResponse, Topic> response =
                 publisherClient.ListTopics(request);
 
             // Iterate over all response items, lazily performing RPCs as required
@@ -410,7 +442,7 @@ namespace Google.Cloud.PubSub.V1.Snippets
             // Initialize request argument(s)
             TopicName topic = new TopicName("[PROJECT]", "[TOPIC]");
             // Make the request
-            PagedAsyncEnumerable<ListTopicSubscriptionsResponse,SubscriptionName> response =
+            PagedAsyncEnumerable<ListTopicSubscriptionsResponse, SubscriptionName> response =
                 publisherClient.ListTopicSubscriptionsAsync(topic);
 
             // Iterate over all response items, lazily performing RPCs as required
@@ -453,7 +485,7 @@ namespace Google.Cloud.PubSub.V1.Snippets
             // Initialize request argument(s)
             TopicName topic = new TopicName("[PROJECT]", "[TOPIC]");
             // Make the request
-            PagedEnumerable<ListTopicSubscriptionsResponse,SubscriptionName> response =
+            PagedEnumerable<ListTopicSubscriptionsResponse, SubscriptionName> response =
                 publisherClient.ListTopicSubscriptions(topic);
 
             // Iterate over all response items, lazily performing RPCs as required
@@ -499,7 +531,7 @@ namespace Google.Cloud.PubSub.V1.Snippets
                 TopicAsTopicName = new TopicName("[PROJECT]", "[TOPIC]"),
             };
             // Make the request
-            PagedAsyncEnumerable<ListTopicSubscriptionsResponse,SubscriptionName> response =
+            PagedAsyncEnumerable<ListTopicSubscriptionsResponse, SubscriptionName> response =
                 publisherClient.ListTopicSubscriptionsAsync(request);
 
             // Iterate over all response items, lazily performing RPCs as required
@@ -545,7 +577,7 @@ namespace Google.Cloud.PubSub.V1.Snippets
                 TopicAsTopicName = new TopicName("[PROJECT]", "[TOPIC]"),
             };
             // Make the request
-            PagedEnumerable<ListTopicSubscriptionsResponse,SubscriptionName> response =
+            PagedEnumerable<ListTopicSubscriptionsResponse, SubscriptionName> response =
                 publisherClient.ListTopicSubscriptions(request);
 
             // Iterate over all response items, lazily performing RPCs as required

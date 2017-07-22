@@ -12,7 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Google.Api.Gax;
+using Google.Cloud.Diagnostics.Common;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Google.Cloud.Diagnostics.AspNetCore
 {
@@ -24,13 +29,23 @@ namespace Google.Cloud.Diagnostics.AspNetCore
     /// 
     /// <example>
     /// <code>
-    /// public void Configure(IApplicationBuilder app)
+    /// public void ConfigureServices(IServiceCollection services)
     /// {
-    ///     // Use before handling any requests to ensure all unhandled exceptions are reported.
     ///     string projectId = "[Google Cloud Platform project ID]";
     ///     string serviceName = "[Name of service]";
     ///     string version = "[Version of service]";
-    ///     app.ReportExceptionsToGoogle(projectId, serviceName, version);
+    ///     services.AddGoogleExceptionLogging(projectId, serviceName, version);
+    ///     ...
+    /// }
+    /// </code>
+    /// </example>
+    /// 
+    /// <example>
+    /// <code>
+    /// public void Configure(IApplicationBuilder app)
+    /// {
+    ///     // Use before handling any requests to ensure all unhandled exceptions are reported.
+    ///     app.UseGoogleExceptionLogging();
     ///     ...
     /// }
     /// </code>
@@ -46,14 +61,50 @@ namespace Google.Cloud.Diagnostics.AspNetCore
         /// Uses middleware that will report all uncaught exceptions to the Stackdriver
         /// Error Reporting API.
         /// </summary>
-        /// <param name="projectId">The Google Cloud Platform project ID.</param>
-        /// <param name="serviceName">An identifier of the service, such as the name of the executable or job.</param>
-        /// <param name="version">Represents the source code version that the developer provided.</param> 
-        public static void ReportExceptionsToGoogle(
-            this IApplicationBuilder app, string projectId, string serviceName, string version)
+        /// <param name="app">The application builder. Cannot be null.</param>   
+        public static void UseGoogleExceptionLogging(this IApplicationBuilder app)
         {
-            var logger = ErrorReportingExceptionLogger.Create(projectId, serviceName, version);
-            app.UseMiddleware<ErrorReportingExceptionLoggerMiddleware>(logger);
+            GaxPreconditions.CheckNotNull(app, nameof(app));
+            app.UseMiddleware<ErrorReportingExceptionLoggerMiddleware>();
+        }
+
+        /// <summary>
+        /// Adds services for middleware that will report all uncaught exceptions to the
+        /// Stackdriver Error Reporting API.
+        /// <para>
+        /// Can be used when running on Google App Engine or Google Compute Engine.
+        /// The Google Cloud Platform project to report errors to will detected from the
+        /// current platform.
+        /// </para>
+        /// </summary>
+        /// <param name="services">The service collection. Cannot be null.</param>
+        /// <param name="setupAction">Action to set up options. Cannot be null.</param>
+        public static void AddGoogleExceptionLogging(
+            this IServiceCollection services, Action<ErrorReportingServiceOptions> setupAction)
+        {
+            GaxPreconditions.CheckNotNull(services, nameof(services));
+            GaxPreconditions.CheckNotNull(setupAction, nameof(setupAction));
+
+            var serviceOptions = new ErrorReportingServiceOptions();
+            setupAction(serviceOptions);
+            var serviceName = GaxPreconditions.CheckNotNull(serviceOptions.ServiceName, nameof(serviceOptions.ServiceName));
+            var version = GaxPreconditions.CheckNotNull(serviceOptions.Version, nameof(serviceOptions.Version));
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton(ErrorReportingContextExceptionLogger.Create(
+                serviceOptions.ProjectId, serviceName, version, serviceOptions.Options));
+            services.AddSingleton(CreateExceptionLogger);
+        }
+
+
+        /// <summary>
+        /// Creates an <see cref="IExceptionLogger"/>.
+        /// </summary>
+        private static IExceptionLogger CreateExceptionLogger(IServiceProvider provider)
+        {
+            var accessor = provider.GetServiceCheckNotNull<IHttpContextAccessor>();
+            var contextLogger = provider.GetServiceCheckNotNull<IContextExceptionLogger>();
+            return new GoogleExceptionLogger(contextLogger, accessor);
         }
     }
 }

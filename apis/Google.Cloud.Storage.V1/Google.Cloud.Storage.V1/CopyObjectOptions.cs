@@ -16,6 +16,7 @@ using Google.Api.Gax;
 using System;
 using static Google.Apis.Storage.v1.ObjectsResource;
 using static Google.Apis.Storage.v1.ObjectsResource.RewriteRequest;
+using Object = Google.Apis.Storage.v1.Data.Object;
 
 namespace Google.Cloud.Storage.V1
 {
@@ -90,6 +91,32 @@ namespace Google.Cloud.Storage.V1
         /// </summary>
         public long? IfSourceMetagenerationNotMatch { get; set; }
 
+        /// <summary>
+        /// Additional object metadata for the new object. This can be used to specify the storage
+        /// class of the new object, the content type etc. If this property is not set, the existing
+        /// object metadata will be used unchanged.
+        /// </summary>
+        public Object ExtraMetadata { get; set; }
+
+        /// <summary>
+        /// The encryption key to use for this operation. If this property is null, the <see cref="StorageClient.EncryptionKey"/>
+        /// will be used instead. Use <see cref="EncryptionKey.None"/> to remove encryption headers from this request.
+        /// </summary>
+        public EncryptionKey EncryptionKey { get; set; }
+
+        /// <summary>
+        /// The encryption key to use for the source of the copy. If this property is null, the <see cref="StorageClient.EncryptionKey"/>
+        /// will be used instead. Use <see cref="EncryptionKey.None"/> if the source is not encrypted.
+        /// </summary>
+        public EncryptionKey SourceEncryptionKey { get; set; }
+
+
+        /// <summary>
+        /// If set, this is the ID of the project which will be billed for the request, for requester-pays buckets.
+        /// The caller must have suitable permissions for the project being billed.
+        /// </summary>
+        public string UserProject { get; set; }
+
         internal void ModifyRequest(RewriteRequest request)
         {
             // Note the use of ArgumentException here, as this will basically be the result of invalid
@@ -157,6 +184,10 @@ namespace Google.Cloud.Storage.V1
             if (IfSourceMetagenerationNotMatch != null)
             {
                 request.IfSourceMetagenerationNotMatch = IfSourceMetagenerationNotMatch;
+            }
+            if (UserProject != null)
+            {
+                request.UserProject = UserProject;
             }
         }
     }
